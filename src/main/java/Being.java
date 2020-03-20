@@ -10,7 +10,15 @@ public abstract class Being {
     protected List<Card> deck;
     protected int actionPoints;
     protected int maxActionPoints;
+    protected int defense;
 
+    /**
+     * Constructor. Also sets actionPoints and health to their respective maximum values.
+     * @param name the name of the being.
+     * @param maxHealth the maximum health of the being.
+     * @param maxActionPoints the maximum action points this being can perform, per turn.
+     * @param deck the assortment of cards available to the being.
+     */
     public Being(String name, int maxHealth, int maxActionPoints, List<Card> deck) {
         this.name = name;
         this.maxHealth = maxHealth;
@@ -18,6 +26,7 @@ public abstract class Being {
         this.maxActionPoints = maxActionPoints;
         this.actionPoints = maxActionPoints;
         this.deck = deck;
+        this.defense = 0;
     }
 
     /**
@@ -105,6 +114,20 @@ public abstract class Being {
     }
 
     /**
+     * @return  The current defense this being has.
+     */
+    public int getDefense() {
+        return defense;
+    }
+
+    /**
+     * @param defense The current defense this being has.
+     */
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    /**
      * @return  The health / maxHealth of the being in String form.
      */
     public String healthStatus() {
@@ -116,7 +139,7 @@ public abstract class Being {
     }
 
     /**
-     * The player takes damage.
+     * This being takes damage.
      * @param damage    The damage this takes.
      */
     public void takeDamage(int damage) {

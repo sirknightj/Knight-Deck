@@ -37,7 +37,8 @@ public class Main {
 
         // Initializing the bear's cards
         List<Card> bearCards = new ArrayList<>();
-        bearCards.add(CardFactory.getAttackCard("Double tap"));
+        bearCards.add(CardFactory.getCard("Slash"));
+        bearCards.add(CardFactory.getCard("Charge"));
         Enemy enemy = new Enemy("Bear", 40, 1, bearCards);
 
         // Adding the bear to the enemy list
@@ -57,11 +58,11 @@ public class Main {
      */
     private static void loadAttackCards(Gson gson) throws URISyntaxException, IOException {
         // file containing attack card data
-        Reader attackCardFile = Files.newBufferedReader(Paths.get(Main.class.getResource("attack.json").toURI()));
+        Reader attackCardFile = Files.newBufferedReader(Paths.get(Main.class.getResource("cards.json").toURI()));
 
-        List<AttackCard> attackCards = gson.fromJson(attackCardFile, new TypeToken<List<AttackCard>>() {}.getType());
+        List<Card> cards = gson.fromJson(attackCardFile, new TypeToken<List<Card>>() {}.getType());
 
-        for (AttackCard card : attackCards) {
+        for (Card card : cards) {
             CardFactory.addCard(card);
         }
     }
@@ -72,10 +73,10 @@ public class Main {
     private static List<Card> testDeck() {
         List<Card> playerDeck = new ArrayList<>();
         for(int i = 0; i < 6; i++) {
-            playerDeck.add(CardFactory.getAttackCard("Stab"));
+            playerDeck.add(CardFactory.getCard("Stab"));
         }
-        playerDeck.add(CardFactory.getAttackCard("Smash"));
-        playerDeck.add(CardFactory.getAttackCard("Double tap"));
+        playerDeck.add(CardFactory.getCard("Smash"));
+        playerDeck.add(CardFactory.getCard("Double tap"));
         return playerDeck;
     }
 }

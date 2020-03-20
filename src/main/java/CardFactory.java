@@ -26,13 +26,13 @@ public class CardFactory {
      * @return attack card
      * @throws RuntimeException if no attack card with the given name is found
      */
-    public static AttackCard getAttackCard(String name) {
+    public static Card getCard(String name) {
         if (!nameToCard.containsKey(name)) {
             throw new RuntimeException("Card " + name + " not found");
         }
         Card result = nameToCard.get(name);
-        if (result instanceof AttackCard) {
-            return (AttackCard) result;
+        if (result instanceof Card) {
+            return result;
         }
         throw new RuntimeException("Card " + name + " is not an AttackCard");
     }
