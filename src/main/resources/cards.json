@@ -1,0 +1,47 @@
+[
+  {
+    "type": "Attack Card",
+    "name": "Stab",
+    "cost": 1,
+    "damage": 8,
+    "hits": 1,
+    "isEnemyOnly": false,
+    "defense": 0
+  },
+  {
+    "type": "Attack Card",
+    "name":"Double tap",
+    "cost": 1,
+    "damage": 5,
+    "hits": 2,
+    "isEnemyOnly": false,
+    "defense": 0
+  },
+  {
+    "type": "Attack Card",
+    "name": "Smash",
+    "cost": 2,
+    "damage": 18,
+    "hits": 1,
+    "isEnemyOnly": false,
+    "defense": 0
+  },
+  {
+    "type": "Attack Card",
+    "name": "Charge",
+    "cost": 1,
+    "damage": 7,
+    "hits": 1,
+    "isEnemyOnly": true,
+    "defense": 0
+  },
+  {
+    "type": "Attack Card",
+    "name": "Slash",
+    "cost": 1,
+    "damage": 12,
+    "hits": 1,
+    "isEnemyOnly": true,
+    "defense": 0
+  }
+]
