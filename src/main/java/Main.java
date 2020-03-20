@@ -6,12 +6,16 @@ import java.io.Reader;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This is the driver class of the program.
  */
 public class Main {
+
+    private static Player player; //The player.
+
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
 
@@ -26,6 +30,23 @@ public class Main {
         for (Card card : CardFactory.getAllCards()) {
             System.out.println("\t" + card.toString());
         }
+
+        // Creating a new player
+        player = new Player("Admin", 50, 2, testDeck(), 3);
+        System.out.println(player.getDeck());
+
+        // Initializing the bear's cards
+        List<Card> bearCards = new ArrayList<>();
+        bearCards.add(CardFactory.getAttackCard("Double tap"));
+        Enemy enemy = new Enemy("Bear", 40, 1, bearCards);
+
+        // Adding the bear to the enemy list
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(enemy);
+
+        // Battle
+        Battle battle = new Battle(player, enemies);
+        battle.start();
     }
 
     /**
@@ -43,5 +64,18 @@ public class Main {
         for (AttackCard card : attackCards) {
             CardFactory.addCard(card);
         }
+    }
+
+    /**
+     * @return  A preset card deck for testing purposes.
+     */
+    private static List<Card> testDeck() {
+        List<Card> playerDeck = new ArrayList<>();
+        for(int i = 0; i < 6; i++) {
+            playerDeck.add(CardFactory.getAttackCard("Stab"));
+        }
+        playerDeck.add(CardFactory.getAttackCard("Smash"));
+        playerDeck.add(CardFactory.getAttackCard("Double tap"));
+        return playerDeck;
     }
 }

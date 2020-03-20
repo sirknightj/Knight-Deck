@@ -2,8 +2,8 @@
  * Immutable representation of a card.
  */
 public abstract class Card {
-    private String name;
-    private int cost;
+    protected String name;
+    protected int cost;
 
     /**
      * Constructor. Creates a new card from its name and cost.
@@ -16,7 +16,6 @@ public abstract class Card {
     }
 
     /**
-     * Returns the name of the card.
      * @return  The name of the card.
      */
     public String getName() {
@@ -24,7 +23,6 @@ public abstract class Card {
     }
 
     /**
-     * Returns the cost to play this card.
      * @return  The cost to play this card.
      */
     public int getCost() {
@@ -32,7 +30,6 @@ public abstract class Card {
     }
 
     /**
-     * Returns the description of the card.
      * @return  The description of the card.
      */
     public abstract String getDescription();
