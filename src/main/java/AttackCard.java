@@ -48,6 +48,6 @@ public class AttackCard extends Card {
 
     @Override
     public String toString() {
-        return super.toString() + " [x" + hits + "]";
+        return super.toString() + " [Damage = " + getDamage() + "x" + hits + "]";
     }
 }
