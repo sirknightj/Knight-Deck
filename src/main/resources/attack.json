@@ -1,0 +1,20 @@
+[
+  {
+    "name":"Stab",
+    "cost":1,
+    "damage":8,
+    "times":1
+  },
+  {
+    "name":"Double tap",
+    "cost":1,
+    "damage":5,
+    "times":2
+  },
+  {
+    "name":"Smash",
+    "cost":2,
+    "damage":18,
+    "times":1
+  }
+]
