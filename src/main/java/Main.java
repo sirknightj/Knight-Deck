@@ -19,12 +19,7 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
 
-        Gson gson = new Gson();
-        try {
-            loadAttackCards(gson);
-        } catch (URISyntaxException | IOException e) {
-            System.err.println("Failed to load attack cards");
-        }
+        loadCards(new Gson(), "cards.json");
 
         System.out.println("List of cards: ");
         for (Card card : CardFactory.getAllCards()) {
@@ -32,14 +27,14 @@ public class Main {
         }
 
         // Creating a new player
-        player = new Player("Admin", 50, 2, testDeck(), 3);
+        player = new Player("Admin", 50, 2, testDeck());
         System.out.println(player.getDeck());
 
         // Initializing the bear's cards
         List<Card> bearCards = new ArrayList<>();
         bearCards.add(CardFactory.getCard("Slash"));
         bearCards.add(CardFactory.getCard("Charge"));
-        Enemy enemy = new Enemy("Bear", 40, 1, bearCards);
+        Enemy enemy = new Enemy("Bear", 40, 2, bearCards);
 
         // Adding the bear to the enemy list
         List<Enemy> enemies = new ArrayList<>();
@@ -51,19 +46,19 @@ public class Main {
     }
 
     /**
-     * Loads all attack cards into CardFactory from data file
-     * @param gson Gson instance
-     * @throws URISyntaxException
-     * @throws IOException
+     * Loads all cards into CardFactory from data file
+     * @param gson      Gson instance
+     * @param dataFile  Name of the JSON resource file containing card data
      */
-    private static void loadAttackCards(Gson gson) throws URISyntaxException, IOException {
-        // file containing attack card data
-        Reader attackCardFile = Files.newBufferedReader(Paths.get(Main.class.getResource("cards.json").toURI()));
-
-        List<Card> cards = gson.fromJson(attackCardFile, new TypeToken<List<Card>>() {}.getType());
-
-        for (Card card : cards) {
-            CardFactory.addCard(card);
+    private static void loadCards(Gson gson, String dataFile) {
+        try {
+            Reader attackCardFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
+            List<Card> cards = gson.fromJson(attackCardFile, new TypeToken<List<Card>>() {}.getType());
+            for (Card card : cards) {
+                CardFactory.addCard(card);
+            }
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException("Failed to load cards");
         }
     }
 
@@ -72,11 +67,13 @@ public class Main {
      */
     private static List<Card> testDeck() {
         List<Card> playerDeck = new ArrayList<>();
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < 3; i++) {
             playerDeck.add(CardFactory.getCard("Stab"));
         }
         playerDeck.add(CardFactory.getCard("Smash"));
-        playerDeck.add(CardFactory.getCard("Double tap"));
+        playerDeck.add(CardFactory.getCard("Defensive Stance"));
+        playerDeck.add(CardFactory.getCard("Block"));
+        playerDeck.add(CardFactory.getCard("Double Tap"));
         return playerDeck;
     }
 }

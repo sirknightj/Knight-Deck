@@ -7,10 +7,10 @@ import java.util.Set;
  * Creates Cards
  */
 public class CardFactory {
-    private static Map<String, Card> nameToCard = new HashMap<String, Card>();
+    private static Map<String, Card> nameToCard = new HashMap<>();
 
     public static void addCard(Card card) {
-        nameToCard.put(card.getName(), card);
+        nameToCard.put(card.getName().toLowerCase(), card);
     }
 
     /**
@@ -22,18 +22,10 @@ public class CardFactory {
 
     /**
      * Returns the attack card with the given name.
-     * @param name Name of the card to get
-     * @return attack card
-     * @throws RuntimeException if no attack card with the given name is found
+     * @param name  Name of the card to get
+     * @return      Card with given name, null if card not found
      */
     public static Card getCard(String name) {
-        if (!nameToCard.containsKey(name)) {
-            throw new RuntimeException("Card " + name + " not found");
-        }
-        Card result = nameToCard.get(name);
-        if (result instanceof Card) {
-            return result;
-        }
-        throw new RuntimeException("Card " + name + " is not an AttackCard");
+        return nameToCard.get(name.toLowerCase());
     }
 }

@@ -1,47 +1,72 @@
 [
   {
-    "type": "Attack Card",
     "name": "Stab",
     "cost": 1,
     "damage": 8,
     "hits": 1,
-    "isEnemyOnly": false,
+    "playable": true,
     "defense": 0
   },
   {
-    "type": "Attack Card",
-    "name":"Double tap",
+    "name":"Double Tap",
     "cost": 1,
     "damage": 5,
     "hits": 2,
-    "isEnemyOnly": false,
+    "playable": true,
     "defense": 0
   },
   {
-    "type": "Attack Card",
     "name": "Smash",
     "cost": 2,
     "damage": 18,
     "hits": 1,
-    "isEnemyOnly": false,
+    "playable": true,
     "defense": 0
   },
   {
-    "type": "Attack Card",
     "name": "Charge",
     "cost": 1,
     "damage": 7,
     "hits": 1,
-    "isEnemyOnly": true,
+    "playable": false,
     "defense": 0
   },
   {
-    "type": "Attack Card",
     "name": "Slash",
     "cost": 1,
     "damage": 12,
     "hits": 1,
-    "isEnemyOnly": true,
+    "playable": false,
     "defense": 0
+  },
+  {
+    "name": "Bow and Arrow",
+    "cost": 1,
+    "damage": 5,
+    "hits": 1,
+    "playable": false,
+    "defense": 0
+  },
+  {
+    "name": "Barrage of Arrows",
+    "cost": 1,
+    "damage": 5,
+    "hits": 3,
+    "playable": false,
+    "defense": 0
+  },
+  {
+    "name": "Block",
+    "cost": 1,
+    "damage": 0,
+    "playable": true,
+    "defense": 6
+  },
+  {
+    "name": "Defensive Stance",
+    "cost": 2,
+    "damage": 0,
+    "playable": true,
+    "defense": 14
   }
 ]

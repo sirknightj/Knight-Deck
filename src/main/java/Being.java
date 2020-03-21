@@ -1,32 +1,28 @@
 import java.util.List;
 
 /**
- * This contains all of the elements of a being: player or enemy.
+ * This contains the elements of a basic Being.
  */
 public abstract class Being {
     protected String name;
     protected int health;
-    protected int maxHealth;
-    protected List<Card> deck;
     protected int actionPoints;
     protected int maxActionPoints;
     protected int defense;
 
     /**
-     * Constructor. Also sets actionPoints and health to their respective maximum values.
+     * Constructor. Also sets action points and health to their respective maximum values.
      * @param name the name of the being.
      * @param maxHealth the maximum health of the being.
      * @param maxActionPoints the maximum action points this being can perform, per turn.
-     * @param deck the assortment of cards available to the being.
+     * @param defense the defense of the enemy
      */
-    public Being(String name, int maxHealth, int maxActionPoints, List<Card> deck) {
+    public Being(String name, int maxHealth, int maxActionPoints, int defense) {
         this.name = name;
-        this.maxHealth = maxHealth;
         this.health = maxHealth;
-        this.maxActionPoints = maxActionPoints;
         this.actionPoints = maxActionPoints;
-        this.deck = deck;
-        this.defense = 0;
+        this.maxActionPoints = maxActionPoints;
+        this.defense = defense;
     }
 
     /**
@@ -37,52 +33,10 @@ public abstract class Being {
     }
 
     /**
-     * @param name  The new name of the being.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * @return  The health of the being.
      */
     public int getHealth() {
         return health;
-    }
-
-    /**
-     * @param health    The health of the being.
-     */
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    /**
-     * @return  The maximum health of the being.
-     */
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    /**
-     * @param maxHealth The maximum health of the being.
-     */
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    /**
-     * @return The deck of the current being.
-     */
-    public List<Card> getDeck() {
-        return deck;
-    }
-
-    /**
-     * @param deck  The deck of the current being.
-     */
-    public void setDeck(List<Card> deck) {
-        this.deck = deck;
     }
 
     /**
@@ -93,24 +47,10 @@ public abstract class Being {
     }
 
     /**
-     * @param actionPoints  The number of action points the being has.
+     * Resets the player's action points to their max.
      */
-    public void setActionPoints(int actionPoints) {
-        this.actionPoints = actionPoints;
-    }
-
-    /**
-     * @return  The maximum action points the being has.
-     */
-    public int getMaxActionPoints() {
-        return maxActionPoints;
-    }
-
-    /**
-     * @param maxActionPoints   The maximum action points the being has.
-     */
-    public void setMaxActionPoints(int maxActionPoints) {
-        this.maxActionPoints = maxActionPoints;
+    public void resetActionPoints() {
+        actionPoints = maxActionPoints;
     }
 
     /**
@@ -128,21 +68,23 @@ public abstract class Being {
     }
 
     /**
-     * @return  The health / maxHealth of the being in String form.
+     * @param damage    Damage per hit against being
+     * @param hits      Number of attacks
      */
-    public String healthStatus() {
-        if(health > 1) {
-            return name + " has " + health + "/" + maxHealth + " health";
-        } else {
-            return name + " is dead.";
-        }
-    }
+    public abstract void takeDamage(int damage, int hits);
 
     /**
-     * This being takes damage.
-     * @param damage    The damage this takes.
+     * @return  The health / maxHealth of the being in String form.
      */
-    public void takeDamage(int damage) {
-        health -= damage;
+    public abstract String healthStatus();
+
+    /**
+     * @return The deck of the current being.
+     */
+    public abstract List<Card> getDeck();
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

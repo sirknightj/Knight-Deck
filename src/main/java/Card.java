@@ -2,77 +2,96 @@
  * Immutable representation of a card.
  */
 public class Card {
-    private String type;
     private String name;
     private int cost;
-    private boolean isEnemyOnly;
+    private boolean playable;
     private int damage;
     private int hits;
     private int defense;
 
     /**
-     * Constructor. Creates a new card from its name and cost.
-     * @param name        The name of the card.
-     * @param cost        The cost to play this card.
-     * @param isEnemyOnly True if only the enemy can play this card.
+     * Constructor. Defense cards should have hits = 0.
+     * @param name        Name of the card.
+     * @param cost        Cost to play this card.
+     * @param playable    True iff the player can play this card
+     * @param damage      Amount of damage done to opponent
+     * @param hits        Number of times this damage deals damage to opponent
+     * @param defense     Amount of defense to add to the playing Being
      */
-    public Card(String type, String name, int cost, boolean isEnemyOnly, int damage, int hits, int defense) {
-        this.type = type;
+    public Card(String name, int cost, boolean playable, int damage, int hits, int defense) {
         this.name = name;
         this.cost = cost;
-        this.isEnemyOnly = isEnemyOnly;
+        this.playable = playable;
         this.damage = damage;
         this.hits = hits;
+        this.defense = defense;
     }
 
     /**
-     * @return The name of the card.
+     * @return Name of the card.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return The cost to play this card.
+     * @return Cost to play this card.
      */
     public int getCost() {
         return cost;
     }
 
     /**
-     * @return damage value of each hit.
+     * @return Damage value of each hit.
      */
     public int getDamage() {
         return damage;
     }
 
     /**
-     * @return number of hits the card performs.
+     * @return Number of hits the card performs.
      */
     public int getHits() {
         return hits;
     }
 
     /**
-     * @return True if the card can only be played by an enemy.
+     * @return Defense
      */
-    public boolean isEnemyOnly() {
-        return isEnemyOnly;
+    public int getDefense() {
+        return defense;
     }
 
     /**
-     * Causes this card to damage the given Being.
-     * @param being Being targeted by the card.
+     * @param being Being to check against
+     * @return True iff the card can be played by the given Being
      */
-    public void play(Being being) {
-        being.takeDamage(damage * hits);
+    public boolean isPlayableBy(Being being) {
+        if (being instanceof Player) {
+            return playable;
+        }
+        return !playable;
+    }
+
+    /**
+     * Causes this card to be applied by the user against the opponent.
+     * @param user      Being that uses the card
+     * @param opponent  Being that user uses the card against
+     */
+    public void play(Being user, Being opponent) {
+        if (damage * hits != 0) {
+            opponent.takeDamage(damage, hits);
+        }
+        if (defense != 0) {
+            user.setDefense(user.getDefense() + defense);
+        }
     }
 
     /**
      * @return the card's name and its cost
      */
     public String toString() {
-        return name + " [" + cost + "]" + " [Damage = " + damage + "x" + hits + "]";
+        return name + " [" + cost + "] [Att=" + damage + "x" + hits + ", Def=" + defense + "]";
     }
 
     /**
