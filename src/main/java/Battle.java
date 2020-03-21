@@ -28,7 +28,11 @@ public class Battle {
         player.initializeDeck();
         while (!isBattleOver()) {
             displayStats();
+            System.out.println();
+            planEnemyAction();
+            System.out.println();
             doPlayerAction();
+            System.out.println();
             doEnemyAction();
             player.setDefense(0);
             turn++;
@@ -46,7 +50,7 @@ public class Battle {
         player.resetActionPoints();
         System.out.println("You drew the following cards:");
         for (Card card : player.getActionDeck()) {
-            System.out.println("\t" + card.toString());
+            System.out.println("\t" + card.getDescription());
         }
 
         Scanner input = new Scanner(System.in);
@@ -56,11 +60,11 @@ public class Battle {
             if (!firstTime) {
                 System.out.println("You still have the remaining cards:");
                 for (Card card : player.getActionDeck()) {
-                    System.out.println("\t" + card.toString());
+                    System.out.println("\t" + card.getDescription());
                 }
             }
-            System.out.println("Enter the card name you want to play (e to end turn).");
             System.out.println("You have " + player.getActionPoints() + " action point(s) left this turn.");
+            System.out.println("Enter the card name you want to play (e to end turn).");
 
             // Card selection process
             Card cardToPlay;
@@ -69,6 +73,7 @@ public class Battle {
                 String response = input.nextLine();
                 if (response.toLowerCase().equals("e")) {
                     System.out.println("You have chosen to end your turn.");
+                    player.finishTurn();
                     return;
                 }
 
@@ -77,7 +82,7 @@ public class Battle {
                 if (cardToPlay == null) {
                     System.out.println("Invalid card.");
                 } else if (!player.actionDeckContains(cardToPlay)) {
-                    System.out.println("Your action deck does not have that card.");
+                    System.out.println("You don't have that card in hand.");
                 } else if (player.getActionPoints() < cardToPlay.getCost()) {
                     System.out.println("You do not have enough action points.");
                 } else {
@@ -85,12 +90,19 @@ public class Battle {
                 }
             }
 
+            //TODO: CHOOSE A TARGET
             Enemy target = enemies.get(0);
             assert (target != null);
 
             player.playCard(cardToPlay, target);
-            System.out.println("You played " + cardToPlay + "!");
-            System.out.println(target.healthStatus());
+            System.out.println("You played " + cardToPlay.getName() + "!");
+            System.out.println("\t" + cardToPlay.getCardForecast(target));
+            if(cardToPlay.getDamage() > 0) {
+                System.out.println(target.healthStatus());
+            }
+            if(cardToPlay.getDefense() > 0) {
+                System.out.println("You have " + player.getDefense() + " defense.");
+            }
             firstTime = false;
         }
         if (isBattleOver()) {
@@ -99,6 +111,23 @@ public class Battle {
             System.out.println("Your turn has automatically ended because you have no more action points.");
         } else if (player.isActionDeckEmpty()) {
             System.out.println("Your turn has automatically ended because you have no more cards in your hand.");
+        }
+        player.finishTurn();
+    }
+
+    private void planEnemyAction() {
+        for(Enemy enemy: enemies) {
+            enemy.resetActionPoints();
+            Card card = enemy.chooseCard();
+            String also = "";
+            // Enemy chooses cards until enemy's AP=0 or no valid options
+            while(card != null) {
+                enemy.intend(card);
+                System.out.println(enemy.getName() + also + " plans to use " + card.getName() + ".");
+                System.out.println("\t" + card.getDescription());
+                card = enemy.chooseCard();
+                also = " also";
+            }
         }
     }
 
@@ -112,20 +141,25 @@ public class Battle {
     /**
      * Looks inside each enemy's deck and chooses random card to play. Each card in the
      * enemy's deck has an equal chance of appearing. Repeats this process until the enemy
-     * runs out of energy for the turn.
+     * runs out of action points for the turn.
      */
     private void doEnemyAction() {
         checkForDeadEnemies();
         for (Enemy enemy : enemies) {
-            enemy.resetActionPoints();
             enemy.setDefense(0);
 
-            // Play enemy's cards until enemy's AP=0 or no valid options
-            Card card = enemy.chooseCard();
-            while (card != null && !player.isDead()) {
+            // Play enemy's cards that it intended to play
+            while (!enemy.isIntendEmpty() && !player.isDead()) {
+                Card card = enemy.getIntendedCard();
                 enemy.playCard(card, player);
-                System.out.println(enemy.getName() + " has played " + card);
-                card = enemy.chooseCard();
+                System.out.println(enemy.getName() + " plays " + card.getName() + "!");
+                System.out.println("\t" + card.getCardForecast(player));
+                if(card.getDamage() > 0) {
+                    System.out.println(player.healthStatus());
+                }
+                if(card.getDefense() > 0) {
+                    System.out.println(enemy.getName() + " has " + enemy.getDefense() + " defense.");
+                }
             }
 
             System.out.println(enemy.getName() + " has ended their turn.");
@@ -136,7 +170,7 @@ public class Battle {
      * Prints out the turn count, and the health of every being on the battlefield.
      */
     private void displayStats() {
-        System.out.println("Turn " + turn);
+        System.out.println("--Turn " + turn + "--");
         System.out.println(player.healthStatus());
         for (Enemy enemy : enemies) {
             System.out.println(enemy.healthStatus());

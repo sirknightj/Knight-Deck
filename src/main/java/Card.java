@@ -11,12 +11,13 @@ public class Card {
 
     /**
      * Constructor. Defense cards should have hits = 0.
-     * @param name        Name of the card.
-     * @param cost        Cost to play this card.
-     * @param playable    True iff the player can play this card
-     * @param damage      Amount of damage done to opponent
-     * @param hits        Number of times this damage deals damage to opponent
-     * @param defense     Amount of defense to add to the playing Being
+     *
+     * @param name     Name of the card.
+     * @param cost     Cost to play this card.
+     * @param playable True iff the player can play this card
+     * @param damage   Amount of damage done to opponent
+     * @param hits     Number of times this damage deals damage to opponent
+     * @param defense  Amount of defense to add to the playing Being
      */
     public Card(String name, int cost, boolean playable, int damage, int hits, int defense) {
         this.name = name;
@@ -75,8 +76,9 @@ public class Card {
 
     /**
      * Causes this card to be applied by the user against the opponent.
-     * @param user      Being that uses the card
-     * @param opponent  Being that user uses the card against
+     *
+     * @param user     Being that uses the card
+     * @param opponent Being that user uses the card against
      */
     public void play(Being user, Being opponent) {
         if (damage * hits != 0) {
@@ -88,16 +90,49 @@ public class Card {
     }
 
     /**
-     * @return the card's name and its cost
+     * @return all the stats about the card
      */
     public String toString() {
         return name + " [" + cost + "] [Att=" + damage + "x" + hits + ", Def=" + defense + "]";
     }
 
     /**
-     * @return a description of how much damage this card deals.
+     * @return a description of what this card does, ignoring the things it doesn't do.
      */
     public String getDescription() {
-        return "Deals " + damage + (hits != 1 ? " x " + hits : "") + " damage.";
+        String description = name + " [" + cost + "] ";
+        if (damage > 0) {
+            description += "Deals " + damage + (hits != 1 ? "x" + hits : "") + " damage. ";
+        }
+        if (defense > 0) {
+            description += "Applies " + defense + " defense. ";
+        }
+        return description.trim();
+    }
+
+    /**
+     * Forecasts the total damage dealt, based on the being's stats.
+     *
+     * @param being The intended target of the card.
+     * @return a string forecast of the amount of damage the card will do.
+     */
+    public String getCardForecast(Being being) {
+        String output = name;
+        if (damage > 0) {
+            output += " deals " + Math.max(damage - being.getDefense(), 0);
+        }
+        if (hits > 1) {
+            output += "x" + hits;
+        }
+        if (damage * hits > 0) {
+            output += " damage to " + being.getName();
+        }
+        if (defense > 0) {
+            if(damage * hits > 0) {
+                output += " and";
+            }
+            output += " applies " + defense + " defense to self";
+        }
+        return output + ".";
     }
 }

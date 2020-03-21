@@ -14,31 +14,38 @@ import java.util.List;
  */
 public class Main {
 
+    public static final boolean DEBUGSTATS = false; //Displays debug information about the game.
     private static Player player; //The player.
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
 
         loadCards(new Gson(), "cards.json");
+        loadEnemies(new Gson(), "enemies.json");
 
-        System.out.println("List of cards: ");
-        for (Card card : CardFactory.getAllCards()) {
-            System.out.println("\t" + card.toString());
+        if (DEBUGSTATS) { // to see if all the cards and enemies initialized correctly
+            System.out.println("List of all cards:");
+            for (Card card : CardFactory.getAllCards()) {
+                System.out.println("\t" + card.toString());
+            }
+            System.out.println("List of all enemies:");
+            for (Enemy e : EnemyFactory.getAllEnemies()) {
+                System.out.println("\t" + e.toString());
+            }
         }
 
         // Creating a new player
         player = new Player("Admin", 50, 2, testDeck());
-        System.out.println(player.getDeck());
+        if (DEBUGSTATS) { // checking if the player has initialized correctly
+            System.out.println("Your deck is as follows:");
+            for (Card card : player.getDeck()) {
+                System.out.println("\t" + card.getDescription());
+            }
+        }
 
-        // Initializing the bear's cards
-        List<Card> bearCards = new ArrayList<>();
-        bearCards.add(CardFactory.getCard("Slash"));
-        bearCards.add(CardFactory.getCard("Charge"));
-        Enemy enemy = new Enemy("Bear", 40, 2, bearCards);
-
-        // Adding the bear to the enemy list
+        // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
-        enemies.add(enemy);
+        enemies.add(EnemyFactory.getEnemy("Beast"));
 
         // Battle
         Battle battle = new Battle(player, enemies);
@@ -47,13 +54,16 @@ public class Main {
 
     /**
      * Loads all cards into CardFactory from data file
-     * @param gson      Gson instance
-     * @param dataFile  Name of the JSON resource file containing card data
+     *
+     * @param gson     Gson instance
+     * @param dataFile Name of the JSON resource file containing card data
+     * @throws RuntimeException iff the cards failed to load.
      */
     private static void loadCards(Gson gson, String dataFile) {
         try {
-            Reader attackCardFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
-            List<Card> cards = gson.fromJson(attackCardFile, new TypeToken<List<Card>>() {}.getType());
+            Reader cardFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
+            List<Card> cards = gson.fromJson(cardFile, new TypeToken<List<Card>>() {
+            }.getType());
             for (Card card : cards) {
                 CardFactory.addCard(card);
             }
@@ -63,11 +73,36 @@ public class Main {
     }
 
     /**
-     * @return  A preset card deck for testing purposes.
+     * Loads all enemies into EnemyFactory from data file
+     *
+     * @param gson     Gson instance
+     * @param dataFile Name of the JSON resource file containing enemy data
+     * @throws RuntimeException iff the the enemies failed to load.
+     */
+    private static void loadEnemies(Gson gson, String dataFile) {
+        try {
+            Reader enemyFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
+            List<Enemy> enemies = gson.fromJson(enemyFile, new TypeToken<List<Enemy>>() {
+            }.getType());
+            for (Enemy enemy : enemies) {
+                List<Card> newDeck = new ArrayList<>();
+                for (String invalidCard : enemy.getUnofficialDeck()) {
+                    newDeck.add(CardFactory.getCard(invalidCard));
+                }
+                enemy.setDeck(newDeck);
+                EnemyFactory.addEnemy(enemy);
+            }
+        } catch (URISyntaxException | IOException e) {
+            throw new RuntimeException("Failed to load enemies");
+        }
+    }
+
+    /**
+     * @return A preset card deck for testing purposes.
      */
     private static List<Card> testDeck() {
         List<Card> playerDeck = new ArrayList<>();
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             playerDeck.add(CardFactory.getCard("Stab"));
         }
         playerDeck.add(CardFactory.getCard("Smash"));

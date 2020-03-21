@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Archer",
+    "maxHealth": 20,
+    "maxActionPoints": 1,
+    "unofficialDeck": ["Bow and Arrow", "Triple Shot", "Triple Shot"]
+  },
+  {
+    "name": "Bear",
+    "maxHealth": 40,
+    "maxActionPoints": 1,
+    "unofficialDeck": ["Slash", "Charge"]
+  },
+  {
+    "name": "Wizard",
+    "maxHealth": 21,
+    "maxActionPoints": 2,
+    "unofficialDeck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield"]
+  },
+  {
+    "name": "Beast",
+    "maxHealth": 250,
+    "maxActionPoints": 3,
+    "unofficialDeck": ["Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Dab"]
+  }
+]

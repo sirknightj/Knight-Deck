@@ -22,8 +22,9 @@ public class CardFactory {
 
     /**
      * Returns the attack card with the given name.
-     * @param name  Name of the card to get
-     * @return      Card with given name, null if card not found
+     *
+     * @param name Name of the card to get
+     * @return Card with given name, null if card not found
      */
     public static Card getCard(String name) {
         return nameToCard.get(name.toLowerCase());

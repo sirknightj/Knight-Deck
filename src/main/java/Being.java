@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -5,45 +6,57 @@ import java.util.List;
  */
 public abstract class Being {
     protected String name;
+    protected int maxHealth;
     protected int health;
     protected int actionPoints;
     protected int maxActionPoints;
     protected int defense;
+    protected List<Card> deck;
 
     /**
      * Constructor. Also sets action points and health to their respective maximum values.
-     * @param name the name of the being.
-     * @param maxHealth the maximum health of the being.
+     *
+     * @param name            the name of the being.
+     * @param maxHealth       the maximum health of the being.
      * @param maxActionPoints the maximum action points this being can perform, per turn.
-     * @param defense the defense of the enemy
+     * @param deck            the deck that the being has
      */
-    public Being(String name, int maxHealth, int maxActionPoints, int defense) {
+    public Being(String name, int maxHealth, int maxActionPoints, List<Card> deck) {
         this.name = name;
+        this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.actionPoints = maxActionPoints;
         this.maxActionPoints = maxActionPoints;
-        this.defense = defense;
+        this.deck = new ArrayList<>(deck);
+        this.defense = 0;
     }
 
     /**
-     * @return  The name of the being.
+     * @return The name of the being.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return  The health of the being.
+     * @return The health of the being.
      */
     public int getHealth() {
         return health;
     }
 
     /**
-     * @return  The action points of the being.
+     * @return The action points of the being.
      */
     public int getActionPoints() {
-        return this.actionPoints;
+        return actionPoints;
+    }
+
+    /**
+     * @return The maximum action points of the being.
+     */
+    public int getMaxActionPoints() {
+        return maxActionPoints;
     }
 
     /**
@@ -54,7 +67,7 @@ public abstract class Being {
     }
 
     /**
-     * @return  The current defense this being has.
+     * @return The current defense this being has.
      */
     public int getDefense() {
         return defense;
@@ -68,23 +81,31 @@ public abstract class Being {
     }
 
     /**
-     * @param damage    Damage per hit against being
-     * @param hits      Number of attacks
+     * @param damage Damage per hit against being
+     * @param hits   Number of attacks
      */
     public abstract void takeDamage(int damage, int hits);
 
     /**
-     * @return  The health / maxHealth of the being in String form.
+     * @return The health / maxHealth of the being in String form.
      */
-    public abstract String healthStatus();
+    public String healthStatus() {
+        if (health > 0) {
+            return name + " has " + health + "/" + maxHealth + " health" + ((defense > 0) ? " and " + defense + " defense." : ".");
+        } else {
+            return name + " is dead.";
+        }
+    };
 
     /**
      * @return The deck of the current being.
      */
-    public abstract List<Card> getDeck();
+    public List<Card> getDeck() {
+        return new ArrayList<>(deck);
+    }
 
     @Override
     public String toString() {
-        return name;
+        return name + ": " + health + "/" + maxHealth + ". Deck: " + deck;
     }
 }
