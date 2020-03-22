@@ -15,7 +15,7 @@
     "name": "Wizard",
     "health": 21,
     "actionPoints": 2,
-    "deck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield"]
+    "deck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield", "Fireball"]
   },
   {
     "name": "Beast",

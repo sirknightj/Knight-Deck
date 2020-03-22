@@ -42,6 +42,13 @@
     "hits": 1
   },
   {
+    "name": "Fireball",
+    "cost": 2,
+    "playable": false,
+    "damage": 12,
+    "hits": 1
+  },
+  {
     "name": "Triple Shot",
     "cost": 1,
     "playable": false,
