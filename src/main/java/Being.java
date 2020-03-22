@@ -84,7 +84,12 @@ public abstract class Being {
      * @param damage Damage per hit against being
      * @param hits   Number of attacks
      */
-    public abstract void takeDamage(int damage, int hits);
+    public void takeDamage(int damage, int hits) {
+        assert (damage > 0);
+        assert (hits > 0);
+        damage = Math.max(damage - defense, 0);
+        health = Math.max(health - damage * hits, 0);
+    }
 
     /**
      * @return The health / maxHealth of the being in String form.

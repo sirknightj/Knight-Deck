@@ -116,7 +116,7 @@ public class Card {
      * @param being The intended target of the card.
      * @return a string forecast of the amount of damage the card will do.
      */
-    public String getCardForecast(Being being) {
+    public String forecast(Being being) {
         String output = name;
         if (damage > 0) {
             output += " deals " + Math.max(damage - being.getDefense(), 0);

@@ -119,11 +119,4 @@ public class Enemy extends Being {
         return deck.get((int) (Math.random() * deck.size()));
     }
 
-    @Override
-    public void takeDamage(int damage, int hits) {
-        assert (damage > 0);
-        assert (hits > 0);
-        damage = Math.max(damage - defense, 0);
-        health = Math.max(health - damage * hits, 0);
-    }
 }

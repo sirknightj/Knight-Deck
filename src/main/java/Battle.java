@@ -96,7 +96,7 @@ public class Battle {
 
             player.playCard(cardToPlay, target);
             System.out.println("You played " + cardToPlay.getName() + "!");
-            System.out.println("\t" + cardToPlay.getCardForecast(target));
+            System.out.println("\t" + cardToPlay.forecast(target));
             if(cardToPlay.getDamage() > 0) {
                 System.out.println(target.healthStatus());
             }
@@ -115,6 +115,12 @@ public class Battle {
         player.finishTurn();
     }
 
+
+    /**
+     * Looks inside each enemy's deck and chooses random card they intend to play. Each card in the
+     * enemy's deck has an equal chance of appearing. Repeats this process until the enemy
+     * runs out of action points for the turn.
+     */
     private void planEnemyAction() {
         for(Enemy enemy: enemies) {
             enemy.resetActionPoints();
@@ -139,9 +145,7 @@ public class Battle {
     }
 
     /**
-     * Looks inside each enemy's deck and chooses random card to play. Each card in the
-     * enemy's deck has an equal chance of appearing. Repeats this process until the enemy
-     * runs out of action points for the turn.
+     *  Each enemy plays the cards that they intended to do.
      */
     private void doEnemyAction() {
         checkForDeadEnemies();
@@ -153,7 +157,7 @@ public class Battle {
                 Card card = enemy.getIntendedCard();
                 enemy.playCard(card, player);
                 System.out.println(enemy.getName() + " plays " + card.getName() + "!");
-                System.out.println("\t" + card.getCardForecast(player));
+                System.out.println("\t" + card.forecast(player));
                 if(card.getDamage() > 0) {
                     System.out.println(player.healthStatus());
                 }

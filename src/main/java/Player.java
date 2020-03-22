@@ -105,20 +105,6 @@ public class Player extends Being {
     }
 
     /**
-     * Tells the player to take damage
-     *
-     * @param damage Damage per hit against being
-     * @param hits   Number of attacks
-     */
-    @Override
-    public void takeDamage(int damage, int hits) {
-        assert (damage > 0);
-        assert (hits > 0);
-        damage = Math.max(damage - defense, 0);
-        health = Math.max(health - damage * hits, 0);
-    }
-
-    /**
      * @return True iff the player is dead.
      */
     public boolean isDead() {
