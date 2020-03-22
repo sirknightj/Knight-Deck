@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
 public class Enemy extends Being {
 
-    private List<String> unofficialDeck; // used when loading cards from a file
+    private List<Card> deck; // current deck of cards
     private Queue<Card> intent; // the cards the enemy intends to use this turn
 
     /**
@@ -18,11 +19,12 @@ public class Enemy extends Being {
     public Enemy(String name, int maxHealth, int maxActionPoints, List<Card> deck) {
         super(name, maxHealth, maxActionPoints, deck);
 
-        assert (!deck.isEmpty());
+        assert !deck.isEmpty();
         // make sure each card is a valid enemy card
         for (Card card : deck) {
-            assert (card.isPlayableBy(this));
+            assert card.isPlayableBy(this);
         }
+        this.deck = deck;
 
         intent = new LinkedList<>();
     }
@@ -43,20 +45,6 @@ public class Enemy extends Being {
     }
 
     /**
-     * @param deck the new deck of the enemy.
-     */
-    public void setDeck(List<Card> deck) {
-        this.deck = deck;
-    }
-
-    /**
-     * @return the names of all the cards in the deck.
-     */
-    public List<String> getUnofficialDeck() {
-        return unofficialDeck;
-    }
-
-    /**
      * Adds the intended card into the enemy's intent queue, and takes away the
      * appropriate number of action points away.
      *
@@ -64,12 +52,12 @@ public class Enemy extends Being {
      */
     public void intend(Card card) {
         actionPoints -= card.getCost();
-        assert (actionPoints >= 0);
+        assert actionPoints >= 0;
         intent.add(card);
     }
 
     /**
-     * @return true if the enemy's intent queue is empty.
+     * @return true iff the enemy's intent queue is empty.
      */
     public boolean isIntendEmpty() {
         return intent.isEmpty();
@@ -77,12 +65,11 @@ public class Enemy extends Being {
 
     /**
      * Returns true iff the card already exists in the intent queue.
+     *
      * @param card the card to be checked.
      * @return true iff the card exists in the intent queue.
      */
     public boolean intendContains(Card card) {
-        System.out.println(card);
-        System.out.println("intent" + intent);
         return intent.contains(card);
     }
 
@@ -125,6 +112,13 @@ public class Enemy extends Being {
      */
     public Card getRandomCard() {
         return deck.get((int) (Math.random() * deck.size()));
+    }
+
+    /**
+     * @return a copy of this Enemy with the same name, health, action points, and deck.
+     */
+    public Enemy copy() {
+        return new Enemy(name, maxHealth, maxActionPoints, new ArrayList<>(deck));
     }
 
 }

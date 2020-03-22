@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -14,7 +15,6 @@ import java.util.Scanner;
  * This is the driver class of the program.
  */
 public class Main {
-
     public static final boolean DEBUGSTATS = false; //Displays debug information about the game.
     private static Player player; // The player.
     private static double difficulty; // The difficulty
@@ -22,8 +22,8 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
         difficulty = 1.0;
-        loadCards(new Gson(), "cards.json");
-        loadEnemies(new Gson(), "enemies.json");
+        loadCards("cards.json");
+        loadEnemies("enemies.json");
 
         if (DEBUGSTATS) { // to see if all the cards and enemies initialized correctly
             System.out.println("List of all cards:");
@@ -74,14 +74,13 @@ public class Main {
     /**
      * Loads all cards into CardFactory from data file
      *
-     * @param gson     Gson instance
      * @param dataFile Name of the JSON resource file containing card data
      * @throws RuntimeException iff the cards failed to load.
      */
-    private static void loadCards(Gson gson, String dataFile) {
+    private static void loadCards(String dataFile) {
         try {
             Reader cardFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
-            List<Card> cards = gson.fromJson(cardFile, new TypeToken<List<Card>>() {
+            List<Card> cards = new Gson().fromJson(cardFile, new TypeToken<List<Card>>() {
             }.getType());
             for (Card card : cards) {
                 CardFactory.addCard(card);
@@ -94,22 +93,21 @@ public class Main {
     /**
      * Loads all enemies into EnemyFactory from data file
      *
-     * @param gson     Gson instance
      * @param dataFile Name of the JSON resource file containing enemy data
      * @throws RuntimeException iff the the enemies failed to load.
      */
-    private static void loadEnemies(Gson gson, String dataFile) {
+    private static void loadEnemies(String dataFile) {
         try {
             Reader enemyFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
+
+            Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Enemy.class, new EnemyDeckDeserializer())
+                .create();
+
             List<Enemy> enemies = gson.fromJson(enemyFile, new TypeToken<List<Enemy>>() {
             }.getType());
             for (Enemy enemy : enemies) {
-                List<Card> newDeck = new ArrayList<>();
-                for (String invalidCard : enemy.getUnofficialDeck()) {
-                    newDeck.add(CardFactory.getCard(invalidCard));
-                }
-                enemy.setDeck(newDeck);
-                EnemyFactory.addEnemy(enemy);
+                EnemyFactory.addEnemyType(enemy);
             }
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException("Failed to load enemies");
