@@ -7,6 +7,7 @@ public class Enemy extends Being {
 
     private List<Card> deck; // current deck of cards
     private Queue<Card> intent; // the cards the enemy intends to use this turn
+    private int cost;
 
     /**
      * Constructor.
@@ -16,8 +17,9 @@ public class Enemy extends Being {
      * @param maxActionPoints The max action points of the enemy.
      * @param deck            The deck the enemy has.
      */
-    public Enemy(String name, int maxHealth, int maxActionPoints, List<Card> deck) {
+    public Enemy(String name, int maxHealth, int maxActionPoints, List<Card> deck, int cost) {
         super(name, maxHealth, maxActionPoints, deck);
+        this.cost = cost;
 
         assert !deck.isEmpty();
         // make sure each card is a valid enemy card
@@ -42,6 +44,13 @@ public class Enemy extends Being {
      */
     public int getMaxHealth() {
         return maxHealth;
+    }
+
+    /**
+     * @return The cost to place this enemy on the battlefield.
+     */
+    public int getCost() {
+        return cost;
     }
 
     /**

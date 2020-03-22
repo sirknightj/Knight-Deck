@@ -3,21 +3,21 @@
     "name": "Stab",
     "cost": 1,
     "playable": true,
-    "damage": 8,
+    "damage": 6,
     "hits": 1
   },
   {
     "name": "Double Tap",
     "cost": 1,
     "playable": true,
-    "damage": 5,
+    "damage": 4,
     "hits": 2
   },
   {
     "name": "Smash",
     "cost": 2,
     "playable": true,
-    "damage": 18,
+    "damage": 15,
     "hits": 1
   },
   {
@@ -49,11 +49,11 @@
     "hits": 1
   },
   {
-    "name": "Triple Shot",
+    "name": "Quick Draw",
     "cost": 1,
     "playable": false,
     "damage": 5,
-    "hits": 3
+    "hits": 2
   },
   {
     "name": "Dab",
@@ -64,33 +64,60 @@
     "defense": 200
   },
   {
+    "name": "Crossbow",
+    "cost": 1,
+    "playable": false,
+    "damage": 8,
+    "hits": 3
+  },
+  {
+    "name": "Quick Shot",
+    "cost": 1,
+    "playable": false,
+    "damage": 6,
+    "hits": 2
+  },
+  {
+    "name": "Barrage",
+    "cost": 2,
+    "playable": false,
+    "damage": 7,
+    "hits": 3
+  },
+  {
     "name": "Block",
     "cost": 1,
     "playable": true,
-    "defense": 6
+    "defense": 2
   },
   {
     "name": "Defensive Stance",
     "cost": 2,
     "playable": true,
-    "defense": 14
+    "defense": 5
   },
   {
     "name": "Magic Shield",
     "cost": 1,
     "playable": false,
-    "defense": 5
+    "defense": 2
   },
   {
     "name": "Fortify",
     "cost": 1,
     "playable": false,
-    "defense": 10
+    "defense": 5
   },
   {
     "name": "Roar",
     "cost": 1,
     "playable": false,
     "defense": 8
+  },
+  {
+    "name": "Defend",
+    "cost": 1,
+    "playable": false,
+    "defense": 6
   }
 ]

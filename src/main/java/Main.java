@@ -15,9 +15,10 @@ import java.util.Scanner;
  * This is the driver class of the program.
  */
 public class Main {
-    public static final boolean DEBUGSTATS = false; //Displays debug information about the game.
+    public static final boolean DEBUGSTATS = true; //Displays debug information about the game.
     private static Player player; // The player.
     private static double difficulty; // The difficulty
+    public static final int BATTLEFIELD_SIZE = 3;
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
@@ -48,6 +49,9 @@ public class Main {
         Scanner input = new Scanner(System.in);
         String response = "";
         while (!response.equalsIgnoreCase("q")) {
+            if (DEBUGSTATS) {
+                System.out.println("Difficulty " + difficulty);
+            }
             System.out.println("What would you like to do?");
             System.out.println("\t" + "b to battle");
             System.out.println("\t" + "h to visit the field hospital");
@@ -101,8 +105,8 @@ public class Main {
             Reader enemyFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
 
             Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Enemy.class, new EnemyDeckDeserializer())
-                .create();
+                    .registerTypeAdapter(Enemy.class, new EnemyDeckDeserializer())
+                    .create();
 
             List<Enemy> enemies = gson.fromJson(enemyFile, new TypeToken<List<Enemy>>() {
             }.getType());
@@ -135,15 +139,18 @@ public class Main {
     private static void toBattle() {
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
-        for(int i = 0; i < difficulty; i++) {
-            int whichEnemy = (int) (Math.random() * 3);
-            if(whichEnemy == 0) {
-                enemies.add(EnemyFactory.getEnemy("Archer"));
-            } else if(whichEnemy == 1) {
-                enemies.add(EnemyFactory.getEnemy("Wizard"));
-            } else {
-                enemies.add(EnemyFactory.getEnemy("Bear"));
+        int costOfThisField = 0;
+        int end = 0;
+
+        Object[] enemyList = EnemyFactory.getAllEnemies().toArray();
+        while (enemies.isEmpty() || end < 10) {
+            Enemy enemy = (Enemy) enemyList[(int) (Math.random() * enemyList.length)];
+            if(enemy.getCost() + costOfThisField < difficulty) {
+                enemies.add(enemy);
+                costOfThisField += enemy.getCost();
+                end = 0;
             }
+            end++;
         }
 
         // Battle
