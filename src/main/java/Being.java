@@ -118,6 +118,9 @@ public abstract class Being {
         return new ArrayList<>(deck);
     }
 
+    /**
+     * @return A string representation of the being.
+     */
     @Override
     public String toString() {
         return name + ": " + health + "/" + maxHealth + ". Deck: " + deck;

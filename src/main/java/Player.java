@@ -7,11 +7,12 @@ import java.util.Stack;
  * Immutable representation of the player.
  */
 public class Player extends Being {
-    private static final int CARDS_PER_DRAW = 3;
+    private static final int CARDS_PER_DRAW = 4; // the cards the player draws per turn
 
     private Stack<Card> drawPile; // the cards the player is yet to draw.
     private List<Card> actionDeck; // the cards in the player's hand.
     private Stack<Card> discardPile; // the cards the player has already seen.
+    private int gold; // the gold the player will stockpile and use
 
     /**
      * Constructor. Also fills the Player's health and action points to full.
@@ -24,9 +25,24 @@ public class Player extends Being {
             assert (card.isPlayableBy(this));
         }
 
+        gold = 0;
         drawPile = new Stack<>();
         actionDeck = new ArrayList<>();
         discardPile = new Stack<>();
+    }
+
+    /**
+     * @return the gold in the player's inventory
+     */
+    public int getGold() {
+        return gold;
+    }
+
+    /**
+     * @param gold the amount of gold to add to the player's inventory.
+     */
+    public void addGold(int gold) {
+        this.gold += gold;
     }
 
     /**
@@ -37,6 +53,14 @@ public class Player extends Being {
         discardPile.clear();
         actionDeck.clear();
         drawPile.addAll(deck);
+    }
+
+    /**
+     * Adds a card into the player's deck.
+     * @param card the card to be added into the player's deck.
+     */
+    public void deckAdd(Card card) {
+        deck.add(card);
     }
 
     /**
@@ -121,5 +145,10 @@ public class Player extends Being {
         if (this.health > maxHealth) {
             this.health = maxHealth;
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + ". Gold: " + gold;
     }
 }

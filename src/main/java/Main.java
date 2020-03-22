@@ -17,11 +17,12 @@ public class Main {
     public static final boolean DEBUGSTATS = true; //Displays debug information about the game.
     private static Player player; // The player.
     private static double difficulty; // The difficulty
-    public static final int BATTLEFIELD_SIZE = 3;
+    public static final int BATTLEFIELD_SIZE = 3; // the maximum number of enemies on the battlefield
+    public static final double DROP_CHANCE = 0.4; // the chance that the enemy will drop a card for the player to find.
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
-        difficulty = 1.0;
+        difficulty = 1.9;
         loadCards("cards.json");
         loadEnemies("enemies.json");
 
@@ -37,7 +38,7 @@ public class Main {
         }
 
         // Creating a new player
-        player = new Player("Admin", 50, 2, testDeck());
+        player = new Player("Admin", 50, 3, testDeck());
         if (DEBUGSTATS) { // checking if the player has initialized correctly
             System.out.println("Your deck is as follows:");
             for (Card card : player.getDeck()) {
@@ -64,6 +65,7 @@ public class Main {
             } else if (response.equals("h")) {
                 visitHospital();
             } else if (response.equals("s")) {
+                System.out.println("You have " + player.getGold() + " gold.");
                 System.out.println("Coming soon.");
             } else if (response.equals("q")) {
                 System.out.println("Thanks for playing Knight Deck!");
@@ -144,7 +146,7 @@ public class Main {
                 costOfThisField += enemy.getCost();
                 end = 0;
             }
-            if(enemies.size() >= BATTLEFIELD_SIZE) {
+            if (enemies.size() >= BATTLEFIELD_SIZE) {
                 break;
             }
             end++;

@@ -4,41 +4,52 @@
     "health": 45,
     "actionPoints": 1,
     "deck": ["Bow and Arrow", "Quick Draw", "Quick Draw"],
-    "cost": 1
+    "cost": 1,
+    "gold": 10,
+    "cardDrops": ["Roll", "Dab"]
   },
   {
     "name": "Mounted Crossbowman",
     "health": 56,
     "actionPoints": 2,
     "deck": ["Crossbow", "Crossbow", "Quick Shot", "Barrage"],
-    "cost": 2
+    "cost": 2,
+    "gold": 20,
+    "cardDrops": ["Dab", "Somersault", "Compound Bow"]
   },
   {
     "name": "Armored Crossbowman",
     "health": 70,
     "actionPoints": 2,
     "deck": ["Crossbow", "Crossbow", "Quick Shot", "Defend"],
-    "cost": 4
+    "cost": 4,
+    "gold": 25,
+    "cardDrops": ["Battle Axe", "Hack and Slash"]
   },
   {
     "name": "Bear",
     "health": 35,
     "actionPoints": 1,
     "deck": ["Slash", "Charge"],
-    "cost": 1
+    "cost": 1,
+    "gold": 5,
+    "cardDrops": ["Double Tap", "Stab"]
   },
   {
     "name": "Wizard",
     "health": 21,
     "actionPoints": 2,
     "deck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield", "Fireball"],
-    "cost": 1
+    "cost": 1,
+    "cardDrops": ["Defensive Stance", "Block"]
   },
   {
     "name": "Beast",
     "health": 250,
     "actionPoints": 3,
-    "deck": ["Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Dab"],
-    "cost": 10
+    "deck": ["Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Finishing Blow"],
+    "cost": 10,
+    "gold": 69,
+    "cardDrops": ["Battle Axe", "Hack and Slash"]
   }
 ]

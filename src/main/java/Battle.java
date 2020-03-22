@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,6 +10,7 @@ public class Battle {
     private Player player; // the player to battle.
     private List<Enemy> enemies; // the enemies to battle.
     private int turn; // the current turn number.
+    private List<Card> possibleCardDrops; // the card drops from all the enemies combined.
 
     /**
      * Constructor. Also sets the turn count to 1, and if there is more than 1 enemy,
@@ -20,6 +23,7 @@ public class Battle {
         this.player = player;
         this.enemies = enemies;
         turn = 1;
+        possibleCardDrops = new ArrayList<>();
 
         if (enemies.size() > 1) {
             for (int i = 1; i <= enemies.size(); i++) {
@@ -46,7 +50,8 @@ public class Battle {
             turn++;
             System.out.println();
         }
-        System.out.println("=== Battle has finished! ===");
+        System.out.print("=== Battle has finished! ===\n");
+        doCardAdding();
         System.out.println(player.healthStatus());
     }
 
@@ -168,6 +173,15 @@ public class Battle {
      * Checks if any enemy is dead and removes them from the battlefield.
      */
     private void checkForDeadEnemies() {
+        for (Enemy enemy : enemies) {
+            if (enemy.getHealth() <= 0) {
+                int amount = enemy.getGold(); // the gold amount is randomized.
+                player.addGold(amount);
+                System.out.println("You have gained " + amount + " gold!");
+                possibleCardDrops.addAll(enemy.getCardDrops());
+                System.out.println(possibleCardDrops.toString());
+            }
+        }
         enemies.removeIf(enemy -> enemy.getHealth() <= 0);
     }
 
@@ -217,5 +231,59 @@ public class Battle {
     private boolean isBattleOver() {
         checkForDeadEnemies();
         return player.isDead() || enemies.isEmpty();
+    }
+
+    /**
+     * Lets the player choose between a few drops from the enemies who have perished on the battlefield.
+     */
+    private void doCardAdding() {
+        possibleCardDrops.removeIf(card -> Math.random() <= Main.DROP_CHANCE); // removes some cards from the possible drops.
+        Card cardToAdd = null;
+        if (possibleCardDrops.isEmpty()) {
+            System.out.println("The enemies didn't drop anything...");
+        } else if (possibleCardDrops.size() == 1) {
+            cardToAdd = possibleCardDrops.get((int) (possibleCardDrops.size() * Math.random()));
+            System.out.println("After inspecting the enemy's bodies, you discover " + cardToAdd.getName() + ".");
+            System.out.println("\t" + cardToAdd.getDescription());
+            System.out.println("Do you want to add this card into your deck? (y/n)");
+            System.out.print("> ");
+            Scanner input = new Scanner(System.in);
+            String response = input.nextLine();
+            while (!(response.equals("y") || response.equals("n"))) {
+                System.out.println("Invalid input.");
+                System.out.print("> ");
+                response = input.nextLine();
+            }
+            if (response.equals("n")) {
+                cardToAdd = null;
+            }
+        } else {
+            Collections.shuffle(possibleCardDrops);
+            Card cardToAdd1 = possibleCardDrops.get(0);
+            System.out.println("After inspecting the enemy's bodies, you discover " + cardToAdd1.getName() + " (1).");
+            System.out.println("\t" + cardToAdd1.getDescription());
+            Card cardToAdd2 = possibleCardDrops.get(1);
+            System.out.println("And you also discover " + cardToAdd2.getName() + " (2).");
+            System.out.println("\t" + cardToAdd2.getDescription());
+            System.out.println("You can only add one card per battle.");
+            System.out.println("Which number card do you want to add? (any other number for none)");
+            System.out.print("> ");
+            Scanner input = new Scanner(System.in);
+            while (!input.hasNextInt()) {
+                input.nextLine();
+                System.out.println("Invalid input.");
+                System.out.print("> ");
+            }
+            int number = input.nextInt();
+            if (number == 1) {
+                cardToAdd = cardToAdd1;
+            } else if (number == 2) {
+                cardToAdd = cardToAdd2;
+            }
+        }
+        if (cardToAdd != null) {
+            player.deckAdd(cardToAdd);
+            System.out.println("You have added " + cardToAdd.getName() + " to your deck.");
+        }
     }
 }

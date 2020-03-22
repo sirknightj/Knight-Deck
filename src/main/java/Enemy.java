@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -7,7 +6,9 @@ public class Enemy extends Being {
 
     private List<Card> deck; // current deck of cards
     private Queue<Card> intent; // the cards the enemy intends to use this turn
-    private int cost;
+    private int cost; // the cost to place this enemy on the battlefield
+    private int gold; // the maximum gold this enemy drops on defeat
+    private List<Card> cardDrops; // the cards this enemy drops on defeat
 
     /**
      * Constructor.
@@ -17,9 +18,11 @@ public class Enemy extends Being {
      * @param maxActionPoints The max action points of the enemy.
      * @param deck            The deck the enemy has.
      */
-    public Enemy(String name, int maxHealth, int maxActionPoints, List<Card> deck, int cost) {
+    public Enemy(String name, int maxHealth, int maxActionPoints, List<Card> deck, int cost, int gold, List<Card> cardDrops) {
         super(name, maxHealth, maxActionPoints, deck);
         this.cost = cost;
+        this.gold = gold;
+        this.cardDrops = cardDrops;
 
         assert !deck.isEmpty();
         // make sure each card is a valid enemy card
@@ -52,6 +55,24 @@ public class Enemy extends Being {
      */
     public int getCost() {
         return cost;
+    }
+
+    /**
+     * @return A random amount of gold equal to or less than the gold.
+     */
+    public int getGold() {
+        int goldDrop = 0;
+        while(goldDrop < 1) {
+            goldDrop = (int) (Math.random() * gold);
+        }
+        return goldDrop;
+    }
+
+    /**
+     * @return The card drops for this enemy
+     */
+    public List<Card> getCardDrops() {
+        return cardDrops;
     }
 
     /**
