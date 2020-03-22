@@ -134,38 +134,30 @@ public class Main {
     private static void toBattle() {
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
-
         int costOfThisField = 0;
         int end = 0;
-
         Object[] enemyList = EnemyFactory.getAllEnemies().toArray();
         while (enemies.isEmpty() || end < 10) {
-            Enemy enemy = (Enemy) enemyList[(int) (Math.random() * enemyList.length)];
-            if (enemy.getCost() + costOfThisField < difficulty) {
+            Enemy enemy = ((EnemyTemplate) enemyList[(int) (Math.random() * enemyList.length)]).create();
+            if (enemy.getCost() + costOfThisField <= difficulty) {
                 enemies.add(enemy);
                 costOfThisField += enemy.getCost();
                 end = 0;
-
-                for (int i = 0; i < difficulty; i++) {
-                    int whichEnemy = (int) (Math.random() * 3);
-                    if (whichEnemy == 0) {
-                        enemies.add(EnemyFactory.getEnemy("Archer"));
-                    } else if (whichEnemy == 1) {
-                        enemies.add(EnemyFactory.getEnemy("Wizard"));
-                    } else {
-                        enemies.add(EnemyFactory.getEnemy("Bear"));
-
-                    }
-                    end++;
-                }
-
-                // Battle
-                Battle battle = new Battle(player, enemies);
-                battle.start();
-                difficulty *= 1.24;
             }
+            if(enemies.size() >= BATTLEFIELD_SIZE) {
+                break;
+            }
+            end++;
         }
+
+        // Battle
+        Battle battle = new Battle(player, enemies);
+        battle.start();
+
+        // Post-battle
+        difficulty *= 1.24;
     }
+
 
     /**
      * Driver for when the player visits the hospital.
@@ -176,5 +168,4 @@ public class Main {
         player.heal(player.getMaxHealth() - player.getHealth());
         System.out.println(player.healthStatus());
     }
-}
 }

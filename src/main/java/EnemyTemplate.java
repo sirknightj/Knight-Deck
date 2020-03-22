@@ -9,6 +9,7 @@ import java.util.List;
 public class EnemyTemplate {
     public final String name;
     public final List<String> deck; // names of the deck
+    public final int cost;
 
     @SerializedName(value = "health")
     public final int maxHealth;
@@ -19,11 +20,12 @@ public class EnemyTemplate {
     /**
      * Constructor
      */
-    public EnemyTemplate(String name, int maxHealth, int maxActionPoints, List<String> deck) {
+    public EnemyTemplate(String name, int maxHealth, int maxActionPoints, List<String> deck, int cost) {
         this.name = name;
         this.maxHealth = maxHealth;
         this.maxActionPoints = maxActionPoints;
         this.deck = deck;
+        this.cost = cost;
     }
 
     /**
@@ -36,13 +38,13 @@ public class EnemyTemplate {
         for (String cardName : deck) {
             cards.add(CardFactory.getCard(cardName));
         }
-        return new Enemy(name, maxHealth, maxActionPoints, cards);
+        return new Enemy(name, maxHealth, maxActionPoints, cards, cost);
     }
 
     /**
-     * @return String representation of this template, including name, health, action points, and deck
+     * @return String representation of this template, including name, health, action points, deck, and cost
      */
     public String toString() {
-        return name + ": " + maxHealth + " HP, " + maxActionPoints + " AP. Deck: " + deck;
+        return name + ": " + maxHealth + " HP, " + maxActionPoints + " AP. Deck: " + deck + ". Cost: " + cost + ".";
     }
 }
