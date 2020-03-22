@@ -111,8 +111,6 @@ public abstract class Being {
         }
     }
 
-    ;
-
     /**
      * @return The deck of the current being.
      */

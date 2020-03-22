@@ -4,16 +4,16 @@ import java.util.*;
  * Creates Enemies
  */
 public class EnemyFactory {
-    private static Map<String, Enemy> nameToEnemy = new HashMap<>();
+    private static Map<String, EnemyTemplate> nameToEnemy = new HashMap<>();
 
-    public static void addEnemyType(Enemy enemy) {
-        nameToEnemy.put(enemy.getName().toLowerCase(), enemy);
+    public static void addEnemyTemplate(EnemyTemplate enemy) {
+        nameToEnemy.put(enemy.name.toLowerCase(), enemy);
     }
 
     /**
      * @return Set of all Enemies
      */
-    public static Set<Enemy> getAllEnemies() {
+    public static Set<EnemyTemplate> getAllEnemies() {
         return new HashSet<>(nameToEnemy.values());
     }
 
@@ -24,7 +24,7 @@ public class EnemyFactory {
      * @return New enemy of the given type, null if enemy not found
      */
     public static Enemy getEnemy(String name) {
-        Enemy template = nameToEnemy.get(name.toLowerCase());
-        return (template == null) ? null : template.copy();
+        EnemyTemplate template = nameToEnemy.get(name.toLowerCase());
+        return (template == null) ? null : template.create();
     }
 }
