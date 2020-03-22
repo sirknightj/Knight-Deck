@@ -110,4 +110,16 @@ public class Player extends Being {
     public boolean isDead() {
         return health <= 0;
     }
+
+    /**
+     * Heals the player, not allowing their health to go above max.
+     *
+     * @param health the amount of health to be restored.
+     */
+    public void heal(int health) {
+        this.health += health;
+        if (this.health > maxHealth) {
+            this.health = maxHealth;
+        }
+    }
 }

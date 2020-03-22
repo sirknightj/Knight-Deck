@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * This is the driver class of the program.
@@ -15,11 +16,12 @@ import java.util.List;
 public class Main {
 
     public static final boolean DEBUGSTATS = false; //Displays debug information about the game.
-    private static Player player; //The player.
+    private static Player player; // The player.
+    private static double difficulty; // The difficulty
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
-
+        difficulty = 1.0;
         loadCards(new Gson(), "cards.json");
         loadEnemies(new Gson(), "enemies.json");
 
@@ -43,14 +45,30 @@ public class Main {
             }
         }
 
-        // Adding the enemies to battle
-        List<Enemy> enemies = new ArrayList<>();
-        enemies.add(EnemyFactory.getEnemy("Archer"));
-        enemies.add(EnemyFactory.getEnemy("Wizard"));
-
-        // Battle
-        Battle battle = new Battle(player, enemies);
-        battle.start();
+        Scanner input = new Scanner(System.in);
+        String response = "";
+        while (!response.equalsIgnoreCase("q")) {
+            System.out.println("What would you like to do?");
+            System.out.println("\t" + "b to battle");
+            System.out.println("\t" + "h to visit the field hospital");
+            System.out.println("\t" + "s to check out the shop");
+            System.out.println("\t" + "q to quit");
+            System.out.print("Action> ");
+            response = input.nextLine().toLowerCase();
+            System.out.println();
+            if (response.equals("b")) {
+                toBattle();
+            } else if (response.equals("h")) {
+                visitHospital();
+            } else if (response.equals("s")) {
+                System.out.println("Coming soon.");
+            } else if (response.equals("q")) {
+                System.out.println("Thanks for playing Knight Deck!");
+            } else {
+                System.out.println("Unrecognizable input.");
+            }
+            System.out.println();
+        }
     }
 
     /**
@@ -111,5 +129,35 @@ public class Main {
         playerDeck.add(CardFactory.getCard("Block"));
         playerDeck.add(CardFactory.getCard("Double Tap"));
         return playerDeck;
+    }
+
+    private static void toBattle() {
+        // Adding the enemies to battle
+        List<Enemy> enemies = new ArrayList<>();
+        for(int i = 0; i < difficulty; i++) {
+            int whichEnemy = (int) (Math.random() * 3);
+            if(whichEnemy == 0) {
+                enemies.add(EnemyFactory.getEnemy("Archer"));
+            } else if(whichEnemy == 1) {
+                enemies.add(EnemyFactory.getEnemy("Wizard"));
+            } else {
+                enemies.add(EnemyFactory.getEnemy("Bear"));
+            }
+        }
+
+        // Battle
+        Battle battle = new Battle(player, enemies);
+        battle.start();
+        difficulty *= 1.24;
+    }
+
+    /**
+     * Driver for when the player visits the hospital.
+     */
+    private static void visitHospital() {
+        System.out.println("Cleric: Welcome to the field hospital. For now, I'll heal you for free.");
+        System.out.println("\tCleric used heal.");
+        player.heal(player.getMaxHealth() - player.getHealth());
+        System.out.println(player.healthStatus());
     }
 }

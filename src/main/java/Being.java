@@ -46,6 +46,13 @@ public abstract class Being {
     }
 
     /**
+     * @return THe max health of the being.
+     */
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    /**
      * @return The action points of the being.
      */
     public int getActionPoints() {

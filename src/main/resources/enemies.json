@@ -15,7 +15,7 @@
     "name": "Wizard",
     "maxHealth": 21,
     "maxActionPoints": 2,
-    "unofficialDeck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield"]
+    "unofficialDeck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield", "Fireball"]
   },
   {
     "name": "Beast",
