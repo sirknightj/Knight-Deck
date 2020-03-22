@@ -131,6 +131,9 @@ public class Main {
         return playerDeck;
     }
 
+    /**
+     * Random enemy selection, and starts the battle.
+     */
     private static void toBattle() {
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
