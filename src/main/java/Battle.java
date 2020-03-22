@@ -1,4 +1,5 @@
-import java.util.*;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * The driver class for battles.
@@ -9,7 +10,8 @@ public class Battle {
     private int turn; // the current turn number.
 
     /**
-     * Constructor. Also sets the turn count to 1.
+     * Constructor. Also sets the turn count to 1, and if there is more than 1 enemy,
+     * assigns numbers to their names for player convenience when targeting.
      *
      * @param player  The player to battle.
      * @param enemies The enemies to battle.
@@ -18,6 +20,12 @@ public class Battle {
         this.player = player;
         this.enemies = enemies;
         turn = 1;
+
+        if (enemies.size() > 1) {
+            for (int i = 1; i <= enemies.size(); i++) {
+                enemies.get(i - 1).addToName(" (" + i + ")");
+            }
+        }
     }
 
     /**
@@ -58,7 +66,7 @@ public class Battle {
         while (player.getActionPoints() > 0 && !player.isActionDeckEmpty() && !isBattleOver()) {
             // Card selection
             if (!firstTime) {
-                System.out.println("You still have the remaining cards:");
+                System.out.println("\nYou still have the remaining cards:");
                 for (Card card : player.getActionDeck()) {
                     System.out.println("\t" + card.getDescription());
                 }
@@ -90,17 +98,37 @@ public class Battle {
                 }
             }
 
-            //TODO: CHOOSE A TARGET
-            Enemy target = enemies.get(0);
+            // Enemy selection process.
+            Enemy target = null;
+            if (enemies.size() == 1 || cardToPlay.getDamage() * cardToPlay.getHits() == 0) {
+                target = enemies.get(0);
+            } else {
+                System.out.println("Which enemy number do you want to target?");
+                while (target == null) {
+                    System.out.print("Enemy> ");
+                    if (input.hasNextInt()) {
+                        String response = input.nextLine();
+                        for (Enemy enemy : enemies) {
+                            if (enemy.getName().toLowerCase().contains(response.toLowerCase())) {
+                                target = enemy;
+                            }
+                        }
+                    }
+                    if (target == null) {
+                        System.out.println("Invalid enemy.");
+                    }
+                }
+            }
+
             assert (target != null);
 
             player.playCard(cardToPlay, target);
             System.out.println("You played " + cardToPlay.getName() + "!");
             System.out.println("\t" + cardToPlay.forecast(target));
-            if(cardToPlay.getDamage() > 0) {
+            if (cardToPlay.getDamage() > 0) {
                 System.out.println(target.healthStatus());
             }
-            if(cardToPlay.getDefense() > 0) {
+            if (cardToPlay.getDefense() > 0) {
                 System.out.println("You have " + player.getDefense() + " defense.");
             }
             firstTime = false;
@@ -115,19 +143,18 @@ public class Battle {
         player.finishTurn();
     }
 
-
     /**
      * Looks inside each enemy's deck and chooses random card they intend to play. Each card in the
      * enemy's deck has an equal chance of appearing. Repeats this process until the enemy
      * runs out of action points for the turn.
      */
     private void planEnemyAction() {
-        for(Enemy enemy: enemies) {
+        for (Enemy enemy : enemies) {
             enemy.resetActionPoints();
             Card card = enemy.chooseCard();
             String also = "";
             // Enemy chooses cards until enemy's AP=0 or no valid options
-            while(card != null) {
+            while (card != null) {
                 enemy.intend(card);
                 System.out.println(enemy.getName() + also + " plans to use " + card.getName() + ".");
                 System.out.println("\t" + card.getDescription());
@@ -145,7 +172,7 @@ public class Battle {
     }
 
     /**
-     *  Each enemy plays the cards that they intended to do.
+     * Each enemy plays the cards that they intended to do.
      */
     private void doEnemyAction() {
         checkForDeadEnemies();
@@ -158,10 +185,10 @@ public class Battle {
                 enemy.playCard(card, player);
                 System.out.println(enemy.getName() + " plays " + card.getName() + "!");
                 System.out.println("\t" + card.forecast(player));
-                if(card.getDamage() > 0) {
+                if (card.getDamage() > 0) {
                     System.out.println(player.healthStatus());
                 }
-                if(card.getDefense() > 0) {
+                if (card.getDefense() > 0) {
                     System.out.println(enemy.getName() + " has " + enemy.getDefense() + " defense.");
                 }
             }

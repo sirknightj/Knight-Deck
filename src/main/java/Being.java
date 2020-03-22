@@ -81,6 +81,8 @@ public abstract class Being {
     }
 
     /**
+     * Tells the being to take damage, with defense factored in.
+     *
      * @param damage Damage per hit against being
      * @param hits   Number of attacks
      */
@@ -100,7 +102,9 @@ public abstract class Being {
         } else {
             return name + " is dead.";
         }
-    };
+    }
+
+    ;
 
     /**
      * @return The deck of the current being.
