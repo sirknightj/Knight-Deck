@@ -28,6 +28,14 @@ public class Enemy extends Being {
     }
 
     /**
+     * Appends a String to the enemy's name.
+     * @param nameAddition the string to append.
+     */
+    public void addToName(String nameAddition) {
+        name += nameAddition;
+    }
+
+    /**
      * @return The max health of the enemy.
      */
     public int getMaxHealth() {

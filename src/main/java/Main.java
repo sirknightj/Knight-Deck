@@ -45,7 +45,8 @@ public class Main {
 
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
-        enemies.add(EnemyFactory.getEnemy("Beast"));
+        enemies.add(EnemyFactory.getEnemy("Archer"));
+        enemies.add(EnemyFactory.getEnemy("Wizard"));
 
         // Battle
         Battle battle = new Battle(player, enemies);
