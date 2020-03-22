@@ -1,5 +1,4 @@
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class Main {
                 System.out.println("\t" + card.toString());
             }
             System.out.println("List of all enemies:");
-            for (Enemy e : EnemyFactory.getAllEnemies()) {
+            for (EnemyTemplate e : EnemyFactory.getAllEnemies()) {
                 System.out.println("\t" + e.toString());
             }
         }
@@ -104,14 +103,10 @@ public class Main {
         try {
             Reader enemyFile = Files.newBufferedReader(Paths.get(Main.class.getResource(dataFile).toURI()));
 
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Enemy.class, new EnemyDeckDeserializer())
-                    .create();
-
-            List<Enemy> enemies = gson.fromJson(enemyFile, new TypeToken<List<Enemy>>() {
+            List<EnemyTemplate> enemies = new Gson().fromJson(enemyFile, new TypeToken<List<EnemyTemplate>>() {
             }.getType());
-            for (Enemy enemy : enemies) {
-                EnemyFactory.addEnemyType(enemy);
+            for (EnemyTemplate enemy : enemies) {
+                EnemyFactory.addEnemyTemplate(enemy);
             }
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException("Failed to load enemies");
@@ -139,24 +134,37 @@ public class Main {
     private static void toBattle() {
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
+
         int costOfThisField = 0;
         int end = 0;
 
         Object[] enemyList = EnemyFactory.getAllEnemies().toArray();
         while (enemies.isEmpty() || end < 10) {
             Enemy enemy = (Enemy) enemyList[(int) (Math.random() * enemyList.length)];
-            if(enemy.getCost() + costOfThisField < difficulty) {
+            if (enemy.getCost() + costOfThisField < difficulty) {
                 enemies.add(enemy);
                 costOfThisField += enemy.getCost();
                 end = 0;
-            }
-            end++;
-        }
 
-        // Battle
-        Battle battle = new Battle(player, enemies);
-        battle.start();
-        difficulty *= 1.24;
+                for (int i = 0; i < difficulty; i++) {
+                    int whichEnemy = (int) (Math.random() * 3);
+                    if (whichEnemy == 0) {
+                        enemies.add(EnemyFactory.getEnemy("Archer"));
+                    } else if (whichEnemy == 1) {
+                        enemies.add(EnemyFactory.getEnemy("Wizard"));
+                    } else {
+                        enemies.add(EnemyFactory.getEnemy("Bear"));
+
+                    }
+                    end++;
+                }
+
+                // Battle
+                Battle battle = new Battle(player, enemies);
+                battle.start();
+                difficulty *= 1.24;
+            }
+        }
     }
 
     /**
@@ -168,4 +176,5 @@ public class Main {
         player.heal(player.getMaxHealth() - player.getHealth());
         System.out.println(player.healthStatus());
     }
+}
 }

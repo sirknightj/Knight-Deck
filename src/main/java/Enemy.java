@@ -33,6 +33,7 @@ public class Enemy extends Being {
 
     /**
      * Appends a String to the enemy's name.
+     *
      * @param nameAddition the string to append.
      */
     public void addToName(String nameAddition) {
@@ -121,13 +122,6 @@ public class Enemy extends Being {
      */
     public Card getRandomCard() {
         return deck.get((int) (Math.random() * deck.size()));
-    }
-
-    /**
-     * @return a copy of this Enemy with the same name, health, action points, and deck.
-     */
-    public Enemy copy() {
-        return new Enemy(name, maxHealth, maxActionPoints, new ArrayList<>(deck));
     }
 
 }
