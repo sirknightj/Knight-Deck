@@ -1,7 +1,7 @@
 [
   {
     "name": "Archer",
-    "health": 45,
+    "health": 30,
     "actionPoints": 1,
     "deck": ["Bow and Arrow", "Quick Draw", "Quick Draw"],
     "cost": 1,
@@ -10,12 +10,12 @@
   },
   {
     "name": "Mounted Crossbowman",
-    "health": 56,
+    "health": 46,
     "actionPoints": 2,
     "deck": ["Crossbow", "Crossbow", "Quick Shot", "Barrage"],
     "cost": 2,
     "gold": 20,
-    "cardDrops": ["Dab", "Somersault", "Compound Bow"]
+    "cardDrops": ["Dab", "Somersault", "Compound Bow", "Twin Scythe"]
   },
   {
     "name": "Armored Crossbowman",
@@ -24,7 +24,43 @@
     "deck": ["Crossbow", "Crossbow", "Quick Shot", "Defend"],
     "cost": 4,
     "gold": 25,
-    "cardDrops": ["Battle Axe", "Hack and Slash"]
+    "cardDrops": ["Double tap", "Compound Bow", "Golden Scythe"]
+  },
+  {
+    "name": "Knight",
+    "health": 60,
+    "actionPoints": 1,
+    "deck": ["Crossbow", "Slash", "Quick Shot", "Defend"],
+    "cost": 3,
+    "gold": 16,
+    "cardDrops": ["Pummel", "Hack and Slash"]
+  },
+  {
+    "name": "Armored Knight",
+    "health": 95,
+    "actionPoints": 2,
+    "deck": ["Crossbow", "Slash", "Quick Shot", "Defend", "Defend"],
+    "cost": 5,
+    "gold": 35,
+    "cardDrops": ["Battle Axe", "Beatdown", "Pummel"]
+  },
+  {
+    "name": "Golden Armored Knight",
+    "health": 135,
+    "actionPoints": 2,
+    "deck": ["Crossbow", "Slash", "Slash", "Quick Shot", "Charge"],
+    "cost": 8,
+    "gold": 60,
+    "cardDrops": ["Relentless Beatdown", "Beatdown"]
+  },
+  {
+    "name": "Wolf",
+    "health": 16,
+    "actionPoints": 1,
+    "deck": ["Bite", "Gnaw"],
+    "cost": 0.7,
+    "gold": 8,
+    "cardDrops": ["Stab"]
   },
   {
     "name": "Bear",
@@ -33,7 +69,7 @@
     "deck": ["Slash", "Charge"],
     "cost": 1,
     "gold": 5,
-    "cardDrops": ["Double Tap", "Stab"]
+    "cardDrops": ["Double Tap", "Stab", "Spin Attack"]
   },
   {
     "name": "Wizard",
@@ -41,6 +77,7 @@
     "actionPoints": 2,
     "deck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield", "Fireball"],
     "cost": 1,
+    "gold": 16,
     "cardDrops": ["Defensive Stance", "Block"]
   },
   {
@@ -50,6 +87,6 @@
     "deck": ["Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Finishing Blow"],
     "cost": 10,
     "gold": 69,
-    "cardDrops": ["Battle Axe", "Hack and Slash"]
+    "cardDrops": ["Great Spin Attack", "Hack and Slash"]
   }
 ]

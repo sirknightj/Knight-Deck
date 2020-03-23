@@ -52,7 +52,6 @@ public class Battle {
         }
         System.out.print("=== Battle has finished! ===\n");
         doCardAdding();
-        System.out.println(player.healthStatus());
     }
 
     /**
@@ -105,7 +104,7 @@ public class Battle {
 
             // Enemy selection process.
             Enemy target = null;
-            if (enemies.size() == 1 || cardToPlay.getDamage() * cardToPlay.getHits() == 0) {
+            if (enemies.size() == 1 || cardToPlay.getDamage() * cardToPlay.getHits() == 0 || cardToPlay.isAttackAll()) {
                 target = enemies.get(0);
             } else {
                 System.out.println("Which enemy number do you want to target?");
@@ -124,14 +123,12 @@ public class Battle {
                     }
                 }
             }
-
             assert (target != null);
-
-            player.playCard(cardToPlay, target);
             System.out.println("You played " + cardToPlay.getName() + "!");
-            System.out.println("\t" + cardToPlay.forecast(target));
-            if (cardToPlay.getDamage() > 0) {
-                System.out.println(target.healthStatus());
+            if (cardToPlay.isAttackAll()) {
+                player.playCard(cardToPlay, enemies);
+            } else {
+                player.playCard(cardToPlay, target);
             }
             if (cardToPlay.getDefense() > 0) {
                 System.out.println("You have " + player.getDefense() + " defense.");
@@ -179,7 +176,6 @@ public class Battle {
                 player.addGold(amount);
                 System.out.println("You have gained " + amount + " gold!");
                 possibleCardDrops.addAll(enemy.getCardDrops());
-                System.out.println(possibleCardDrops.toString());
             }
         }
         enemies.removeIf(enemy -> enemy.getHealth() <= 0);
@@ -196,15 +192,9 @@ public class Battle {
             // Play enemy's cards that it intended to play
             while (!enemy.isIntendEmpty() && !player.isDead()) {
                 Card card = enemy.getIntendedCard();
-                enemy.playCard(card, player);
                 System.out.println(enemy.getName() + " plays " + card.getName() + "!");
-                System.out.println("\t" + card.forecast(player));
-                if (card.getDamage() > 0) {
-                    System.out.println(player.healthStatus());
-                }
-                if (card.getDefense() > 0) {
-                    System.out.println(enemy.getName() + " has " + enemy.getDefense() + " defense.");
-                }
+                enemy.playCard(card, player);
+                System.out.println("Try");
             }
 
             System.out.println(enemy.getName() + " has ended their turn.");
@@ -238,12 +228,15 @@ public class Battle {
      */
     private void doCardAdding() {
         possibleCardDrops.removeIf(card -> Math.random() <= Main.DROP_CHANCE); // removes some cards from the possible drops.
+        if (Main.DEBUGSTATS) {
+            System.out.println(possibleCardDrops);
+        }
         Card cardToAdd = null;
         if (possibleCardDrops.isEmpty()) {
             System.out.println("The enemies didn't drop anything...");
         } else if (possibleCardDrops.size() == 1) {
             cardToAdd = possibleCardDrops.get((int) (possibleCardDrops.size() * Math.random()));
-            System.out.println("After inspecting the enemy's bodies, you discover " + cardToAdd.getName() + ".");
+            System.out.println("After inspecting the battlefield, you discover " + cardToAdd.getName() + ".");
             System.out.println("\t" + cardToAdd.getDescription());
             System.out.println("Do you want to add this card into your deck? (y/n)");
             System.out.print("> ");
@@ -259,8 +252,14 @@ public class Battle {
             }
         } else {
             Collections.shuffle(possibleCardDrops);
+            if (Main.DEBUGSTATS) {
+                System.out.println("Debug: Possible Card Drops");
+                for (int i = 0; i < possibleCardDrops.size(); i++) {
+                    System.out.println("\t" + possibleCardDrops.get(i));
+                }
+            }
             Card cardToAdd1 = possibleCardDrops.get(0);
-            System.out.println("After inspecting the enemy's bodies, you discover " + cardToAdd1.getName() + " (1).");
+            System.out.println("After inspecting the battlefield, you discover " + cardToAdd1.getName() + " (1).");
             System.out.println("\t" + cardToAdd1.getDescription());
             Card cardToAdd2 = possibleCardDrops.get(1);
             System.out.println("And you also discover " + cardToAdd2.getName() + " (2).");
