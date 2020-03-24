@@ -8,24 +8,29 @@ public class Card {
     private int damage;
     private int hits;
     private int defense;
+    private boolean attackAll;
+    private int shield;
 
     /**
      * Constructor. Defense cards should have hits = 0.
      *
-     * @param name     Name of the card.
-     * @param cost     Cost to play this card.
-     * @param playable True iff the player can play this card
-     * @param damage   Amount of damage done to opponent
-     * @param hits     Number of times this damage deals damage to opponent
-     * @param defense  Amount of defense to add to the playing Being
+     * @param name      Name of the card.
+     * @param cost      Cost to play this card.
+     * @param playable  True iff the player can play this card
+     * @param damage    Amount of damage done to opponent
+     * @param hits      Number of times this damage deals damage to opponent
+     * @param defense   Amount of defense to add to the playing Being
+     * @param attackAll True iff this does damage to all enemies.
      */
-    public Card(String name, int cost, boolean playable, int damage, int hits, int defense) {
+    public Card(String name, int cost, boolean playable, int damage, int hits, int defense, boolean attackAll, int shield) {
         this.name = name;
         this.cost = cost;
         this.playable = playable;
         this.damage = damage;
         this.hits = hits;
         this.defense = defense;
+        this.attackAll = attackAll;
+        this.shield = shield;
     }
 
     /**
@@ -64,6 +69,20 @@ public class Card {
     }
 
     /**
+     * @return True iff the card does damage to all enemies.
+     */
+    public boolean isAttackAll() {
+        return attackAll;
+    }
+
+    /**
+     * @return Shield
+     */
+    public int getShield() {
+        return shield;
+    }
+
+    /**
      * @param being Being to check against
      * @return True iff the card can be played by the given Being
      */
@@ -75,17 +94,25 @@ public class Card {
     }
 
     /**
-     * Causes this card to be applied by the user against the opponent.
+     * Causes this card to be applied by the user against the opponent. Also prints out the damage forecast
+     * and state of the beings after damage was taken. Takes all of the opponent's defense and shield into account.
      *
      * @param user     Being that uses the card
      * @param opponent Being that user uses the card against
      */
     public void play(Being user, Being opponent) {
         if (damage * hits != 0) {
+            System.out.println("\t" + forecast(opponent));
             opponent.takeDamage(damage, hits);
+            System.out.println("\t" + opponent.healthStatus());
         }
         if (defense != 0) {
             user.setDefense(user.getDefense() + defense);
+            System.out.println("\t" + user.getName() + " now has " + user.getDefense() + " defense.");
+        }
+        if (shield != 0) {
+            user.increaseShield(shield);
+            System.out.println("\t" + user.getName() + " now has " + user.getShield() + " shield.");
         }
     }
 
@@ -93,19 +120,27 @@ public class Card {
      * @return all the stats about the card
      */
     public String toString() {
-        return name + " [" + cost + "] [Att=" + damage + "x" + hits + ", Def=" + defense + "]";
+        return name + " [" + cost + "] [Att=" + damage + "x" + hits + ", Def=" + defense + ", AttackAll=" + attackAll + ", shield=" + shield + "]";
     }
 
     /**
      * @return a description of what this card does, ignoring the things it doesn't do.
      */
     public String getDescription() {
-        String description = name + " [" + cost + "] ";
+        String description = name + " [" + cost + "]";
         if (damage > 0) {
-            description += "Deals " + damage + (hits != 1 ? "x" + hits : "") + " damage. ";
+            description += " Deals " + damage + (hits != 1 ? "x" + hits : "") + " damage";
+            if (attackAll) {
+                description += " to all enemies.";
+            } else {
+                description += ".";
+            }
         }
         if (defense > 0) {
-            description += "Applies " + defense + " defense. ";
+            description += " Applies " + defense + " defense.";
+        }
+        if(shield > 0) {
+            description += " Applies " + shield + " shield.";
         }
         return description.trim();
     }
@@ -127,8 +162,11 @@ public class Card {
         if (damage * hits > 0) {
             output += " damage to " + being.getName();
         }
+        if (being.getShield() > 0) {
+            output += "'s " + being.getShield() + " shields";
+        }
         if (defense > 0) {
-            if(damage * hits > 0) {
+            if (damage * hits > 0) {
                 output += " and";
             }
             output += " applies " + defense + " defense to self";

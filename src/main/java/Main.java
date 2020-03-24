@@ -18,12 +18,13 @@ import java.util.Scanner;
  * This is the driver class of the program.
  */
 public class Main {
-    public static final boolean DEBUGSTATS = true; //Displays debug information about the game.
+    public static final boolean DEBUGSTATS = false; //Displays debug information about the game.
     private static Player player; // The player.
-    private static final double STARTING_DIFFICULTY = 1.9;
+    private static final double STARTING_DIFFICULTY = 1.22;
     private static double difficulty; // The difficulty
     public static final int BATTLEFIELD_SIZE = 3; // the maximum number of enemies on the battlefield
     public static final double DROP_CHANCE = 0.4; // the chance that the enemy will drop a card for the player to find.
+    public static final int TEXT_DELAY = 1600; // the text delay in milliseconds.
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
@@ -69,6 +70,7 @@ public class Main {
         while (!response.equalsIgnoreCase("q")) {
             if (DEBUGSTATS) {
                 System.out.println("Difficulty " + difficulty);
+                System.out.println(player.healthStatus());
             }
             System.out.println("What would you like to do?");
             System.out.println("\t" + "b to battle");
@@ -207,23 +209,26 @@ public class Main {
         List<Card> playerDeck = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             playerDeck.add(CardFactory.getCard("Stab"));
+            playerDeck.add(CardFactory.getCard("Shield"));
         }
-        playerDeck.add(CardFactory.getCard("Smash"));
+//        playerDeck.add(CardFactory.getCard("Smash"));
         playerDeck.add(CardFactory.getCard("Defensive Stance"));
         playerDeck.add(CardFactory.getCard("Block"));
-        playerDeck.add(CardFactory.getCard("Double Tap"));
+//        playerDeck.add(CardFactory.getCard("Double Tap"));
+//        playerDeck.add(CardFactory.getCard("Sickle"));
+//        playerDeck.add(CardFactory.getCard("Scythe"));
         return playerDeck;
     }
 
     /**
-     * Random enemy selection, and starts the battle.
+     * Selects random enemies, based on the difficulty, and starts the battle.
      */
     private static void toBattle() {
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
-        int costOfThisField = 0;
-        int end = 0;
+        double costOfThisField = 0;
         Object[] enemyList = EnemyFactory.getAllEnemies().toArray();
+        int end = 0;
         while (enemies.isEmpty() || end < 10) {
             Enemy enemy = ((EnemyTemplate) enemyList[(int) (Math.random() * enemyList.length)]).create();
             if (enemy.getCost() + costOfThisField <= difficulty) {
@@ -242,7 +247,7 @@ public class Main {
         battle.start();
 
         // Post-battle
-        difficulty *= 1.24;
+        difficulty *= 1.22;
     }
 
     /**
@@ -252,6 +257,14 @@ public class Main {
         System.out.println("Cleric: Welcome to the field hospital. For now, I'll heal you for free.");
         System.out.println("\tCleric used heal.");
         player.heal(player.getMaxHealth() - player.getHealth());
-        System.out.println(player.healthStatus());
+        System.out.println("\t" + player.healthStatus());
+    }
+
+    public static void textWait() {
+        try {
+            Thread.sleep(TEXT_DELAY);
+        } catch (InterruptedException e) {
+            System.out.println("Interrupted Exception!");
+        }
     }
 }

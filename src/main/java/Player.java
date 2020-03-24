@@ -54,10 +54,12 @@ public class Player extends Being {
         discardPile.clear();
         actionDeck.clear();
         drawPile.addAll(deck);
+        Collections.shuffle(drawPile);
     }
 
     /**
      * Adds a card into the player's deck.
+     *
      * @param card the card to be added into the player's deck.
      */
     public void deckAdd(Card card) {
@@ -89,8 +91,23 @@ public class Player extends Being {
      * @param target Enemy to attack
      */
     public void playCard(Card card, Enemy target) {
+        List<Enemy> enemies = new ArrayList<>();
+        enemies.add(target);
+        playCard(card, enemies);
+    }
+
+    /**
+     * Plays the given card against the given enemies. Card must be in the action deck.
+     * If card is solely defensive, the target does not matter.
+     *
+     * @param card    Card to play
+     * @param targets Enemies to attack
+     */
+    public void playCard(Card card, List<Enemy> targets) {
         assert (actionDeckContains(card));
-        card.play(this, target);
+        for (Enemy target : targets) {
+            card.play(this, target);
+        }
         actionPoints -= card.getCost();
         assert (actionPoints >= 0);
 

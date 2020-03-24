@@ -10,7 +10,7 @@ public class EnemyTemplate {
     public final String name; // the name of the enemy
     public final List<String> deck; // names of the deck
     public final List<String> cardDrops; // names of the cards it can drop
-    public final int cost; // the cost to deploy this enemy on the battlefield
+    public final double cost; // the cost to deploy this enemy on the battlefield
     public final int gold; // the maximum gold dropped on defeat
 
     @SerializedName(value = "health")

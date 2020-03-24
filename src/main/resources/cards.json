@@ -36,10 +36,63 @@
   },
   {
     "name": "Compound Bow",
+    "cost": 2,
+    "playable": true,
+    "damage": 16,
+    "hits": 1
+  },
+  {
+    "name": "Pummel",
     "cost": 3,
     "playable": true,
     "damage": 11,
     "hits": 2
+  },
+  {
+    "name": "Beatdown",
+    "cost": 2,
+    "playable": true,
+    "damage": 4,
+    "hits": 3
+  },
+  {
+    "name": "Relentless Beatdown",
+    "cost": 4,
+    "playable": true,
+    "damage": 5,
+    "hits": 5
+  },
+  {
+    "name": "Sickle",
+    "cost": 1,
+    "playable": true,
+    "damage": 4,
+    "hits": 1,
+    "attackAll": true
+  },
+  {
+    "name": "Scythe",
+    "cost": 2,
+    "playable": true,
+    "damage": 9,
+    "hits": 1,
+    "attackAll": true
+  },
+  {
+    "name": "Twin Scythes",
+    "cost": 2,
+    "playable": true,
+    "damage": 6,
+    "hits": 2,
+    "attackAll": true
+  },
+  {
+    "name": "Golden Scythe",
+    "cost": 3,
+    "playable": true,
+    "damage": 14,
+    "hits": 1,
+    "attackAll": true
   },
   {
     "name": "Dab",
@@ -74,6 +127,21 @@
     "playable": false,
     "damage": 12,
     "hits": 1
+  },
+  {
+    "name": "Bite",
+    "cost": 1,
+    "playable": false,
+    "damage": 4,
+    "hits": 1
+  },
+  {
+    "name": "Gnaw",
+    "cost": 1,
+    "playable": false,
+    "damage": 3,
+    "hits": 1,
+    "defense": 1
   },
   {
     "name": "Bow and Arrow",
@@ -130,6 +198,12 @@
     "cost": 1,
     "playable": true,
     "defense": 2
+  },
+  {
+    "name": "Shield",
+    "cost": 1,
+    "playable": true,
+    "shield": 6
   },
   {
     "name": "Defensive Stance",
