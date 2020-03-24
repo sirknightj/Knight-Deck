@@ -115,6 +115,27 @@ public abstract class Being {
     }
 
     /**
+     * Calculates how much damage the card will do to this being. Does not change the being's status.
+     *
+     * @param card The card to be played.
+     * @return The damage that the being should receive.
+     */
+    public int damageCalculation(Card card) {
+        return Math.max(preShieldDamageCalculation(card) - shield, 0);
+    }
+
+    /**
+     * Calculates how much damage the card will do to this being, without shields being considered.
+     * Does not change this being's status.
+     *
+     * @param card The card to be played.
+     * @return The damage that the being should receive before shields are factored in.
+     */
+    public int preShieldDamageCalculation(Card card) {
+        return Math.max(((card.getDamage() - defense) * card.getHits()), 0);
+    }
+
+    /**
      * Tells the being to take damage, with defense and shield factored in.
      *
      * @param damage Damage per hit against being
@@ -124,7 +145,7 @@ public abstract class Being {
         assert (damage > 0);
         assert (hits > 0);
         damage = Math.max((damage - defense) * hits, 0);
-        if(shield > 0) {
+        if (shield > 0) {
             int oldDamage = damage;
             damage = Math.max(damage - shield, 0);
             shield = Math.max(shield - oldDamage, 0);

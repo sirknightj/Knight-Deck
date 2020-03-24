@@ -3,7 +3,7 @@
     "name": "Archer",
     "health": 30,
     "actionPoints": 1,
-    "deck": ["Bow and Arrow", "Quick Draw", "Quick Draw"],
+    "deck": ["Bow and Arrow", "Quick Draw", "Covering Fire"],
     "cost": 1,
     "gold": 10,
     "cardDrops": ["Roll", "Dab"]
@@ -75,7 +75,7 @@
     "name": "Wizard",
     "health": 21,
     "actionPoints": 2,
-    "deck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield", "Fireball"],
+    "deck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield", "Fireball", "Bubble", "Bubble", "Bubble"],
     "cost": 1,
     "gold": 16,
     "cardDrops": ["Defensive Stance", "Block"]

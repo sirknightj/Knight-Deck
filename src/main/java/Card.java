@@ -94,6 +94,13 @@ public class Card {
     }
 
     /**
+     * @return The raw damage output of this card.
+     */
+    public int rawDamage() {
+        return damage * hits;
+    }
+
+    /**
      * Causes this card to be applied by the user against the opponent. Also prints out the damage forecast
      * and state of the beings after damage was taken. Takes all of the opponent's defense and shield into account.
      *
@@ -102,7 +109,7 @@ public class Card {
      */
     public void play(Being user, Being opponent) {
         if (damage * hits != 0) {
-            System.out.println("\t" + forecast(opponent));
+            printForecast(opponent);
             opponent.takeDamage(damage, hits);
             System.out.println("\t" + opponent.healthStatus());
         }
@@ -139,7 +146,7 @@ public class Card {
         if (defense > 0) {
             description += " Applies " + defense + " defense.";
         }
-        if(shield > 0) {
+        if (shield > 0) {
             description += " Applies " + shield + " shield.";
         }
         return description.trim();
@@ -151,26 +158,28 @@ public class Card {
      * @param being The intended target of the card.
      * @return a string forecast of the amount of damage the card will do.
      */
-    public String forecast(Being being) {
-        String output = name;
-        if (damage > 0) {
-            output += " deals " + Math.max(damage - being.getDefense(), 0);
+    public void printForecast(Being being) {
+        if (being.getDefense() > 0) {
+            if (being.getDefense() >= damage) {
+                System.out.println("\t" + being.getName() + "'s defense mitigates all damage.");
+            } else {
+                System.out.println("\t" + being.getName() + "'s defense mitigates " + Math.min(being.getDefense(), damage) + ((hits > 1) ? "x" + hits : "") + " damage.");
+            }
         }
-        if (hits > 1) {
-            output += "x" + hits;
+        if (being.getShield() > 0 && being.getDefense() < damage) {
+            System.out.println("\t" + being.getName() + "'s shield mitigates " + Math.min(being.getShield(), being.preShieldDamageCalculation(this)) + " damage.");
+            if (being.preShieldDamageCalculation(this) >= being.getShield()) {
+                System.out.println("\t" + name + " has broken " + being.getName() + "'s shields!");
+            }
         }
-        if (damage * hits > 0) {
-            output += " damage to " + being.getName();
-        }
-        if (being.getShield() > 0) {
-            output += "'s " + being.getShield() + " shields";
+        if (damage > 0 && hits > 0) {
+            System.out.println("\t" + name + " deals " + being.damageCalculation(this) + " damage to " + being.getName() + ".");
         }
         if (defense > 0) {
-            if (damage * hits > 0) {
-                output += " and";
-            }
-            output += " applies " + defense + " defense to self";
+            System.out.println("\t" + name + " applies " + defense + " defense to self.");
         }
-        return output + ".";
+        if (shield > 0) {
+            System.out.println("\t" + name + " applies " + shield + " shield to self.");
+        }
     }
 }

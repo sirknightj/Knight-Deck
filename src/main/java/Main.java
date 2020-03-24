@@ -18,7 +18,7 @@ import java.util.Scanner;
  * This is the driver class of the program.
  */
 public class Main {
-    public static final boolean DEBUGSTATS = false; //Displays debug information about the game.
+    public static final boolean DEBUGSTATS = true; // Displays debug information about the game.
     private static Player player; // The player.
     private static final double STARTING_DIFFICULTY = 1.22;
     private static double difficulty; // The difficulty
@@ -211,12 +211,12 @@ public class Main {
             playerDeck.add(CardFactory.getCard("Stab"));
             playerDeck.add(CardFactory.getCard("Shield"));
         }
-//        playerDeck.add(CardFactory.getCard("Smash"));
+        playerDeck.add(CardFactory.getCard("Smash"));
         playerDeck.add(CardFactory.getCard("Defensive Stance"));
         playerDeck.add(CardFactory.getCard("Block"));
-//        playerDeck.add(CardFactory.getCard("Double Tap"));
-//        playerDeck.add(CardFactory.getCard("Sickle"));
-//        playerDeck.add(CardFactory.getCard("Scythe"));
+        playerDeck.add(CardFactory.getCard("Double Tap"));
+        playerDeck.add(CardFactory.getCard("Sickle"));
+        playerDeck.add(CardFactory.getCard("Scythe"));
         return playerDeck;
     }
 

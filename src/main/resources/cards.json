@@ -87,6 +87,14 @@
     "attackAll": true
   },
   {
+    "name": "Spin Attack",
+    "cost": 3,
+    "playable": true,
+    "damage": 2,
+    "hits": 5,
+    "attackAll": true
+  },
+  {
     "name": "Golden Scythe",
     "cost": 3,
     "playable": true,
@@ -194,6 +202,15 @@
     "hits": 3
   },
   {
+    "name": "Covering Fire",
+    "cost": 1,
+    "playable": false,
+    "damage": 5,
+    "hits": 1,
+    "defense": 1,
+    "shield": 2
+  },
+  {
     "name": "Block",
     "cost": 1,
     "playable": true,
@@ -234,5 +251,11 @@
     "cost": 1,
     "playable": false,
     "defense": 6
+  },
+  {
+    "name": "Bubble",
+    "cost": 1,
+    "playable": false,
+    "shield": 4
   }
 ]
