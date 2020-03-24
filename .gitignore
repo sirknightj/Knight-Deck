@@ -17,4 +17,4 @@ log/
 target/
 
 # Save files
-saves/
+saves/*.json
