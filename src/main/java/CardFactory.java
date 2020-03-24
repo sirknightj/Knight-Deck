@@ -1,16 +1,20 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Creates Cards
  */
 public class CardFactory {
     private static Map<String, Card> nameToCard = new HashMap<>();
+    private static Set<Card> playerCards = new HashSet<>();
 
+    /**
+     * @param card The card to be added into the database of cards.
+     */
     public static void addCard(Card card) {
         nameToCard.put(card.getName().toLowerCase(), card);
+        if(card.isPlayableBy(new Player("Example", 0, 0, new ArrayList<>()))) {
+            playerCards.add(card);
+        }
     }
 
     /**
@@ -18,6 +22,13 @@ public class CardFactory {
      */
     public static Set<Card> getAllCards() {
         return new HashSet<>(nameToCard.values());
+    }
+
+    /**
+     * @return A read-only set of all the player cards.
+     */
+    public static Set<Card> getPlayerCards() {
+        return Collections.unmodifiableSet(playerCards);
     }
 
     /**

@@ -68,7 +68,7 @@
     "actionPoints": 1,
     "deck": ["Slash", "Charge"],
     "cost": 1,
-    "gold": 5,
+    "gold": 12,
     "cardDrops": ["Double Tap", "Stab", "Spin Attack"]
   },
   {

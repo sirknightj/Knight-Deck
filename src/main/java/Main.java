@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class Main {
     public static final boolean DEBUGSTATS = true; // Displays debug information about the game.
-    private static Player player; // The player.
+    public static Player player; // The player.
     private static final double STARTING_DIFFICULTY = 1.22;
     private static double difficulty; // The difficulty
     public static final int BATTLEFIELD_SIZE = 3; // the maximum number of enemies on the battlefield
@@ -36,6 +36,10 @@ public class Main {
             System.out.println("List of all enemies:");
             for (EnemyTemplate e : EnemyFactory.getAllEnemies()) {
                 System.out.println("\t" + e.toString());
+            }
+            System.out.println("Playable Cards:");
+            for (Card card : CardFactory.getPlayerCards()) {
+                System.out.println("\t" + card.toString());
             }
         }
 
@@ -67,6 +71,8 @@ public class Main {
         while (!response.equalsIgnoreCase("q")) {
             if (DEBUGSTATS) {
                 System.out.println("Difficulty " + difficulty);
+                System.out.println("Debug: Shop has been set to visitable.");
+                Shop.nowVisitable();
             }
             System.out.println(player.healthStatus());
             System.out.println("You have " + player.getGold() + " gold.");
@@ -80,11 +86,19 @@ public class Main {
             System.out.println();
             if (response.equals("b")) {
                 toBattle();
+                Shop.refreshContents();
+                Shop.nowVisitable();
             } else if (response.equals("h")) {
                 visitHospital();
             } else if (response.equals("s")) {
-                System.out.println("You have " + player.getGold() + " gold.");
-                System.out.println("Coming soon.");
+                if(Shop.getInstance() == null) {
+                    System.out.println("Shopkeepers: Sorry, we're currently sold out.");
+                    textWait();
+                    System.out.println("Shopkeepers: Could you come back in a bit? We'll have some more stock then.");
+                    textWait();
+                } else {
+                    Shop.getInstance().enter();
+                }
             } else if (response.equals("q")) {
                 System.out.println("Thanks for playing Knight Deck!");
             } else {
@@ -267,23 +281,16 @@ public class Main {
                 textWait();
                 System.out.println("Cleric: It looks like you're injured pretty badly.");
                 textWait();
-                if (player.getGold() >= (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4))) {
-                    System.out.println("Cleric: I can heal you all the way to full, but it'll cost you " + (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4)) + " gold (y/n).");
-                    System.out.println("\t(You have " + player.getGold() + " gold.)");
-                    System.out.print("> ");
-                    Scanner input = new Scanner(System.in);
-                    String response = input.nextLine();
-                    while (!response.equals("y") && !response.equals("n")) {
-                        System.out.println("Cleric: Sorry, I don't understand.");
-                        System.out.print("> ");
-                        response = input.nextLine();
-                    }
-                    if (response.equals("y")) {
+                int goldToHeal = (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4));
+                if (player.getGold() >= goldToHeal) {
+                    if (yesNoPrompt("Cleric: I can heal you all the way to full, but it'll cost you " +
+                            goldToHeal + " gold (y/n).\n\t(You have " + player.getGold() + " gold.)",
+                            "","Cleric: Sorry, I don't understand.")) {
                         System.out.println("Cleric: Get ready!");
                         textWait();
                         System.out.println("\t" + "Cleric used heal!");
                         textWait();
-                        player.takeGold((int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4)));
+                        player.takeGold(goldToHeal);
                         player.heal(player.getMaxHealth() - player.getHealth());
                         System.out.println("\t" + player.healthStatus());
                         textWait();
@@ -299,13 +306,12 @@ public class Main {
             System.out.println("Cleric: You don't appear to have any injuries.");
             textWait();
         }
-        if(player.getHealth() == player.getMaxHealth()) {
+        if (player.getHealth() == player.getMaxHealth()) {
             System.out.println("Cleric: Not saying you should get yourself injured, but come back when you need healing!");
-            textWait();
         } else {
             System.out.println("Cleric: Come back soon!");
-            textWait();
         }
+        textWait();
     }
 
     public static void textWait() {
@@ -314,5 +320,46 @@ public class Main {
         } catch (InterruptedException e) {
             System.out.println("Interrupted Exception!");
         }
+    }
+
+    /**
+     * Prompts the player for a yes or no (y/n) answer, repeating until they give a valid answer.
+     *
+     * @param prompt       The question in which to ask, excluding the " (y/n)?" afterwards.
+     * @param enter        The prompt line the user types after (i.e "Card"), excluding the right bracket ">" and ending space.
+     * @param errorMessage The message to play in case the user does not type in y or n.
+     * @return True if yes. False if no.
+     */
+    public static boolean yesNoPrompt(String prompt, String enter, String errorMessage) {
+        System.out.println(prompt + " (y/n)?");
+        System.out.print(enter.trim() + "> ");
+        Scanner input = new Scanner(System.in);
+        String response = input.nextLine().trim().toLowerCase();
+        while (!response.equals("y") && !response.equals("n")) {
+            System.out.println(errorMessage);
+            System.out.print(enter.trim() + "> ");
+            response = input.nextLine().trim().toLowerCase();
+        }
+        return response.equalsIgnoreCase("y");
+    }
+
+    /**
+     * Prompts the player to enter a number, repeating until they give a valid number.
+     *
+     * @param prompt       The question in which to ask.
+     * @param enter        The prompt line the user types after (i.e. "Card"), excluding the right bracket ">" and ending space.
+     * @param errorMessage The message to play in case the user does not type in a valid number.
+     * @return The integer the user typed in.
+     */
+    public static int numberPrompt(String prompt, String enter, String errorMessage) {
+        System.out.println(prompt);
+        System.out.print(enter.trim() + "> ");
+        Scanner input = new Scanner(System.in);
+        while (!input.hasNextInt()) {
+            input.nextLine();
+            System.out.println(errorMessage);
+            System.out.print(enter.trim() + "> ");
+        }
+        return input.nextInt();
     }
 }

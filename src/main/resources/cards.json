@@ -24,8 +24,24 @@
     "name": "Battle Axe",
     "cost": 3,
     "playable": true,
-    "damage": 24,
+    "damage": 38,
     "hits": 1
+  },
+  {
+    "name": "Javelin",
+    "cost": 2,
+    "playable": true,
+    "damage": 24,
+    "hits": 1,
+    "singleUse": true
+  },
+  {
+    "name": "Hunker",
+    "cost": 2,
+    "playable": true,
+    "defense": 10,
+    "shield": 6,
+    "singleUse": true
   },
   {
     "name": "Hack and Slash",

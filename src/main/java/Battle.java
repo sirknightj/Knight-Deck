@@ -235,16 +235,7 @@ public class Battle {
             cardToAdd = possibleCardDrops.get(0);
             System.out.println("After inspecting the battlefield, you discover " + cardToAdd.getName() + ".");
             System.out.println("\t" + cardToAdd.getDescription());
-            System.out.println("Do you want to add this card into your deck? (y/n)");
-            System.out.print("> ");
-            Scanner input = new Scanner(System.in);
-            String response = input.nextLine();
-            while (!(response.equals("y") || response.equals("n"))) {
-                System.out.println("Invalid input.");
-                System.out.print("> ");
-                response = input.nextLine();
-            }
-            if (response.equals("n")) {
+            if (!Main.yesNoPrompt("Do you want to add this card into your deck","","Invalid input.")) {
                 cardToAdd = null;
             }
         } else {
@@ -262,15 +253,7 @@ public class Battle {
             System.out.println("And you also discover " + cardToAdd2.getName() + " (2).");
             System.out.println("\t" + cardToAdd2.getDescription());
             System.out.println("You can only add one card per battle.");
-            System.out.println("Which number card do you want to add? (any other number for none)");
-            System.out.print("> ");
-            Scanner input = new Scanner(System.in);
-            while (!input.hasNextInt()) {
-                input.nextLine();
-                System.out.println("Invalid input.");
-                System.out.print("> ");
-            }
-            int number = input.nextInt();
+            int number = Main.numberPrompt("Which card number do you want to add to your deck (any other number for none?)","Card#", "Invalid input.");
             if (number == 1) {
                 cardToAdd = cardToAdd1;
             } else if (number == 2) {

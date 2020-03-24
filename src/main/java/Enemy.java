@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 public class Enemy extends Being {
 
@@ -59,14 +60,11 @@ public class Enemy extends Being {
     }
 
     /**
-     * @return A random amount of gold equal to or less than the gold.
+     * @return A random amount of gold equal to or less than the gold, but larger than half the gold.
      */
     public int getGold() {
-        int goldDrop = 0;
-        while (goldDrop < 1) {
-            goldDrop = (int) (Math.random() * gold);
-        }
-        return goldDrop;
+        Random r = new Random();
+        return r.nextInt(gold / 2) + (gold / 2);
     }
 
     /**

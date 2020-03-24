@@ -10,6 +10,7 @@ public class Card implements Comparable<Card> {
     private int defense;
     private boolean attackAll;
     private int shield;
+    private boolean singleUse;
 
     /**
      * Constructor. Defense cards should have hits = 0.
@@ -22,7 +23,7 @@ public class Card implements Comparable<Card> {
      * @param defense   Amount of defense to add to the playing Being
      * @param attackAll True iff this does damage to all enemies.
      */
-    public Card(String name, int cost, boolean playable, int damage, int hits, int defense, boolean attackAll, int shield) {
+    public Card(String name, int cost, boolean playable, int damage, int hits, int defense, boolean attackAll, int shield, boolean singleUse) {
         this.name = name;
         this.cost = cost;
         this.playable = playable;
@@ -127,7 +128,7 @@ public class Card implements Comparable<Card> {
      * @return all the stats about the card
      */
     public String toString() {
-        return name + " [" + cost + "] [Att=" + damage + "x" + hits + ", Def=" + defense + ", AttackAll=" + attackAll + ", shield=" + shield + "]";
+        return name + " [" + cost + "] [Att=" + damage + "x" + hits + ", Def=" + defense + ", AttackAll=" + attackAll + ", shield=" + shield + ", singleUse=" + singleUse + "]";
     }
 
     /**
@@ -148,6 +149,9 @@ public class Card implements Comparable<Card> {
         }
         if (shield > 0) {
             description += " Applies " + shield + " shield.";
+        }
+        if (singleUse) {
+            description += " Can only be used once per battle.";
         }
         return description.trim();
     }
