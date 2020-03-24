@@ -12,6 +12,7 @@ public abstract class Being {
     protected int maxActionPoints;
     protected int defense;
     protected List<Card> deck;
+    protected int shield;
 
     /**
      * Constructor. Also sets action points and health to their respective maximum values.
@@ -29,6 +30,7 @@ public abstract class Being {
         this.maxActionPoints = maxActionPoints;
         this.deck = new ArrayList<>(deck);
         this.defense = 0;
+        this.shield = 0;
     }
 
     /**
@@ -67,7 +69,7 @@ public abstract class Being {
     }
 
     /**
-     * Resets the player's action points to their max.
+     * Resets the being's action points to their max.
      */
     public void resetActionPoints() {
         actionPoints = maxActionPoints;
@@ -88,7 +90,32 @@ public abstract class Being {
     }
 
     /**
-     * Tells the being to take damage, with defense factored in.
+     * @return The current shield this being has.
+     */
+    public int getShield() {
+        return shield;
+    }
+
+    /**
+     * Adds shield to the being.
+     *
+     * @param shield The amount of shield to add.
+     */
+    public void increaseShield(int shield) {
+        this.shield += shield;
+    }
+
+    /**
+     * Resets the defense, shield, and actionPoints of the being.
+     */
+    public void turnStartStatReset() {
+        defense = 0;
+        shield = 0;
+        resetActionPoints();
+    }
+
+    /**
+     * Tells the being to take damage, with defense and shield factored in.
      *
      * @param damage Damage per hit against being
      * @param hits   Number of attacks
@@ -96,8 +123,13 @@ public abstract class Being {
     public void takeDamage(int damage, int hits) {
         assert (damage > 0);
         assert (hits > 0);
-        damage = Math.max(damage - defense, 0);
-        health = Math.max(health - damage * hits, 0);
+        damage = Math.max((damage - defense) * hits, 0);
+        if(shield > 0) {
+            int oldDamage = damage;
+            damage = Math.max(damage - shield, 0);
+            shield = Math.max(shield - oldDamage, 0);
+        }
+        health = Math.max(health - damage, 0);
     }
 
     /**
@@ -105,7 +137,10 @@ public abstract class Being {
      */
     public String healthStatus() {
         if (health > 0) {
-            return name + " has " + health + "/" + maxHealth + " health" + ((defense > 0) ? " and " + defense + " defense." : ".");
+            String output = name + " has " + health + "/" + maxHealth + " health";
+            output += (defense > 0) ? " and " + defense + " defense" : "";
+            output += (shield > 0) ? " and " + shield + " shield" : "";
+            return output.trim() + ".";
         } else {
             return name + " is dead.";
         }

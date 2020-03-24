@@ -19,6 +19,7 @@ public class Main {
     private static double difficulty; // The difficulty
     public static final int BATTLEFIELD_SIZE = 3; // the maximum number of enemies on the battlefield
     public static final double DROP_CHANCE = 0.4; // the chance that the enemy will drop a card for the player to find.
+    public static final int TEXT_DELAY = 1600; // the text delay in milliseconds.
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
@@ -123,13 +124,14 @@ public class Main {
         List<Card> playerDeck = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             playerDeck.add(CardFactory.getCard("Stab"));
+            playerDeck.add(CardFactory.getCard("Shield"));
         }
-        playerDeck.add(CardFactory.getCard("Smash"));
+//        playerDeck.add(CardFactory.getCard("Smash"));
         playerDeck.add(CardFactory.getCard("Defensive Stance"));
         playerDeck.add(CardFactory.getCard("Block"));
-        playerDeck.add(CardFactory.getCard("Double Tap"));
-        playerDeck.add(CardFactory.getCard("Sickle"));
-        playerDeck.add(CardFactory.getCard("Scythe"));
+//        playerDeck.add(CardFactory.getCard("Double Tap"));
+//        playerDeck.add(CardFactory.getCard("Sickle"));
+//        playerDeck.add(CardFactory.getCard("Scythe"));
         return playerDeck;
     }
 
@@ -171,6 +173,14 @@ public class Main {
         System.out.println("Cleric: Welcome to the field hospital. For now, I'll heal you for free.");
         System.out.println("\tCleric used heal.");
         player.heal(player.getMaxHealth() - player.getHealth());
-        System.out.println(player.healthStatus());
+        System.out.println("\t" + player.healthStatus());
+    }
+
+    public static void textWait() {
+        try {
+            Thread.sleep(TEXT_DELAY);
+        } catch (InterruptedException e) {
+            System.out.println("Interrupted Exception!");
+        }
     }
 }

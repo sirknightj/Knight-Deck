@@ -46,8 +46,8 @@ public class Battle {
             doPlayerAction();
             System.out.println();
             doEnemyAction();
-            player.setDefense(0);
             turn++;
+            player.turnStartStatReset();
             System.out.println();
         }
         System.out.print("=== Battle has finished! ===\n");
@@ -59,7 +59,6 @@ public class Battle {
      */
     private void doPlayerAction() {
         player.drawCards();
-        player.resetActionPoints();
         System.out.println("You drew the following cards:");
         for (Card card : player.getActionDeck()) {
             System.out.println("\t" + card.getDescription());
@@ -130,9 +129,6 @@ public class Battle {
             } else {
                 player.playCard(cardToPlay, target);
             }
-            if (cardToPlay.getDefense() > 0) {
-                System.out.println("You have " + player.getDefense() + " defense.");
-            }
             firstTime = false;
         }
         if (isBattleOver()) {
@@ -152,7 +148,6 @@ public class Battle {
      */
     private void planEnemyAction() {
         for (Enemy enemy : enemies) {
-            enemy.resetActionPoints();
             Card card = enemy.chooseCard();
             String also = "";
             // Enemy chooses cards until enemy's AP=0 or no valid options
@@ -187,17 +182,18 @@ public class Battle {
     private void doEnemyAction() {
         checkForDeadEnemies();
         for (Enemy enemy : enemies) {
-            enemy.setDefense(0);
+            enemy.turnStartStatReset();
 
             // Play enemy's cards that it intended to play
             while (!enemy.isIntendEmpty() && !player.isDead()) {
                 Card card = enemy.getIntendedCard();
                 System.out.println(enemy.getName() + " plays " + card.getName() + "!");
+                Main.textWait();
                 enemy.playCard(card, player);
-                System.out.println("Try");
+                Main.textWait();
             }
-
-            System.out.println(enemy.getName() + " has ended their turn.");
+            System.out.println(enemy.getName() + " has ended their turn.\n");
+            Main.textWait();
         }
     }
 
@@ -235,7 +231,7 @@ public class Battle {
         if (possibleCardDrops.isEmpty()) {
             System.out.println("The enemies didn't drop anything...");
         } else if (possibleCardDrops.size() == 1) {
-            cardToAdd = possibleCardDrops.get((int) (possibleCardDrops.size() * Math.random()));
+            cardToAdd = possibleCardDrops.get(0);
             System.out.println("After inspecting the battlefield, you discover " + cardToAdd.getName() + ".");
             System.out.println("\t" + cardToAdd.getDescription());
             System.out.println("Do you want to add this card into your deck? (y/n)");

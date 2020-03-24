@@ -200,6 +200,12 @@
     "defense": 2
   },
   {
+    "name": "Shield",
+    "cost": 1,
+    "playable": true,
+    "shield": 6
+  },
+  {
     "name": "Defensive Stance",
     "cost": 2,
     "playable": true,
