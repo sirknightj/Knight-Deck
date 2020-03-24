@@ -101,14 +101,21 @@ public abstract class Being {
     }
 
     /**
+     * @param health new health, must be non-negative
+     */
+    public void setHealth(int health) {
+        assert health >= 0;
+        this.health = health;
+    }
+
+    /**
      * @return The health / maxHealth of the being in String form.
      */
     public String healthStatus() {
-        if (health > 0) {
-            return name + " has " + health + "/" + maxHealth + " health" + ((defense > 0) ? " and " + defense + " defense." : ".");
-        } else {
+        if (health <= 0) {
             return name + " is dead.";
         }
+        return name + " has " + health + "/" + maxHealth + " health" + ((defense > 0) ? " and " + defense + " defense." : ".");
     }
 
     /**

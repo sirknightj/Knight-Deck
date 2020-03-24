@@ -39,9 +39,10 @@ public class Player extends Being {
     }
 
     /**
-     * @param gold the amount of gold to add to the player's inventory.
+     * @param gold the amount of gold to add to the player's inventory, must be >= 0.
      */
     public void addGold(int gold) {
+        assert gold >= 0;
         this.gold += gold;
     }
 
