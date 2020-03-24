@@ -109,8 +109,14 @@ public abstract class Being {
      * Resets the defense, shield, and actionPoints of the being.
      */
     public void turnStartStatReset() {
-        defense = 0;
-        shield = 0;
+        if(defense > 0) {
+            System.out.println(name + "'s defense wears off.");
+            defense = 0;
+        }
+        if(shield > 0) {
+            System.out.println(name + "'s shield wears off.");
+            shield = 0;
+        }
         resetActionPoints();
     }
 

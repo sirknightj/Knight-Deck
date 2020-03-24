@@ -47,8 +47,6 @@ public class Battle {
             System.out.println();
             doEnemyAction();
             turn++;
-            player.turnStartStatReset();
-            System.out.println();
         }
         System.out.print("=== Battle has finished! ===\n");
         doCardAdding();
@@ -183,7 +181,8 @@ public class Battle {
         checkForDeadEnemies();
         for (Enemy enemy : enemies) {
             enemy.turnStartStatReset();
-
+        }
+        for (Enemy enemy : enemies) {
             // Play enemy's cards that it intended to play
             while (!enemy.isIntendEmpty() && !player.isDead()) {
                 Card card = enemy.getIntendedCard();
@@ -199,9 +198,11 @@ public class Battle {
 
     /**
      * Prints out the turn count, and the health of every being on the battlefield.
+     * Also clears effects from the player.
      */
     private void displayStats() {
         System.out.println("--Turn " + turn + "--");
+        player.turnStartStatReset();
         System.out.println(player.healthStatus());
         for (Enemy enemy : enemies) {
             System.out.println(enemy.healthStatus());

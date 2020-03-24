@@ -9,10 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * This is the driver class of the program.
@@ -24,7 +21,7 @@ public class Main {
     private static double difficulty; // The difficulty
     public static final int BATTLEFIELD_SIZE = 3; // the maximum number of enemies on the battlefield
     public static final double DROP_CHANCE = 0.4; // the chance that the enemy will drop a card for the player to find.
-    public static final int TEXT_DELAY = 1600; // the text delay in milliseconds.
+    public static final int TEXT_DELAY = 1400; // the text delay in milliseconds.
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
@@ -70,8 +67,9 @@ public class Main {
         while (!response.equalsIgnoreCase("q")) {
             if (DEBUGSTATS) {
                 System.out.println("Difficulty " + difficulty);
-                System.out.println(player.healthStatus());
             }
+            System.out.println(player.healthStatus());
+            System.out.println("You have " + player.getGold() + " gold.");
             System.out.println("What would you like to do?");
             System.out.println("\t" + "b to battle");
             System.out.println("\t" + "h to visit the field hospital");
@@ -92,6 +90,7 @@ public class Main {
             } else {
                 System.out.println("Unrecognizable input.");
             }
+            player.sortDeck();
             makeSaveState(player, difficulty); // save after every action
             System.out.println();
         }
@@ -217,6 +216,7 @@ public class Main {
         playerDeck.add(CardFactory.getCard("Double Tap"));
         playerDeck.add(CardFactory.getCard("Sickle"));
         playerDeck.add(CardFactory.getCard("Scythe"));
+        Collections.sort(playerDeck);
         return playerDeck;
     }
 
@@ -254,10 +254,58 @@ public class Main {
      * Driver for when the player visits the hospital.
      */
     private static void visitHospital() {
-        System.out.println("Cleric: Welcome to the field hospital. For now, I'll heal you for free.");
-        System.out.println("\tCleric used heal.");
-        player.heal(player.getMaxHealth() - player.getHealth());
-        System.out.println("\t" + player.healthStatus());
+        System.out.println("Cleric: Welcome to the field hospital.");
+        textWait();
+        if (player.getHealth() < player.maxHealth) {
+            if (player.getGold() < 1) {
+                System.out.println("Cleric: I'm sorry, but I'm greedy. I need gold to heal you.");
+                textWait();
+            } else {
+                System.out.println("Cleric: Let me take a look at your wounds...");
+                textWait();
+                System.out.println("Cleric: ...");
+                textWait();
+                System.out.println("Cleric: It looks like you're injured pretty badly.");
+                textWait();
+                if (player.getGold() >= (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4))) {
+                    System.out.println("Cleric: I can heal you all the way to full, but it'll cost you " + (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4)) + " gold (y/n).");
+                    System.out.println("\t(You have " + player.getGold() + " gold.)");
+                    System.out.print("> ");
+                    Scanner input = new Scanner(System.in);
+                    String response = input.nextLine();
+                    while (!response.equals("y") && !response.equals("n")) {
+                        System.out.println("Cleric: Sorry, I don't understand.");
+                        System.out.print("> ");
+                        response = input.nextLine();
+                    }
+                    if (response.equals("y")) {
+                        System.out.println("Cleric: Get ready!");
+                        textWait();
+                        System.out.println("\t" + "Cleric used heal!");
+                        textWait();
+                        player.takeGold((int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4)));
+                        player.heal(player.getMaxHealth() - player.getHealth());
+                        System.out.println("\t" + player.healthStatus());
+                        textWait();
+                    }
+                } else {
+                    System.out.println("Cleric: Sorry, but you don't have enough gold to cover treatment.");
+                    textWait();
+                    System.out.println("Cleric: I really would like to heal you, but I'm poor and don't have any extra supplies.");
+                    textWait();
+                }
+            }
+        } else {
+            System.out.println("Cleric: You don't appear to have any injuries.");
+            textWait();
+        }
+        if(player.getHealth() == player.getMaxHealth()) {
+            System.out.println("Cleric: Not saying you should get yourself injured, but come back when you need healing!");
+            textWait();
+        } else {
+            System.out.println("Cleric: Come back soon!");
+            textWait();
+        }
     }
 
     public static void textWait() {

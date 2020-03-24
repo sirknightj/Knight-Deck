@@ -1,7 +1,7 @@
 /**
  * Immutable representation of a card.
  */
-public class Card {
+public class Card implements Comparable<Card> {
     private String name;
     private int cost;
     private boolean playable;
@@ -167,7 +167,11 @@ public class Card {
             }
         }
         if (being.getShield() > 0 && being.getDefense() < damage) {
-            System.out.println("\t" + being.getName() + "'s shield mitigates " + Math.min(being.getShield(), being.preShieldDamageCalculation(this)) + " damage.");
+            if (being.getShield() <= being.preShieldDamageCalculation(this)) {
+                System.out.println("\t" + being.getName() + "'s shield mitigates " + Math.min(being.getShield(), being.preShieldDamageCalculation(this)) + " damage.");
+            } else {
+                System.out.println("\t" + being.getName() + "'s shield mitigates all (" + being.preShieldDamageCalculation(this) + ") damage.");
+            }
             if (being.preShieldDamageCalculation(this) >= being.getShield()) {
                 System.out.println("\t" + name + " has broken " + being.getName() + "'s shields!");
             }
@@ -181,5 +185,16 @@ public class Card {
         if (shield > 0) {
             System.out.println("\t" + name + " applies " + shield + " shield to self.");
         }
+    }
+
+    /**
+     * Compares this card to another card, returning an integer depending on the result.
+     *
+     * @param other the card to compare this card to
+     * @return int > 1 if this card is greater than the other card, 0 if they are equal, and int < 0 if the other card is greater.
+     */
+    @Override
+    public int compareTo(Card other) {
+        return name.compareTo(other.getName());
     }
 }

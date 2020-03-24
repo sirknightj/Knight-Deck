@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Immutable representation of the player.
@@ -44,6 +41,15 @@ public class Player extends Being {
     public void addGold(int gold) {
         assert gold >= 0;
         this.gold += gold;
+    }
+
+    /**
+     * @param gold the amount of gold to be taken away from the player's inventory. The remaining
+     *             gold must be >= 0.
+     */
+    public void takeGold(int gold) {
+        this.gold -= gold;
+        assert(gold >= 0);
     }
 
     /**
@@ -163,6 +169,13 @@ public class Player extends Being {
         if (this.health > maxHealth) {
             this.health = maxHealth;
         }
+    }
+
+    /**
+     * Sorts the player's deck in alphabetical order
+     */
+    public void sortDeck() {
+        Collections.sort(deck);
     }
 
     @Override
