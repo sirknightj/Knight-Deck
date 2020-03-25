@@ -55,7 +55,7 @@ public class Main {
             difficulty = save.getDifficulty();
             player = save.constructPlayer();
         } else { // No save
-            player = new Player(name, 50, 3, testDeck());
+            player = new Player(name, 50, 3, testDeck(), false);
             difficulty = STARTING_DIFFICULTY;
             makeSaveState(player, difficulty);
         }
