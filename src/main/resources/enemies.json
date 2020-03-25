@@ -15,7 +15,7 @@
     "deck": ["Crossbow", "Crossbow", "Quick Shot", "Barrage"],
     "cost": 2,
     "gold": 20,
-    "cardDrops": ["Dab", "Somersault", "Compound Bow", "Twin Scythe"]
+    "cardDrops": ["Dab", "Somersault", "Compound Bow", "Twin Scythes"]
   },
   {
     "name": "Armored Crossbowman",
