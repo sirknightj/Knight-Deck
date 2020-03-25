@@ -6,7 +6,6 @@ import java.util.*;
 public class Shop {
     private static Map<Card, Integer> vendorContents; // The cards which the shopkeeper will sell.
     private static Map<Card, Integer> shadyContents; // The cards which the shady dealer will sell.
-//    private List<Charm> charms; // The charms which the priest will sell. [Coming soon]
     private static Player player = Main.player;
     private static boolean visitable = false;
 
@@ -21,7 +20,7 @@ public class Shop {
      * @return The current instance of the shop.
      */
     public static Shop getInstance() {
-        if(visitable) {
+        if (visitable) {
             return ShopHolder.INSTANCE;
         } else {
             return null;
@@ -39,22 +38,22 @@ public class Shop {
      * Refreshes the content in the shops.
      */
     public static void refreshContents() {
-        if(Main.DEBUGSTATS) {
+        if (Main.DEBUGSTATS) {
             System.out.println("DEBUG: Shop contents have been refreshed.");
         }
         vendorContents = new HashMap<>();
         Set<Integer> alreadySeen = new HashSet<>();
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
-            int randomCard = random.nextInt(CardFactory.getPlayerCards().size());;
-            while(alreadySeen.contains(randomCard)) {
+            int randomCard = random.nextInt(CardFactory.getPlayerCards().size());
+            while (alreadySeen.contains(randomCard)) {
                 randomCard = random.nextInt(CardFactory.getPlayerCards().size());
             }
             alreadySeen.add(randomCard);
             int j = 0;
-            for(Card card : CardFactory.getPlayerCards()) {
-                if(j == randomCard) {
-                    vendorContents.put(card, random.nextInt((card.getDamage() * card.getHits() + card.getDefense() + card.getShield())/2) + ((card.getDamage() * card.getHits() + card.getDefense() + card.getShield())/2) + 5);
+            for (Card card : CardFactory.getPlayerCards()) {
+                if (j == randomCard) {
+                    vendorContents.put(card, random.nextInt((card.getDamage() * card.getHits() + card.getDefense() + card.getShield()) / 2) + ((card.getDamage() * card.getHits() + card.getDefense() + card.getShield()) / 2) + 5);
                     break;
                 }
                 j++;
@@ -70,7 +69,7 @@ public class Shop {
      * The driver and menu of the shop.
      */
     public void enter() {
-        if(vendorContents == null) {
+        if (vendorContents == null) {
             refreshContents();
         }
         System.out.println("Vendor: Welcome to my shop!");
@@ -79,7 +78,7 @@ public class Shop {
         Main.textWait();
         System.out.println("Priest: If you need blessings, come to me.");
         Main.textWait();
-        while(true) {
+        while (true) {
             System.out.println("\nWhat would you like to do?");
             System.out.println("\tv to go visit the vendor");
             System.out.println("\ts to visit the shady dealer");
@@ -88,14 +87,14 @@ public class Shop {
             Scanner input = new Scanner(System.in);
             System.out.print("> ");
             String response = input.nextLine().trim();
-            if(response.equalsIgnoreCase("v")) {
+            if (response.equalsIgnoreCase("v")) {
                 visitVendor();
-            } else if(response.equalsIgnoreCase("s")) {
+            } else if (response.equalsIgnoreCase("s")) {
                 visitShadyMerchant();
-            } else if(response.equals("p")) {
+            } else if (response.equals("p")) {
                 System.out.println("Coming soon. You'll be able to upgrade your stats here.");
                 Main.textWait();
-            } else if(response.equals("l")) {
+            } else if (response.equals("l")) {
                 System.out.println("Everyone: Come back again soon!");
                 Main.textWait();
                 return;
@@ -109,24 +108,24 @@ public class Shop {
      * Driver for when the player visits the vendor.
      */
     private void visitVendor() {
-        if(vendorContents.keySet().isEmpty()) {
+        if (vendorContents.keySet().isEmpty()) {
             System.out.println("Vendor: Sorry, I'm out of goods at the moment. Please check back later.");
             return;
         }
         System.out.println("Vendor: Hello, take a look at my wares!");
         Main.textWait();
-        for(Card card : vendorContents.keySet()) {
+        for (Card card : vendorContents.keySet()) {
             System.out.println("\t" + vendorContents.get(card) + " gold: " + card.getDescription(player));
         }
         Main.textWait();
         System.out.println("Vendor: All sales final! No returns!");
         Main.textWait();
-        while(true) {
+        while (true) {
             Scanner input = new Scanner(System.in);
             System.out.println("Vendor: Type in the name of the card you would like to purchase (l to leave).");
             System.out.println("\t(You have " + player.getGold() + " gold.)");
             Card card = null;
-            while(true) {
+            while (true) {
                 System.out.print("Card> ");
                 String response = input.nextLine();
                 if (response.toLowerCase().equals("l")) {
@@ -152,36 +151,36 @@ public class Shop {
             Main.textWait();
             System.out.println("\t" + card.getName() + " has been added into your deck.");
             Main.textWait();
-            if(vendorContents.keySet().isEmpty()) {
+            if (vendorContents.keySet().isEmpty()) {
                 System.out.println("Vendor: Sorry, I'm out of goods. Check back later!");
                 return;
             }
             System.out.println("Vendor: I still have the following cards:");
-            for(Card card1 : vendorContents.keySet()) {
+            for (Card card1 : vendorContents.keySet()) {
                 System.out.println(vendorContents.get(card1) + " gold: " + card1.getDescription(player));
             }
         }
     }
 
     private void visitShadyMerchant() {
-        if(shadyContents.keySet().isEmpty()) {
+        if (shadyContents.keySet().isEmpty()) {
             System.out.println("Shady Dealer: Can't you see thatI'm busy? Please check back later!");
             return;
         }
         System.out.println("Shady Dealer: Sup.");
         Main.textWait();
-        for(Card card : shadyContents.keySet()) {
+        for (Card card : shadyContents.keySet()) {
             System.out.println("\t" + shadyContents.get(card) + " gold: " + card.getDescription(player));
         }
         Main.textWait();
         System.out.println("Shady Dealer: No returns. Tell me whatcha want. Hurry up.");
         Main.textWait();
-        while(true) {
+        while (true) {
             Scanner input = new Scanner(System.in);
             System.out.println("Shady Dealer: I said hurry up!! (l to leave).");
             System.out.println("\t(You have " + player.getGold() + " gold.)");
             Card card = null;
-            while(true) {
+            while (true) {
                 System.out.print("Card> ");
                 String response = input.nextLine();
                 if (response.toLowerCase().equals("l")) {
@@ -207,12 +206,12 @@ public class Shop {
             Main.textWait();
             System.out.println("\t" + card.getName() + " has been added into your deck.");
             Main.textWait();
-            if(vendorContents.keySet().isEmpty()) {
+            if (vendorContents.keySet().isEmpty()) {
                 System.out.println("Shady Dealer: Sorry, limited stock. Check back later!");
                 return;
             }
             System.out.println("Shady Dealer: I still have the following cards:");
-            for(Card card1 : shadyContents.keySet()) {
+            for (Card card1 : shadyContents.keySet()) {
                 System.out.println(shadyContents.get(card1) + " gold: " + card1.getDescription(player));
             }
         }

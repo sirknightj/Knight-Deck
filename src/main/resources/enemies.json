@@ -12,16 +12,16 @@
     "name": "Mounted Crossbowman",
     "health": 46,
     "actionPoints": 2,
-    "deck": ["Crossbow", "Crossbow", "Quick Shot", "Barrage"],
+    "deck": ["Crossbow", "Quick Shot", "Barrage"],
     "cost": 2,
     "gold": 20,
-    "cardDrops": ["Dab", "Somersault", "Compound Bow", "Twin Scythe"]
+    "cardDrops": ["Dab", "Somersault", "Compound Bow", "Twin Scythes"]
   },
   {
     "name": "Armored Crossbowman",
     "health": 70,
     "actionPoints": 2,
-    "deck": ["Crossbow", "Crossbow", "Quick Shot", "Defend"],
+    "deck": ["Crossbow", "Quick Shot", "Defend"],
     "cost": 4,
     "gold": 25,
     "cardDrops": ["Double tap", "Compound Bow", "Golden Scythe"]
@@ -39,7 +39,7 @@
     "name": "Armored Knight",
     "health": 95,
     "actionPoints": 2,
-    "deck": ["Crossbow", "Slash", "Quick Shot", "Defend", "Defend"],
+    "deck": ["Crossbow", "Slash", "Quick Shot", "Defend"],
     "cost": 5,
     "gold": 35,
     "cardDrops": ["Battle Axe", "Beatdown", "Pummel"]
@@ -48,7 +48,7 @@
     "name": "Golden Armored Knight",
     "health": 135,
     "actionPoints": 2,
-    "deck": ["Crossbow", "Slash", "Slash", "Quick Shot", "Charge"],
+    "deck": ["Crossbow", "Slash", "Quick Shot", "Charge"],
     "cost": 8,
     "gold": 60,
     "cardDrops": ["Relentless Beatdown", "Beatdown"]
@@ -75,7 +75,7 @@
     "name": "Wizard",
     "health": 21,
     "actionPoints": 2,
-    "deck": ["Fortify", "Magic Shield", "Magic Shield", "Magic Shield", "Fireball", "Bubble", "Bubble", "Bubble"],
+    "deck": ["Fortify", "Magic Shield", "Fireball", "Bubble"],
     "cost": 1,
     "gold": 16,
     "cardDrops": ["Defensive Stance", "Block"]
@@ -84,7 +84,7 @@
     "name": "Beast",
     "health": 250,
     "actionPoints": 3,
-    "deck": ["Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Roar", "Finishing Blow"],
+    "deck": ["Roar", "Finishing Blow"],
     "cost": 10,
     "gold": 69,
     "cardDrops": ["Great Spin Attack", "Hack and Slash"]

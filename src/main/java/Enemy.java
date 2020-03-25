@@ -23,6 +23,11 @@ public class Enemy extends Being {
         super(name, maxHealth, maxActionPoints, deck);
         this.cost = cost;
         this.gold = gold;
+
+        // make sure each card is not null
+        for (Card card : cardDrops) {
+            assert card != null;
+        }
         this.cardDrops = cardDrops;
 
         assert gold > 0;
@@ -43,13 +48,6 @@ public class Enemy extends Being {
      */
     public void addToName(String nameAddition) {
         name += nameAddition;
-    }
-
-    /**
-     * @return The max health of the enemy.
-     */
-    public int getMaxHealth() {
-        return maxHealth;
     }
 
     /**
