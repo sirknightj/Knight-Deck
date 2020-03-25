@@ -63,7 +63,7 @@ public class Main {
         if (DEBUGSTATS) { // checking if the player has initialized correctly
             System.out.println("Your deck is as follows:");
             for (Card card : player.getDeck()) {
-                System.out.println("\t" + card.getDescription());
+                System.out.println("\t" + card.getDescription(player));
             }
         }
 

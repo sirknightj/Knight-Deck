@@ -4,8 +4,9 @@ import java.util.*;
  * This manages the player's actions when they visit the shop.
  */
 public class Shop {
-    private static Map<Card, Integer> contents; // The cards which the shopkeeper will sell.
-//    private List<Charm> charms; // The charms which the shopkeeper will sell. [Coming soon]
+    private static Map<Card, Integer> vendorContents; // The cards which the shopkeeper will sell.
+    private static Map<Card, Integer> shadyContents; // The cards which the shady dealer will sell.
+//    private List<Charm> charms; // The charms which the priest will sell. [Coming soon]
     private static Player player = Main.player;
     private static boolean visitable = false;
 
@@ -41,7 +42,7 @@ public class Shop {
         if(Main.DEBUGSTATS) {
             System.out.println("DEBUG: Shop contents have been refreshed.");
         }
-        contents = new HashMap<>();
+        vendorContents = new HashMap<>();
         Set<Integer> alreadySeen = new HashSet<>();
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
@@ -53,19 +54,23 @@ public class Shop {
             int j = 0;
             for(Card card : CardFactory.getPlayerCards()) {
                 if(j == randomCard) {
-                    contents.put(card, random.nextInt((card.getDamage() * card.getHits() + card.getDefense() + card.getShield())/2) + ((card.getDamage() * card.getHits() + card.getDefense() + card.getShield())/2) + 5);
+                    vendorContents.put(card, random.nextInt((card.getDamage() * card.getHits() + card.getDefense() + card.getShield())/2) + ((card.getDamage() * card.getHits() + card.getDefense() + card.getShield())/2) + 5);
                     break;
                 }
                 j++;
             }
         }
+        shadyContents = new HashMap<>();
+        shadyContents.put(CardFactory.getCard("Strength Potion"), (int) (Math.random() * 10) + 5);
+        shadyContents.put(CardFactory.getCard("Motivational Photo"), (int) (Math.random() * 10) + 5);
+        shadyContents.put(CardFactory.getCard("Relentless Beatdown"), (int) (Math.random() * 10) + 10);
     }
 
     /**
      * The driver and menu of the shop.
      */
     public void enter() {
-        if(contents == null) {
+        if(vendorContents == null) {
             refreshContents();
         }
         System.out.println("Vendor: Welcome to my shop!");
@@ -86,8 +91,7 @@ public class Shop {
             if(response.equalsIgnoreCase("v")) {
                 visitVendor();
             } else if(response.equalsIgnoreCase("s")) {
-                System.out.println("Coming soon. You'll be able to get some super rare cards here.");
-                Main.textWait();
+                visitShadyMerchant();
             } else if(response.equals("p")) {
                 System.out.println("Coming soon. You'll be able to upgrade your stats here.");
                 Main.textWait();
@@ -105,14 +109,14 @@ public class Shop {
      * Driver for when the player visits the vendor.
      */
     private void visitVendor() {
-        if(contents.keySet().isEmpty()) {
+        if(vendorContents.keySet().isEmpty()) {
             System.out.println("Vendor: Sorry, I'm out of goods at the moment. Please check back later.");
             return;
         }
         System.out.println("Vendor: Hello, take a look at my wares!");
         Main.textWait();
-        for(Card card : contents.keySet()) {
-            System.out.println("\t" + contents.get(card) + " gold: " + card.getDescription());
+        for(Card card : vendorContents.keySet()) {
+            System.out.println("\t" + vendorContents.get(card) + " gold: " + card.getDescription(player));
         }
         Main.textWait();
         System.out.println("Vendor: All sales final! No returns!");
@@ -133,28 +137,83 @@ public class Shop {
                 // Print error messages if card is illegal
                 if (card == null) {
                     System.out.println("Invalid card.");
-                } else if (!contents.keySet().contains(card)) {
+                } else if (!vendorContents.keySet().contains(card)) {
                     System.out.println("I'm not selling any card with that name.");
-                } else if (player.getGold() < contents.get(card)) {
+                } else if (player.getGold() < vendorContents.get(card)) {
                     System.out.println("You don't have enough gold.");
                 } else {
                     break;
                 }
             }
-            player.takeGold(contents.get(card));
+            player.takeGold(vendorContents.get(card));
             player.deckAdd(card);
-            contents.remove(card);
+            vendorContents.remove(card);
             System.out.println("Vendor: Thanks for your purchase.");
             Main.textWait();
             System.out.println("\t" + card.getName() + " has been added into your deck.");
             Main.textWait();
-            if(contents.keySet().isEmpty()) {
+            if(vendorContents.keySet().isEmpty()) {
                 System.out.println("Vendor: Sorry, I'm out of goods. Check back later!");
                 return;
             }
             System.out.println("Vendor: I still have the following cards:");
-            for(Card card1 : contents.keySet()) {
-                System.out.println(contents.get(card1) + " gold: " + card1.getDescription());
+            for(Card card1 : vendorContents.keySet()) {
+                System.out.println(vendorContents.get(card1) + " gold: " + card1.getDescription(player));
+            }
+        }
+    }
+
+    private void visitShadyMerchant() {
+        if(shadyContents.keySet().isEmpty()) {
+            System.out.println("Shady Dealer: Can't you see thatI'm busy? Please check back later!");
+            return;
+        }
+        System.out.println("Shady Dealer: Sup.");
+        Main.textWait();
+        for(Card card : shadyContents.keySet()) {
+            System.out.println("\t" + shadyContents.get(card) + " gold: " + card.getDescription(player));
+        }
+        Main.textWait();
+        System.out.println("Shady Dealer: No returns. Tell me whatcha want. Hurry up.");
+        Main.textWait();
+        while(true) {
+            Scanner input = new Scanner(System.in);
+            System.out.println("Shady Dealer: I said hurry up!! (l to leave).");
+            System.out.println("\t(You have " + player.getGold() + " gold.)");
+            Card card = null;
+            while(true) {
+                System.out.print("Card> ");
+                String response = input.nextLine();
+                if (response.toLowerCase().equals("l")) {
+                    System.out.println("Shady Dealer: You'd better keep quiet.");
+                    return;
+                }
+                card = CardFactory.getCard(response);
+                // Print error messages if card is illegal
+                if (card == null) {
+                    System.out.println("Shady Dealer: Invalid card.");
+                } else if (!shadyContents.keySet().contains(card)) {
+                    System.out.println("Shady Dealer: I'm not selling any card with that name.");
+                } else if (player.getGold() < shadyContents.get(card)) {
+                    System.out.println("Shady Dealer: You don't have enough gold.");
+                } else {
+                    break;
+                }
+            }
+            player.takeGold(shadyContents.get(card));
+            player.deckAdd(card);
+            shadyContents.remove(card);
+            System.out.println("Shady Dealer: Dun deal.");
+            Main.textWait();
+            System.out.println("\t" + card.getName() + " has been added into your deck.");
+            Main.textWait();
+            if(vendorContents.keySet().isEmpty()) {
+                System.out.println("Shady Dealer: Sorry, limited stock. Check back later!");
+                return;
+            }
+            System.out.println("Shady Dealer: I still have the following cards:");
+            for(Card card1 : shadyContents.keySet()) {
+                System.out.println(shadyContents.get(card1) + " gold: " + card1.getDescription(player));
             }
         }
     }

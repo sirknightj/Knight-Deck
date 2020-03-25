@@ -13,6 +13,7 @@ public abstract class Being {
     protected int defense;
     protected List<Card> deck;
     protected int shield;
+    protected int strength;
 
     /**
      * Constructor. Also sets action points and health to their respective maximum values.
@@ -31,6 +32,7 @@ public abstract class Being {
         this.deck = new ArrayList<>(deck);
         this.defense = 0;
         this.shield = 0;
+        this.strength = 0;
     }
 
     /**
@@ -97,6 +99,13 @@ public abstract class Being {
     }
 
     /**
+     * @return The current strength this being has.
+     */
+    public int getStrength() {
+        return strength;
+    }
+
+    /**
      * Adds shield to the being.
      *
      * @param shield The amount of shield to add.
@@ -106,16 +115,34 @@ public abstract class Being {
     }
 
     /**
+     * Adds strength to the being.
+     *
+     * @param strength The amount of strength to add.
+     */
+    public void increaseStrength(int strength) {
+        this.strength += strength;
+    }
+
+    /**
      * Resets the defense, shield, and actionPoints of the being.
      */
     public void turnStartStatReset() {
-        if(defense > 0) {
+        if (defense > 0) {
             System.out.println(name + "'s defense wears off.");
             defense = 0;
         }
-        if(shield > 0) {
+        if (shield > 0) {
             System.out.println(name + "'s shield wears off.");
             shield = 0;
+        }
+        if (strength > 0) {
+            if (strength == 1) {
+                System.out.println(name + "'s strength wears off.");
+                strength = 0;
+            } else {
+                System.out.println((int) Math.ceil((double) strength / 2) + " of " + name + "'s " + strength + " strength wears off.");
+                strength /= 2;
+            }
         }
         resetActionPoints();
     }
@@ -123,22 +150,24 @@ public abstract class Being {
     /**
      * Calculates how much damage the card will do to this being. Does not change the being's status.
      *
-     * @param card The card to be played.
+     * @param opponent The opponent playing the card.
+     * @param card     The card to be played.
      * @return The damage that the being should receive.
      */
-    public int damageCalculation(Card card) {
-        return Math.max(preShieldDamageCalculation(card) - shield, 0);
+    public int damageCalculation(Being opponent, Card card) {
+        return Math.max(preShieldDamageCalculation(opponent, card) - shield, 0);
     }
 
     /**
      * Calculates how much damage the card will do to this being, without shields being considered.
      * Does not change this being's status.
      *
-     * @param card The card to be played.
+     * @param opponent The opponent playing this card.
+     * @param card     The card to be played.
      * @return The damage that the being should receive before shields are factored in.
      */
-    public int preShieldDamageCalculation(Card card) {
-        return Math.max(((card.getDamage() - defense) * card.getHits()), 0);
+    public int preShieldDamageCalculation(Being opponent, Card card) {
+        return Math.max(((card.getDamage() - defense + opponent.getStrength()) * card.getHits()), 0);
     }
 
     /**
@@ -178,6 +207,7 @@ public abstract class Being {
         String output = name + " has " + health + "/" + maxHealth + " health";
         output += (defense > 0) ? " and " + defense + " defense" : "";
         output += (shield > 0) ? " and " + shield + " shield" : "";
+        output += (strength > 0) ? " and " + strength + " strength" : "";
         return output.trim() + ".";
     }
 

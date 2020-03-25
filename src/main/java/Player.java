@@ -118,7 +118,9 @@ public class Player extends Being {
         assert (actionPoints >= 0);
 
         actionDeck.remove(card);
-        discardPile.push(card);
+        if(!card.isSingleUse()) {
+            discardPile.push(card);
+        }
     }
 
     /**

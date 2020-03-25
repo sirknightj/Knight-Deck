@@ -44,6 +44,19 @@
     "singleUse": true
   },
   {
+    "name": "Strength Potion",
+    "cost": 1,
+    "playable": true,
+    "singleUse": true,
+    "strength": 3
+  },
+  {
+    "name": "Motivational Photo",
+    "cost": 0,
+    "playable": true,
+    "strength": 1
+  },
+  {
     "name": "Hack and Slash",
     "cost": 2,
     "playable": true,
