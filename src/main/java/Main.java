@@ -55,7 +55,7 @@ public class Main {
             difficulty = save.getDifficulty();
             player = save.constructPlayer();
         } else { // No save
-            player = new Player(name, 50, 3, testDeck(), false);
+            player = new Player(name, 50, 3, testDeck(), 4);
             difficulty = STARTING_DIFFICULTY;
             makeSaveState(player, difficulty);
         }
@@ -257,7 +257,6 @@ public class Main {
         while (enemies.isEmpty() || end < 10) {
             Enemy enemy = ((EnemyTemplate) enemyList[(int) (Math.random() * enemyList.length)]).create();
             if (enemy.getCost() + costOfThisField <= battleFieldStamina) {
-                System.out.println("Enemy has been added: " + enemy.toString());
                 enemies.add(enemy);
                 costOfThisField += enemy.getCost();
                 end = 0;

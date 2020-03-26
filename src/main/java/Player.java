@@ -4,24 +4,23 @@ import java.util.*;
  * Immutable representation of the player.
  */
 public class Player extends Being {
-    private static final int CARDS_PER_DRAW = 4; // the cards the player draws per turn
 
+    private int drawSize; // the number of cards the player starts off their turn with in the actionDeck.
     private Stack<Card> drawPile; // the cards the player is yet to draw.
     private List<Card> actionDeck; // the cards in the player's hand.
     private Stack<Card> discardPile; // the cards the player has already seen.
     private int gold; // the gold the player will stockpile and use
-    private boolean discardActionDeck; // true iff the player discards their actionDeck at the end of their turn.
 
     /**
      * Constructor. Also fills the Player's health and action points to full.
      *
-     * @param name              The name of the player.
-     * @param maxHealth         The maximum health of the player.
-     * @param maxActionPoints   The maximum actionPoints of the player.
-     * @param deck              The deck the player starts with.
-     * @param discardActionDeck True iff the player discards their actionDeck at the end of their turn.
+     * @param name            The name of the player.
+     * @param maxHealth       The maximum health of the player.
+     * @param maxActionPoints The maximum actionPoints of the player.
+     * @param deck            The deck the player starts with.
+     * @param drawSize        the number of cards the player starts off their turn with in the actionDeck.
      */
-    public Player(String name, int maxHealth, int maxActionPoints, List<Card> deck, boolean discardActionDeck) {
+    public Player(String name, int maxHealth, int maxActionPoints, List<Card> deck, int drawSize) {
         super(name, maxHealth, maxActionPoints, deck);
 
         // make sure each card is a valid player card
@@ -29,7 +28,7 @@ public class Player extends Being {
             assert (card.isPlayableBy(this));
         }
 
-        this.discardActionDeck = discardActionDeck;
+        this.drawSize = drawSize;
         gold = 0;
         drawPile = new Stack<>();
         actionDeck = new ArrayList<>();
@@ -61,13 +60,6 @@ public class Player extends Being {
     }
 
     /**
-     * @return True iff the actionDeck is to be discarded every turn.
-     */
-    public boolean isActionDeckDiscarded() {
-        return discardActionDeck;
-    }
-
-    /**
      * Should be called before starting a battle.
      * Action deck is empty. Draw pile contains all player's cards shuffled. Discard pile is empty.
      */
@@ -92,10 +84,7 @@ public class Player extends Being {
      * Or, if the player's action deck is not discarded, draw more cards up to the player's draw capacity.
      */
     public void drawCards() {
-        if (discardActionDeck) {
-            actionDeck.clear();
-        }
-        for (int i = actionDeck.size(); i < CARDS_PER_DRAW; i++) {
+        for (int i = actionDeck.size(); i < drawSize; i++) {
             if (drawPile.isEmpty()) {
                 resetDrawPile();
             }
@@ -106,12 +95,33 @@ public class Player extends Being {
     }
 
     /**
+     * @return The number of cards the player should have in their action deck at the start of their turn.
+     */
+    public int getDrawSize() {
+        return drawSize;
+    }
+
+    /**
      * Resets the player's draw pile.
      */
     private void resetDrawPile() {
         drawPile.addAll(discardPile);
         discardPile.clear();
         Collections.shuffle(drawPile);
+    }
+
+    /**
+     * Increases the player's draw size by 1.
+     */
+    public void increaseDrawSize() {
+        drawSize++;
+    }
+
+    /**
+     * Increases the player's max action points by 1.
+     */
+    public void increaseActionPoints() {
+        maxActionPoints++;
     }
 
     /**
@@ -148,13 +158,18 @@ public class Player extends Being {
         }
     }
 
-    /**
-     * Moves the remaining unselected cards from the action deck to the discard pile, if discardActionDeck
-     * is true. Otherwise, does nothing.
-     */
-    public void finishTurn() {
-        if (!discardActionDeck) {
-            discardPile.addAll(actionDeck);
+    public void printDeckStatus() {
+        System.out.println("Your draw pile is as follows:");
+        for (Card card : drawPile) {
+            System.out.println("\t" + card.toString());
+        }
+        System.out.println("Your actionDeck is as follows:");
+        for (Card card : actionDeck) {
+            System.out.println("\t" + card.toString());
+        }
+        System.out.println("Your discard pile is as follows:");
+        for (Card card : discardPile) {
+            System.out.println("\t" + card.toString());
         }
     }
 

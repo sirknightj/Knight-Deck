@@ -82,7 +82,6 @@ public class Battle {
                 String response = input.nextLine();
                 if (response.toLowerCase().equals("e")) {
                     System.out.println("You have chosen to end your turn.");
-                    player.finishTurn();
                     return;
                 }
 
@@ -136,7 +135,6 @@ public class Battle {
         } else if (player.isActionDeckEmpty()) {
             System.out.println("Your turn has automatically ended because you have no more cards in your hand.");
         }
-        player.finishTurn();
     }
 
     /**
@@ -203,6 +201,10 @@ public class Battle {
     private void displayStats() {
         System.out.println("--Turn " + turn + "--");
         player.turnStartStatReset();
+        if(Main.DEBUGSTATS) {
+            System.out.println("Debug: Player Deck Status");
+            player.printDeckStatus();
+        }
         System.out.println(player.healthStatus());
         for (Enemy enemy : enemies) {
             System.out.println(enemy.healthStatus());

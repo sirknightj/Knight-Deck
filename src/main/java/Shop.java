@@ -76,13 +76,10 @@ public class Shop {
         Main.textWait();
         System.out.println("Shady Dealer: Come over here to see my wares.");
         Main.textWait();
-        System.out.println("Priest: If you need blessings, come to me.");
-        Main.textWait();
         while (true) {
             System.out.println("\nWhat would you like to do?");
             System.out.println("\tv to go visit the vendor");
             System.out.println("\ts to visit the shady dealer");
-            System.out.println("\tp to visit the priest");
             System.out.println("\tl to leave");
             Scanner input = new Scanner(System.in);
             System.out.print("> ");
@@ -91,9 +88,6 @@ public class Shop {
                 visitVendor();
             } else if (response.equalsIgnoreCase("s")) {
                 visitShadyMerchant();
-            } else if (response.equals("p")) {
-                System.out.println("Coming soon. You'll be able to upgrade your stats here.");
-                Main.textWait();
             } else if (response.equals("l")) {
                 System.out.println("Everyone: Come back again soon!");
                 Main.textWait();
@@ -133,16 +127,18 @@ public class Shop {
                     return;
                 }
                 card = CardFactory.getCard(response);
+
                 // Print error messages if card is illegal
                 if (card == null) {
-                    System.out.println("Invalid card.");
+                    System.out.println("Vendor: Invalid card.");
                 } else if (!vendorContents.keySet().contains(card)) {
-                    System.out.println("I'm not selling any card with that name.");
+                    System.out.println("Vendor: I'm not selling any card with that name.");
                 } else if (player.getGold() < vendorContents.get(card)) {
                     System.out.println("You don't have enough gold.");
                 } else {
                     break;
                 }
+                Main.textWait();
             }
             player.takeGold(vendorContents.get(card));
             player.deckAdd(card);
@@ -157,7 +153,7 @@ public class Shop {
             }
             System.out.println("Vendor: I still have the following cards:");
             for (Card card1 : vendorContents.keySet()) {
-                System.out.println(vendorContents.get(card1) + " gold: " + card1.getDescription(player));
+                System.out.println("\t" + vendorContents.get(card1) + " gold: " + card1.getDescription(player));
             }
         }
     }
@@ -167,11 +163,13 @@ public class Shop {
             System.out.println("Shady Dealer: Can't you see thatI'm busy? Please check back later!");
             return;
         }
-        System.out.println("Shady Dealer: Sup.");
+        System.out.println("Shady Dealer: Sup. Today on the black market, we have:");
         Main.textWait();
         for (Card card : shadyContents.keySet()) {
             System.out.println("\t" + shadyContents.get(card) + " gold: " + card.getDescription(player));
         }
+        System.out.println("\t100 gold: Mind Training [/] ActionPoints +1 Per Turn.");
+        System.out.println("\t50 gold: Slight of Hand [/] Draw +1 Cards Per Turn.");
         Main.textWait();
         System.out.println("Shady Dealer: No returns. Tell me whatcha want. Hurry up.");
         Main.textWait();
@@ -181,22 +179,47 @@ public class Shop {
             System.out.println("\t(You have " + player.getGold() + " gold.)");
             Card card = null;
             while (true) {
-                System.out.print("Card> ");
+                System.out.print("Item> ");
                 String response = input.nextLine();
                 if (response.toLowerCase().equals("l")) {
                     System.out.println("Shady Dealer: You'd better keep quiet.");
                     return;
-                }
-                card = CardFactory.getCard(response);
-                // Print error messages if card is illegal
-                if (card == null) {
-                    System.out.println("Shady Dealer: Invalid card.");
-                } else if (!shadyContents.keySet().contains(card)) {
-                    System.out.println("Shady Dealer: I'm not selling any card with that name.");
-                } else if (player.getGold() < shadyContents.get(card)) {
-                    System.out.println("Shady Dealer: You don't have enough gold.");
+                } else if (response.equalsIgnoreCase("Mind Training")) {
+                    if (player.getGold() >= 100) {
+                        player.increaseActionPoints();
+                        player.takeGold(100);
+                        System.out.println("Shady Dealer: Done. You now start each turn with " + player.getMaxActionPoints() + " action points.");
+                        System.out.println("\t(You have " + player.getGold() + " gold.)");
+                        Main.textWait();
+                        System.out.println("Shady Dealer: Anything else? (l to leave)");
+                    } else {
+                        System.out.println("Shady Dealer: You don't have enough gold.");
+                        Main.textWait();
+                    }
+                } else if (response.equalsIgnoreCase("Slight of Hand")) {
+                    if (player.getGold() >= 50) {
+                        player.increaseDrawSize();
+                        player.takeGold(50);
+                        System.out.println("Shady Dealer: Done. You now start each turn with " + player.getDrawSize() + " cards.");
+                        System.out.println("\t(You have " + player.getGold() + " gold.)");
+                        Main.textWait();
+                        System.out.println("Shady Dealer: Anything else? (l to leave)");
+                    } else {
+                        System.out.println("Shady Dealer: You don't have enough gold.");
+                        Main.textWait();
+                    }
                 } else {
-                    break;
+                    card = CardFactory.getCard(response);
+                    // Print error messages if card is illegal
+                    if (card == null) {
+                        System.out.println("Shady Dealer: Invalid item.");
+                    } else if (!shadyContents.keySet().contains(card)) {
+                        System.out.println("Shady Dealer: I'm not selling any item with that name.");
+                    } else if (player.getGold() < shadyContents.get(card)) {
+                        System.out.println("Shady Dealer: You don't have enough gold.");
+                    } else {
+                        break;
+                    }
                 }
             }
             player.takeGold(shadyContents.get(card));

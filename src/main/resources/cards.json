@@ -251,8 +251,8 @@
     "name": "Crossbow",
     "cost": 1,
     "playable": false,
-    "damage": 8,
-    "hits": 3
+    "damage": 14,
+    "hits": 1
   },
   {
     "name": "Quick Shot",

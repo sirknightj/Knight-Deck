@@ -12,7 +12,7 @@ public class CardFactory {
      */
     public static void addCard(Card card) {
         nameToCard.put(card.getName().toLowerCase(), card);
-        if (card.isPlayableBy(new Player("Example", 0, 0, new ArrayList<>(), true))) {
+        if (card.isPlayableBy(new Player("Example", 0, 0, new ArrayList<>(), 0))) {
             playerCards.add(card);
         }
     }
