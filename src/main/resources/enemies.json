@@ -24,7 +24,7 @@
     "deck": ["Crossbow", "Quick Shot", "Defend"],
     "cost": 4,
     "gold": 25,
-    "cardDrops": ["Double tap", "Compound Bow", "Golden Scythe"]
+    "cardDrops": ["Double Tap", "Compound Bow", "Golden Scythe"]
   },
   {
     "name": "Knight",

@@ -177,8 +177,8 @@ public abstract class Being {
      * @param hits   Number of attacks
      */
     public void takeDamage(int damage, int hits) {
-        assert (damage > 0);
-        assert (hits > 0);
+        assert damage > 0;
+        assert hits > 0;
         damage = Math.max((damage - defense) * hits, 0);
         if (shield > 0) {
             int oldDamage = damage;

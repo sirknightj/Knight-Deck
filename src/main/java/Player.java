@@ -6,9 +6,9 @@ import java.util.*;
 public class Player extends Being {
 
     private int drawSize; // the number of cards the player starts off their turn with in the actionDeck.
-    private Stack<Card> drawPile; // the cards the player is yet to draw.
+    private List<Card> drawPile; // the cards the player is yet to draw.
     private List<Card> actionDeck; // the cards in the player's hand.
-    private Stack<Card> discardPile; // the cards the player has already seen.
+    private List<Card> discardPile; // the cards the player has already seen.
     private int gold; // the gold the player will stockpile and use
 
     /**
@@ -30,9 +30,9 @@ public class Player extends Being {
 
         this.drawSize = drawSize;
         gold = 0;
-        drawPile = new Stack<>();
+        drawPile = new LinkedList<>();
         actionDeck = new ArrayList<>();
-        discardPile = new Stack<>();
+        discardPile = new ArrayList<>();
     }
 
     /**
@@ -93,7 +93,7 @@ public class Player extends Being {
                 Collections.shuffle(drawPile);
             }
 
-            Card card = drawPile.pop();
+            Card card = drawPile.remove(0);
             actionDeck.add(card);
         }
     }
@@ -103,15 +103,6 @@ public class Player extends Being {
      */
     public int getDrawSize() {
         return drawSize;
-    }
-
-    /**
-     * Resets the player's draw pile.
-     */
-    private void resetDrawPile() {
-        drawPile.addAll(discardPile);
-        discardPile.clear();
-        Collections.shuffle(drawPile);
     }
 
     /**
@@ -158,7 +149,7 @@ public class Player extends Being {
 
         actionDeck.remove(card);
         if (!card.isSingleUse()) {
-            discardPile.push(card);
+            discardPile.add(card);
         }
     }
 

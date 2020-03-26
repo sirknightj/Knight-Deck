@@ -1,15 +1,15 @@
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 public class Enemy extends Being {
 
-    private List<Card> deck; // current deck of cards
-    private Queue<Card> intent; // the cards the enemy intends to use this turn
+    //    private List<Card> deck; // current deck of cards
     private double cost; // the cost to place this enemy on the battlefield
     private int gold; // the maximum gold this enemy drops on defeat
     private List<Card> cardDrops; // the cards this enemy drops on defeat
+
+    // TODO: Implement draw and discard
+    private List<Card> drawPile;
+    private List<Card> discardPile;
 
     /**
      * Constructor.
@@ -31,6 +31,7 @@ public class Enemy extends Being {
         this.cardDrops = cardDrops;
 
         assert gold > 0;
+
         assert !deck.isEmpty();
         // make sure each card is a valid enemy card
         for (Card card : deck) {
@@ -38,7 +39,8 @@ public class Enemy extends Being {
         }
         this.deck = deck;
 
-        intent = new LinkedList<>();
+        this.drawPile = new ArrayList<>();
+        this.discardPile = new ArrayList<>();
     }
 
     /**
@@ -73,46 +75,19 @@ public class Enemy extends Being {
     }
 
     /**
-     * Adds the intended card into the enemy's intent queue, and takes away the
-     * appropriate number of action points away.
-     *
-     * @param card the card to be added into the queue.
+     * @return the list of Cards for this Enemy to play. Returns an empty list if it cannot find any Card
      */
-    public void intend(Card card) {
-        actionPoints -= card.getCost();
-        assert actionPoints >= 0;
-        intent.add(card);
-    }
-
-    /**
-     * @return true iff the enemy's intent queue is empty.
-     */
-    public boolean isIntendEmpty() {
-        return intent.isEmpty();
-    }
-
-    /**
-     * Returns the card at the front of the queue, and removes it from the queue.
-     *
-     * @return the card at the front of the queue.
-     */
-    public Card getIntendedCard() {
-        return intent.remove();
-    }
-
-    /**
-     * @return the Card for the Enemy to play. Returns null if it cannot find one
-     */
-    public Card chooseCard() {
-        if (actionPoints > 0) {
-            for (int endTurn = 0; endTurn < 10; endTurn++) {
-                Card card = getRandomCard();
-                if (card.getCost() <= actionPoints) {
-                    return card;
-                }
+    public List<Card> getMove() {
+        List<Card> res = new ArrayList<>();
+        int totalAP = 0;
+        for (int i = 0; i < deck.size() && totalAP <= maxActionPoints; i++) {
+            Card card = deck.get(i);
+            if (card.getCost() + totalAP <= maxActionPoints) {
+                totalAP += card.getCost();
+                res.add(card);
             }
         }
-        return null;
+        return res;
     }
 
     /**
@@ -123,13 +98,6 @@ public class Enemy extends Being {
      */
     public void playCard(Card card, Being target) {
         card.play(this, target);
-    }
-
-    /**
-     * @return a random card in this enemy's deck.
-     */
-    public Card getRandomCard() {
-        return deck.get((int) (Math.random() * deck.size()));
     }
 
 }

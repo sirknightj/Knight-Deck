@@ -153,13 +153,6 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * @return The description of the card.
-     */
-    public String getDescription() {
-        return getDescription(new Player("", 0, 0, new ArrayList<>(), 0));
-    }
-
-    /**
      * * @return a description of what this card does, ignoring the things it doesn't do.
      */
     public String getDescription(Being user) {

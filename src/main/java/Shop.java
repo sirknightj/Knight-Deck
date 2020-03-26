@@ -20,17 +20,13 @@ public class Shop {
      * @return The current instance of the shop.
      */
     public static Shop getInstance() {
-        if (visitable) {
-            return ShopHolder.INSTANCE;
-        } else {
-            return null;
-        }
+        return visitable ? ShopHolder.INSTANCE : null;
     }
 
     /**
      * Allows the player to visit the shop.
      */
-    public static void nowVisitable() {
+    public static void setVisitable() {
         visitable = true;
     }
 
@@ -38,7 +34,7 @@ public class Shop {
      * Refreshes the content in the shops.
      */
     public static void refreshContents() {
-        if (Main.DEBUGSTATS) {
+        if (Main.DEBUG) {
             System.out.println("DEBUG: Shop contents have been refreshed.");
         }
         vendorContents = new HashMap<>();
@@ -131,12 +127,8 @@ public class Shop {
                 // Print error messages if card is illegal
                 if (card == null) {
                     System.out.println("Vendor: Invalid card.");
-                } else if (!vendorContents.keySet().contains(card)) {
-                    System.out.println("Vendor: I'm not selling any card with that name.");
-
-                    System.out.println("Invalid card.");
                 } else if (!vendorContents.containsKey(card)) {
-                    System.out.println("I'm not selling any card with that name.");
+                    System.out.println("Vendor: I'm not selling any card with that name.");
                 } else if (player.getGold() < vendorContents.get(card)) {
                     System.out.println("You don't have enough gold.");
                 } else {
@@ -144,13 +136,7 @@ public class Shop {
                 }
                 Main.textWait();
             }
-            player.takeGold(vendorContents.get(card));
-            player.deckAdd(card);
-            vendorContents.remove(card);
-            System.out.println("Vendor: Thanks for your purchase.");
-            Main.textWait();
-            System.out.println("\t" + card.getName() + " has been added into your deck.");
-            Main.textWait();
+            buyFromSeller(card, vendorContents, "Vendor: Thanks for your purchase.");
             if (vendorContents.keySet().isEmpty()) {
                 System.out.println("Vendor: Sorry, I'm out of goods. Check back later!");
                 return;
@@ -160,6 +146,16 @@ public class Shop {
                 System.out.println("\t" + vendorContents.get(card1) + " gold: " + card1.getDescription(player));
             }
         }
+    }
+
+    private void buyFromSeller(Card card, Map<Card, Integer> sellerContents, String sellerResponse) {
+        player.takeGold(sellerContents.get(card));
+        player.deckAdd(card);
+        sellerContents.remove(card);
+        System.out.println(sellerResponse);
+        Main.textWait();
+        System.out.println("\t" + card.getName() + " has been added into your deck.");
+        Main.textWait();
     }
 
     private void visitShadyMerchant() {
@@ -226,7 +222,7 @@ public class Shop {
                     // Print error messages if card is illegal
                     if (card == null) {
                         System.out.println("Shady Dealer: Invalid item.");
-                    } else if (!shadyContents.keySet().contains(card)) {
+                    } else if (!shadyContents.containsKey(card)) {
                         System.out.println("Shady Dealer: I'm not selling any item with that name.");
                     } else if (player.getGold() < shadyContents.get(card)) {
                         System.out.println("Shady Dealer: You don't have enough gold.");
@@ -235,13 +231,7 @@ public class Shop {
                     }
                 }
             }
-            player.takeGold(shadyContents.get(card));
-            player.deckAdd(card);
-            shadyContents.remove(card);
-            System.out.println("Shady Dealer: Dun deal.");
-            Main.textWait();
-            System.out.println("\t" + card.getName() + " has been added into your deck.");
-            Main.textWait();
+            buyFromSeller(card, shadyContents, "Shady Dealer: Dun deal.");
             if (vendorContents.keySet().isEmpty()) {
                 System.out.println("Shady Dealer: Sorry, limited stock. Check back later!");
                 return;

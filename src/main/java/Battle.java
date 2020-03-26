@@ -41,7 +41,7 @@ public class Battle {
         while (!isBattleOver()) {
             displayStats();
             System.out.println();
-            planEnemyAction();
+//            planEnemyAction();
             System.out.println();
             doPlayerAction();
             System.out.println();
@@ -138,26 +138,6 @@ public class Battle {
     }
 
     /**
-     * Looks inside each enemy's deck and chooses random card they intend to play. Each card in the
-     * enemy's deck has an equal chance of appearing. Repeats this process until the enemy
-     * runs out of action points for the turn.
-     */
-    private void planEnemyAction() {
-        for (Enemy enemy : enemies) {
-            Card card = enemy.chooseCard();
-            String also = "";
-            // Enemy chooses cards until enemy's AP=0 or no valid options
-            while (card != null) {
-                enemy.intend(card);
-                System.out.println(enemy.getName() + also + " plans to use " + card.getName() + ".");
-                System.out.println("\t" + card.getDescription(enemy));
-                card = enemy.chooseCard();
-                also = " also";
-            }
-        }
-    }
-
-    /**
      * Checks if any enemy is dead and removes them from the battlefield.
      */
     private void checkForDeadEnemies() {
@@ -181,9 +161,9 @@ public class Battle {
             enemy.turnStartStatReset();
         }
         for (Enemy enemy : enemies) {
-            // Play enemy's cards that it intended to play
-            while (!enemy.isIntendEmpty() && !player.isDead()) {
-                Card card = enemy.getIntendedCard();
+            // Play enemy's cards
+            List<Card> move = enemy.getMove();
+            for (Card card : move) {
                 System.out.println(enemy.getName() + " plays " + card.getName() + "!");
                 Main.textWait();
                 enemy.playCard(card, player);
@@ -223,7 +203,7 @@ public class Battle {
      */
     private void doCardAdding() {
         possibleCardDrops.removeIf(card -> Math.random() <= Main.DROP_CHANCE); // removes some cards from the possible drops.
-        if (Main.DEBUGSTATS) {
+        if (Main.DEBUG) {
             System.out.println(possibleCardDrops);
         }
         Card cardToAdd = null;
@@ -238,7 +218,7 @@ public class Battle {
             }
         } else {
             Collections.shuffle(possibleCardDrops);
-            if (Main.DEBUGSTATS) {
+            if (Main.DEBUG) {
                 System.out.println("Debug: Possible Card Drops");
                 for (Card possibleCardDrop : possibleCardDrops) {
                     System.out.println("\t" + possibleCardDrop);

@@ -15,20 +15,20 @@ import java.util.*;
  * This is the driver class of the program.
  */
 public class Main {
-    public static final boolean DEBUGSTATS = true; // Displays debug information about the game.
+    public static final boolean DEBUG = false; // Displays debug information about the game.
     public static Player player; // The player.
     private static final double STARTING_DIFFICULTY = 1.22;
     private static double difficulty; // The difficulty
     public static final int BATTLEFIELD_SIZE = 3; // the maximum number of enemies on the battlefield
     public static final double DROP_CHANCE = 0.4; // the chance that the enemy will drop a card for the player to find.
-    public static final int TEXT_DELAY = 1400; // the text delay in milliseconds.
+    public static final int TEXT_DELAY = 100; // the text delay in milliseconds.
 
     public static void main(String[] args) {
         System.out.println("=== Knight Deck ===");
         loadCards("cards.json");
         loadEnemies("enemies.json");
 
-        if (DEBUGSTATS) { // to see if all the cards and enemies initialized correctly
+        if (DEBUG) { // to see if all the cards and enemies initialized correctly
             System.out.println("List of all cards:");
             for (Card card : CardFactory.getAllCards()) {
                 System.out.println("\t" + card.toString());
@@ -60,7 +60,7 @@ public class Main {
             makeSaveState(player, difficulty);
         }
 
-        if (DEBUGSTATS) { // checking if the player has initialized correctly
+        if (DEBUG) { // checking if the player has initialized correctly
             System.out.println("Your deck is as follows:");
             for (Card card : player.getDeck()) {
                 System.out.println("\t" + card.getDescription(player));
@@ -69,10 +69,10 @@ public class Main {
 
         String response = "";
         while (!response.equalsIgnoreCase("q")) {
-            if (DEBUGSTATS) {
+            if (DEBUG) {
                 System.out.println("Difficulty " + difficulty);
                 System.out.println("Debug: Shop has been set to visitable.");
-                Shop.nowVisitable();
+                Shop.setVisitable();
             }
             System.out.println(player.healthStatus());
             System.out.println("You have " + player.getGold() + " gold.");
@@ -280,7 +280,7 @@ public class Main {
 
         // Post-Battle
         Shop.refreshContents();
-        Shop.nowVisitable();
+        Shop.setVisitable();
     }
 
     /**
