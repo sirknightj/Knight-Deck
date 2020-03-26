@@ -53,7 +53,7 @@ public class Shop {
             int j = 0;
             for (Card card : CardFactory.getPlayerCards()) {
                 if (j == randomCard) {
-                    vendorContents.put(card, random.nextInt((card.getDamage() * card.getHits() + card.getDefense() + card.getShield()) / 2) + ((card.getDamage() * card.getHits() + card.getDefense() + card.getShield()) / 2) + 5);
+                    vendorContents.put(card, (random.nextInt(1 + (card.getDamage() * card.getHits() + card.getDefense() * 3 + 2 * card.getShield()) / 2)) + ((card.getDamage() * card.getHits() + card.getDefense() + card.getShield()) / 2) + 5);
                     break;
                 }
                 j++;

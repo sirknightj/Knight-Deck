@@ -235,7 +235,7 @@ public class Battle {
             cardToAdd = possibleCardDrops.get(0);
             System.out.println("After inspecting the battlefield, you discover " + cardToAdd.getName() + ".");
             System.out.println("\t" + cardToAdd.getDescription(player));
-            if (!Main.yesNoPrompt("Do you want to add this card into your deck","","Invalid input.")) {
+            if (!Main.yesNoPrompt("Do you want to add this card into your deck", "", "Invalid input.")) {
                 cardToAdd = null;
             }
         } else {
@@ -253,7 +253,7 @@ public class Battle {
             System.out.println("And you also discover " + cardToAdd2.getName() + " (2).");
             System.out.println("\t" + cardToAdd2.getDescription(player));
             System.out.println("You can only add one card per battle.");
-            int number = Main.numberPrompt("Which card number do you want to add to your deck (any other number for none?)","Card#", "Invalid input.");
+            int number = Main.numberPrompt("Which card number do you want to add to your deck (any other number for none?)", "Card#", "Invalid input.");
             if (number == 1) {
                 cardToAdd = cardToAdd1;
             } else if (number == 2) {

@@ -44,17 +44,32 @@
     "singleUse": true
   },
   {
+    "name": "Armor Up",
+    "cost": 2,
+    "playable": true,
+    "shield": 20,
+    "singleUse": true
+  },
+  {
+    "name": "Protection of the Goddess",
+    "cost": 3,
+    "playable": true,
+    "defense": 15,
+    "shield": 35,
+    "singleUse": true
+  },
+  {
     "name": "Strength Potion",
     "cost": 1,
     "playable": true,
     "singleUse": true,
-    "strength": 3
+    "strength": 4
   },
   {
     "name": "Motivational Photo",
     "cost": 0,
     "playable": true,
-    "strength": 1
+    "strength": 2
   },
   {
     "name": "Hack and Slash",
@@ -135,19 +150,19 @@
     "name": "Dab",
     "cost": 0,
     "playable": true,
-    "defense": 2
+    "defense": 4
   },
   {
     "name": "Roll",
     "cost": 1,
     "playable": true,
-    "defense": 3
+    "defense": 4
   },
   {
     "name": "Somersault",
     "cost": 2,
     "playable": true,
-    "damage": 6,
+    "damage": 7,
     "hits": 1,
     "defense": 2
   },
@@ -181,6 +196,14 @@
     "defense": 1
   },
   {
+    "name": "Great Spin Attack",
+    "cost": 3,
+    "playable": true,
+    "damage": 15,
+    "hits": 3,
+    "attackAll": true
+  },
+  {
     "name": "Bow and Arrow",
     "cost": 1,
     "playable": false,
@@ -205,9 +228,24 @@
     "name": "Finishing Blow",
     "cost": 3,
     "playable": false,
-    "damage": 60,
+    "damage": 65,
     "hits": 1,
-    "defense": 200
+    "shield": 35,
+    "isSingleUse": true
+  },
+  {
+    "name": "Chomp",
+    "cost": 1,
+    "playable": false,
+    "damage": 15,
+    "hits": 1
+  },
+  {
+    "name": "Claw",
+    "cost": 1,
+    "playable": false,
+    "damage": 9,
+    "hits": 2
   },
   {
     "name": "Crossbow",

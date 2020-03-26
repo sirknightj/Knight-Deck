@@ -33,7 +33,7 @@
     "deck": ["Crossbow", "Slash", "Quick Shot", "Defend"],
     "cost": 3,
     "gold": 16,
-    "cardDrops": ["Pummel", "Hack and Slash"]
+    "cardDrops": ["Pummel", "Hack and Slash", "Javelin", "Dab"]
   },
   {
     "name": "Armored Knight",
@@ -42,7 +42,7 @@
     "deck": ["Crossbow", "Slash", "Quick Shot", "Defend"],
     "cost": 5,
     "gold": 35,
-    "cardDrops": ["Battle Axe", "Beatdown", "Pummel"]
+    "cardDrops": ["Battle Axe", "Beatdown", "Pummel", "Protection of the Goddess", "Javelin"]
   },
   {
     "name": "Golden Armored Knight",
@@ -51,7 +51,7 @@
     "deck": ["Crossbow", "Slash", "Quick Shot", "Charge"],
     "cost": 8,
     "gold": 60,
-    "cardDrops": ["Relentless Beatdown", "Beatdown"]
+    "cardDrops": ["Relentless Beatdown", "Beatdown", "Pummel", "Protection of the Goddess"]
   },
   {
     "name": "Wolf",
@@ -60,7 +60,7 @@
     "deck": ["Bite", "Gnaw"],
     "cost": 0.7,
     "gold": 8,
-    "cardDrops": ["Stab"]
+    "cardDrops": ["Stab", "Double Tap"]
   },
   {
     "name": "Bear",
@@ -78,15 +78,15 @@
     "deck": ["Fortify", "Magic Shield", "Fireball", "Bubble"],
     "cost": 1,
     "gold": 16,
-    "cardDrops": ["Defensive Stance", "Block"]
+    "cardDrops": ["Defensive Stance", "Block", "Hunker", "Armor Up"]
   },
   {
     "name": "Beast",
     "health": 250,
     "actionPoints": 3,
-    "deck": ["Roar", "Finishing Blow"],
-    "cost": 10,
-    "gold": 69,
+    "deck": ["Roar", "Finishing Blow", "Claw", "Chomp"],
+    "cost": 16,
+    "gold": 120,
     "cardDrops": ["Great Spin Attack", "Hack and Slash"]
   }
 ]

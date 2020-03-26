@@ -16,6 +16,7 @@ public class SaveState {
 
     /**
      * Creates a save state from the given Player.
+     *
      * @param player Player to save
      */
     public SaveState(Player player, double difficulty) {
@@ -31,6 +32,7 @@ public class SaveState {
 
     /**
      * Creates a new Player from this save state representation
+     *
      * @return new Player
      */
     public Player constructPlayer() {

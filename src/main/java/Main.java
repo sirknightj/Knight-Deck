@@ -77,21 +77,32 @@ public class Main {
             System.out.println(player.healthStatus());
             System.out.println("You have " + player.getGold() + " gold.");
             System.out.println("What would you like to do?");
-            System.out.println("\t" + "b to battle");
-            System.out.println("\t" + "h to visit the field hospital");
-            System.out.println("\t" + "s to check out the shop");
-            System.out.println("\t" + "q to quit");
+            System.out.println("\tb to battle normally and get closer to saving the princess");
+            System.out.println("\te to battle easier enemies and gain some more gold and cards");
+            System.out.println("\th to visit the field hospital");
+            System.out.println("\ts to check out the shop");
+            System.out.println("\tq to quit");
             System.out.print("Action> ");
             response = input.nextLine().toLowerCase();
             System.out.println();
             if (response.equals("b")) {
-                toBattle();
-                Shop.refreshContents();
-                Shop.nowVisitable();
+                if (difficulty > 16) {
+                    finalBattle();
+                } else {
+                    toBattle(difficulty);
+                }
+                // Post-battle
+                difficulty *= 1.22;
+            } else if (response.equals("e")) {
+                if(difficulty < 2) {
+                    toBattle(difficulty);
+                } else {
+                    toBattle(difficulty / 2);
+                }
             } else if (response.equals("h")) {
                 visitHospital();
             } else if (response.equals("s")) {
-                if(Shop.getInstance() == null) {
+                if (Shop.getInstance() == null) {
                     System.out.println("Shopkeepers: Sorry, we're currently sold out.");
                     textWait();
                     System.out.println("Shopkeepers: Could you come back in a bit? We'll have some more stock then.");
@@ -237,7 +248,7 @@ public class Main {
     /**
      * Selects random enemies, based on the difficulty, and starts the battle.
      */
-    private static void toBattle() {
+    private static void toBattle(double battleFieldStamina) {
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
         double costOfThisField = 0;
@@ -245,7 +256,8 @@ public class Main {
         int end = 0;
         while (enemies.isEmpty() || end < 10) {
             Enemy enemy = ((EnemyTemplate) enemyList[(int) (Math.random() * enemyList.length)]).create();
-            if (enemy.getCost() + costOfThisField <= difficulty) {
+            if (enemy.getCost() + costOfThisField <= battleFieldStamina) {
+                System.out.println("Enemy has been added: " + enemy.toString());
                 enemies.add(enemy);
                 costOfThisField += enemy.getCost();
                 end = 0;
@@ -260,8 +272,9 @@ public class Main {
         Battle battle = new Battle(player, enemies);
         battle.start();
 
-        // Post-battle
-        difficulty *= 1.22;
+        // Post-Battle
+        Shop.refreshContents();
+        Shop.nowVisitable();
     }
 
     /**
@@ -284,8 +297,8 @@ public class Main {
                 int goldToHeal = (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4));
                 if (player.getGold() >= goldToHeal) {
                     if (yesNoPrompt("Cleric: I can heal you all the way to full, but it'll cost you " +
-                            goldToHeal + " gold (y/n).\n\t(You have " + player.getGold() + " gold.)",
-                            "","Cleric: Sorry, I don't understand.")) {
+                                    goldToHeal + " gold (y/n).\n\t(You have " + player.getGold() + " gold.)",
+                            "", "Cleric: Sorry, I don't understand.")) {
                         System.out.println("Cleric: Get ready!");
                         textWait();
                         System.out.println("\t" + "Cleric used heal!");
@@ -361,5 +374,43 @@ public class Main {
             System.out.print(enter.trim() + "> ");
         }
         return input.nextInt();
+    }
+
+    /**
+     * Pits the player against the final boss.
+     *
+     * @throws IllegalStateException if the player beats the boss.
+     */
+    private static void finalBattle() {
+        System.out.println("Narrator: You finally reach the castle where the princess is being locked up.");
+        textWait();
+        System.out.println("Narrator: The moment has come. This is the final battle!");
+        textWait();
+        if (yesNoPrompt("Narrator: Are you ready? (y/n)", ">", "Narrator: Sorry, I don't understand.")) {
+            List<Enemy> enemies = new ArrayList<>();
+            enemies.add(EnemyFactory.getEnemy("Beast"));
+            enemies.add(EnemyFactory.getEnemy("Knight"));
+            enemies.add(EnemyFactory.getEnemy("Wizard"));
+            Battle battle = new Battle(player, enemies);
+            battle.start();
+
+            if (player.getHealth() > 0) {
+                System.out.println("Narrator: And thus, " + player.getName() + " has defeated the beast and saved the princess.");
+                textWait();
+                System.out.println("Princess: Oh, " + player.getName() + "! Thank you for saving me!");
+                textWait();
+                System.out.println("Narrator: And so, the brave knight and the beautiful princess lived happily ever after.");
+                textWait();
+                System.out.println("Narrator: The end.");
+                throw new IllegalStateException("We haven't planned this far yet.");
+            } else {
+                System.out.println("Narrator: Unfortunately, our brave knight " + player.getName() + " has been defeated by the beast.");
+                textWait();
+                System.out.println("Narrator: Our princess still needs a rescuer. Who will stop the beast now?");
+                textWait();
+            }
+        } else {
+            System.out.println("Narrator: The final moments await. Ladies and gentlemen, please wait as " + player.getName() + " does their final preparations!");
+        }
     }
 }

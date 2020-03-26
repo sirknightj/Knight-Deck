@@ -14,10 +14,11 @@ public class Player extends Being {
 
     /**
      * Constructor. Also fills the Player's health and action points to full.
-     * @param name The name of the player.
-     * @param maxHealth The maximum health of the player.
-     * @param maxActionPoints The maximum actionPoints of the player.
-     * @param deck The deck the player starts with.
+     *
+     * @param name              The name of the player.
+     * @param maxHealth         The maximum health of the player.
+     * @param maxActionPoints   The maximum actionPoints of the player.
+     * @param deck              The deck the player starts with.
      * @param discardActionDeck True iff the player discards their actionDeck at the end of their turn.
      */
     public Player(String name, int maxHealth, int maxActionPoints, List<Card> deck, boolean discardActionDeck) {
@@ -152,7 +153,7 @@ public class Player extends Being {
      * is true. Otherwise, does nothing.
      */
     public void finishTurn() {
-        if(!discardActionDeck) {
+        if (!discardActionDeck) {
             discardPile.addAll(actionDeck);
         }
     }
