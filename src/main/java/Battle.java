@@ -82,7 +82,6 @@ public class Battle {
                 String response = input.nextLine();
                 if (response.toLowerCase().equals("e")) {
                     System.out.println("You have chosen to end your turn.");
-                    player.finishTurn();
                     return;
                 }
 
@@ -120,7 +119,7 @@ public class Battle {
                     }
                 }
             }
-            assert (target != null);
+            assert target != null;
             System.out.println("You played " + cardToPlay.getName() + "!");
             if (cardToPlay.isAttackAll()) {
                 player.playCard(cardToPlay, enemies);
@@ -136,7 +135,6 @@ public class Battle {
         } else if (player.isActionDeckEmpty()) {
             System.out.println("Your turn has automatically ended because you have no more cards in your hand.");
         }
-        player.finishTurn();
     }
 
     /**
@@ -242,8 +240,8 @@ public class Battle {
             Collections.shuffle(possibleCardDrops);
             if (Main.DEBUGSTATS) {
                 System.out.println("Debug: Possible Card Drops");
-                for (int i = 0; i < possibleCardDrops.size(); i++) {
-                    System.out.println("\t" + possibleCardDrops.get(i));
+                for (Card possibleCardDrop : possibleCardDrops) {
+                    System.out.println("\t" + possibleCardDrop);
                 }
             }
             Card cardToAdd1 = possibleCardDrops.get(0);

@@ -12,7 +12,6 @@ public class SaveState {
     public int gold;
     public List<String> deck;
     public double difficulty;
-    public boolean discardActionDeck;
 
     /**
      * Creates a save state from the given Player.
@@ -27,7 +26,6 @@ public class SaveState {
         this.gold = player.getGold();
         this.deck = player.getDeck().stream().map(Card::getName).collect(Collectors.toList());
         this.difficulty = difficulty;
-        this.discardActionDeck = player.isActionDeckDiscarded();
     }
 
     /**
@@ -37,7 +35,7 @@ public class SaveState {
      */
     public Player constructPlayer() {
         List<Card> cardDeck = deck.stream().map(CardFactory::getCard).collect(Collectors.toList());
-        Player player = new Player(name, maxHealth, maxActionPoints, cardDeck, discardActionDeck);
+        Player player = new Player(name, maxHealth, maxActionPoints, cardDeck);
         player.addGold(gold);
         player.setHealth(health);
         return player;

@@ -55,7 +55,7 @@ public class Main {
             difficulty = save.getDifficulty();
             player = save.constructPlayer();
         } else { // No save
-            player = new Player(name, 50, 3, testDeck(), false);
+            player = new Player(name, 50, 3, testDeck());
             difficulty = STARTING_DIFFICULTY;
             makeSaveState(player, difficulty);
         }
@@ -85,35 +85,42 @@ public class Main {
             System.out.print("Action> ");
             response = input.nextLine().toLowerCase();
             System.out.println();
-            if (response.equals("b")) {
-                if (difficulty > 16) {
-                    finalBattle();
-                } else {
-                    toBattle(difficulty);
-                }
-                // Post-battle
-                difficulty *= 1.22;
-            } else if (response.equals("e")) {
-                if(difficulty < 2) {
-                    toBattle(difficulty);
-                } else {
-                    toBattle(difficulty / 2);
-                }
-            } else if (response.equals("h")) {
-                visitHospital();
-            } else if (response.equals("s")) {
-                if (Shop.getInstance() == null) {
-                    System.out.println("Shopkeepers: Sorry, we're currently sold out.");
-                    textWait();
-                    System.out.println("Shopkeepers: Could you come back in a bit? We'll have some more stock then.");
-                    textWait();
-                } else {
-                    Shop.getInstance().enter();
-                }
-            } else if (response.equals("q")) {
-                System.out.println("Thanks for playing Knight Deck!");
-            } else {
-                System.out.println("Unrecognizable input.");
+            switch (response) {
+                case "b":
+                    if (difficulty > 16) {
+                        finalBattle();
+                    } else {
+                        toBattle(difficulty);
+                    }
+                    // Post-battle
+                    difficulty *= 1.22;
+                    break;
+                case "e":
+                    if (difficulty < 2) {
+                        toBattle(difficulty);
+                    } else {
+                        toBattle(difficulty / 2);
+                    }
+                    break;
+                case "h":
+                    visitHospital();
+                    break;
+                case "s":
+                    if (Shop.getInstance() == null) {
+                        System.out.println("Shopkeepers: Sorry, we're currently sold out.");
+                        textWait();
+                        System.out.println("Shopkeepers: Could you come back in a bit? We'll have some more stock then.");
+                        textWait();
+                    } else {
+                        Shop.getInstance().enter();
+                    }
+                    break;
+                case "q":
+                    System.out.println("Thanks for playing Knight Deck!");
+                    break;
+                default:
+                    System.out.println("Unrecognizable input.");
+                    break;
             }
             player.sortDeck();
             makeSaveState(player, difficulty); // save after every action
@@ -171,7 +178,7 @@ public class Main {
         //   and hash is the SHA-1 of the full name. This ensures that there are no naming conflicts.
 
         // Calculate SHA-1 hash of name
-        String hash = "";
+        String hash;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             byte[] messageDigest = md.digest(name.getBytes());

@@ -92,16 +92,6 @@ public class Enemy extends Being {
     }
 
     /**
-     * Returns true iff the card already exists in the intent queue.
-     *
-     * @param card the card to be checked.
-     * @return true iff the card exists in the intent queue.
-     */
-    public boolean intendContains(Card card) {
-        return intent.contains(card);
-    }
-
-    /**
      * Returns the card at the front of the queue, and removes it from the queue.
      *
      * @return the card at the front of the queue.

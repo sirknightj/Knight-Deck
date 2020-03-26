@@ -10,7 +10,6 @@ public class Player extends Being {
     private List<Card> actionDeck; // the cards in the player's hand.
     private Stack<Card> discardPile; // the cards the player has already seen.
     private int gold; // the gold the player will stockpile and use
-    private boolean discardActionDeck; // true iff the player discards their actionDeck at the end of their turn.
 
     /**
      * Constructor. Also fills the Player's health and action points to full.
@@ -19,9 +18,8 @@ public class Player extends Being {
      * @param maxHealth         The maximum health of the player.
      * @param maxActionPoints   The maximum actionPoints of the player.
      * @param deck              The deck the player starts with.
-     * @param discardActionDeck True iff the player discards their actionDeck at the end of their turn.
      */
-    public Player(String name, int maxHealth, int maxActionPoints, List<Card> deck, boolean discardActionDeck) {
+    public Player(String name, int maxHealth, int maxActionPoints, List<Card> deck) {
         super(name, maxHealth, maxActionPoints, deck);
 
         // make sure each card is a valid player card
@@ -29,7 +27,6 @@ public class Player extends Being {
             assert (card.isPlayableBy(this));
         }
 
-        this.discardActionDeck = discardActionDeck;
         gold = 0;
         drawPile = new Stack<>();
         actionDeck = new ArrayList<>();
@@ -57,14 +54,7 @@ public class Player extends Being {
      */
     public void takeGold(int gold) {
         this.gold -= gold;
-        assert (gold >= 0);
-    }
-
-    /**
-     * @return True iff the actionDeck is to be discarded every turn.
-     */
-    public boolean isActionDeckDiscarded() {
-        return discardActionDeck;
+        assert this.gold >= 0;
     }
 
     /**
@@ -92,26 +82,17 @@ public class Player extends Being {
      * Or, if the player's action deck is not discarded, draw more cards up to the player's draw capacity.
      */
     public void drawCards() {
-        if (discardActionDeck) {
-            actionDeck.clear();
-        }
         for (int i = actionDeck.size(); i < CARDS_PER_DRAW; i++) {
             if (drawPile.isEmpty()) {
-                resetDrawPile();
+                // Reset this player's draw pile
+                drawPile.addAll(discardPile);
+                discardPile.clear();
+                Collections.shuffle(drawPile);
             }
 
             Card card = drawPile.pop();
             actionDeck.add(card);
         }
-    }
-
-    /**
-     * Resets the player's draw pile.
-     */
-    private void resetDrawPile() {
-        drawPile.addAll(discardPile);
-        discardPile.clear();
-        Collections.shuffle(drawPile);
     }
 
     /**
@@ -140,21 +121,11 @@ public class Player extends Being {
             card.play(this, target);
         }
         actionPoints -= card.getCost();
-        assert (actionPoints >= 0);
+        assert actionPoints >= 0;
 
         actionDeck.remove(card);
         if (!card.isSingleUse()) {
             discardPile.push(card);
-        }
-    }
-
-    /**
-     * Moves the remaining unselected cards from the action deck to the discard pile, if discardActionDeck
-     * is true. Otherwise, does nothing.
-     */
-    public void finishTurn() {
-        if (!discardActionDeck) {
-            discardPile.addAll(actionDeck);
         }
     }
 
@@ -195,10 +166,7 @@ public class Player extends Being {
      * @param health the amount of health to be restored.
      */
     public void heal(int health) {
-        this.health += health;
-        if (this.health > maxHealth) {
-            this.health = maxHealth;
-        }
+        this.health = Math.min(this.health + health, maxHealth);
     }
 
     /**
