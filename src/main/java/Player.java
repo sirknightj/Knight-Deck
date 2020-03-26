@@ -13,13 +13,13 @@ public class Player extends Being {
 
     /**
      * Constructor. Also fills the Player's health and action points to full.
-     *
      * @param name            The name of the player.
      * @param maxHealth       The maximum health of the player.
      * @param maxActionPoints The maximum actionPoints of the player.
      * @param deck            The deck the player starts with.
      * @param drawSize        the number of cards the player starts off their turn with in the actionDeck.
      */
+
     public Player(String name, int maxHealth, int maxActionPoints, List<Card> deck, int drawSize) {
         super(name, maxHealth, maxActionPoints, deck);
 
@@ -57,6 +57,7 @@ public class Player extends Being {
     public void takeGold(int gold) {
         this.gold -= gold;
         assert (gold >= 0);
+        assert this.gold >= 0;
     }
 
     /**
@@ -86,7 +87,10 @@ public class Player extends Being {
     public void drawCards() {
         for (int i = actionDeck.size(); i < drawSize; i++) {
             if (drawPile.isEmpty()) {
-                resetDrawPile();
+                // Reset this player's draw pile
+                drawPile.addAll(discardPile);
+                discardPile.clear();
+                Collections.shuffle(drawPile);
             }
 
             Card card = drawPile.pop();
@@ -150,26 +154,11 @@ public class Player extends Being {
             card.play(this, target);
         }
         actionPoints -= card.getCost();
-        assert (actionPoints >= 0);
+        assert actionPoints >= 0;
 
         actionDeck.remove(card);
         if (!card.isSingleUse()) {
             discardPile.push(card);
-        }
-    }
-
-    public void printDeckStatus() {
-        System.out.println("Your draw pile is as follows:");
-        for (Card card : drawPile) {
-            System.out.println("\t" + card.toString());
-        }
-        System.out.println("Your actionDeck is as follows:");
-        for (Card card : actionDeck) {
-            System.out.println("\t" + card.toString());
-        }
-        System.out.println("Your discard pile is as follows:");
-        for (Card card : discardPile) {
-            System.out.println("\t" + card.toString());
         }
     }
 
@@ -210,10 +199,7 @@ public class Player extends Being {
      * @param health the amount of health to be restored.
      */
     public void heal(int health) {
-        this.health += health;
-        if (this.health > maxHealth) {
-            this.health = maxHealth;
-        }
+        this.health = Math.min(this.health + health, maxHealth);
     }
 
     /**

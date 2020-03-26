@@ -109,13 +109,6 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * @return The raw damage output of this card.
-     */
-    public int rawDamage() {
-        return damage * hits;
-    }
-
-    /**
      * @return True iff the card is single use (per combat).
      */
     public boolean isSingleUse() {
@@ -167,7 +160,7 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * @return a description of what this card does, ignoring the things it doesn't do.
+     * * @return a description of what this card does, ignoring the things it doesn't do.
      */
     public String getDescription(Being user) {
         String ANSI_RESET = "\u001B[0m";
@@ -204,7 +197,6 @@ public class Card implements Comparable<Card> {
      * Forecasts the total damage dealt, based on the being's stats.
      *
      * @param target The intended target of the card.
-     * @return a string forecast of the amount of damage the card will do.
      */
     public void printForecast(Being user, Being target) {
         String ANSI_RESET = "\u001B[0m";

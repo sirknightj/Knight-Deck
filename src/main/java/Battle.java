@@ -119,7 +119,7 @@ public class Battle {
                     }
                 }
             }
-            assert (target != null);
+            assert target != null;
             System.out.println("You played " + cardToPlay.getName() + "!");
             if (cardToPlay.isAttackAll()) {
                 player.playCard(cardToPlay, enemies);
@@ -201,10 +201,6 @@ public class Battle {
     private void displayStats() {
         System.out.println("--Turn " + turn + "--");
         player.turnStartStatReset();
-        if(Main.DEBUGSTATS) {
-            System.out.println("Debug: Player Deck Status");
-            player.printDeckStatus();
-        }
         System.out.println(player.healthStatus());
         for (Enemy enemy : enemies) {
             System.out.println(enemy.healthStatus());
@@ -244,8 +240,8 @@ public class Battle {
             Collections.shuffle(possibleCardDrops);
             if (Main.DEBUGSTATS) {
                 System.out.println("Debug: Possible Card Drops");
-                for (int i = 0; i < possibleCardDrops.size(); i++) {
-                    System.out.println("\t" + possibleCardDrops.get(i));
+                for (Card possibleCardDrop : possibleCardDrops) {
+                    System.out.println("\t" + possibleCardDrop);
                 }
             }
             Card cardToAdd1 = possibleCardDrops.get(0);

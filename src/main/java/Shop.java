@@ -118,7 +118,7 @@ public class Shop {
             Scanner input = new Scanner(System.in);
             System.out.println("Vendor: Type in the name of the card you would like to purchase (l to leave).");
             System.out.println("\t(You have " + player.getGold() + " gold.)");
-            Card card = null;
+            Card card;
             while (true) {
                 System.out.print("Card> ");
                 String response = input.nextLine();
@@ -133,6 +133,10 @@ public class Shop {
                     System.out.println("Vendor: Invalid card.");
                 } else if (!vendorContents.keySet().contains(card)) {
                     System.out.println("Vendor: I'm not selling any card with that name.");
+
+                    System.out.println("Invalid card.");
+                } else if (!vendorContents.containsKey(card)) {
+                    System.out.println("I'm not selling any card with that name.");
                 } else if (player.getGold() < vendorContents.get(card)) {
                     System.out.println("You don't have enough gold.");
                 } else {
@@ -177,7 +181,7 @@ public class Shop {
             Scanner input = new Scanner(System.in);
             System.out.println("Shady Dealer: I said hurry up!! (l to leave).");
             System.out.println("\t(You have " + player.getGold() + " gold.)");
-            Card card = null;
+            Card card;
             while (true) {
                 System.out.print("Item> ");
                 String response = input.nextLine();
@@ -208,6 +212,15 @@ public class Shop {
                         System.out.println("Shady Dealer: You don't have enough gold.");
                         Main.textWait();
                     }
+                }
+                card = CardFactory.getCard(response);
+                // Print error messages if card is illegal
+                if (card == null) {
+                    System.out.println("Shady Dealer: Invalid card.");
+                } else if (!shadyContents.containsKey(card)) {
+                    System.out.println("Shady Dealer: I'm not selling any card with that name.");
+                } else if (player.getGold() < shadyContents.get(card)) {
+                    System.out.println("Shady Dealer: You don't have enough gold.");
                 } else {
                     card = CardFactory.getCard(response);
                     // Print error messages if card is illegal
