@@ -30,7 +30,7 @@ public class ApplicationMain extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle(NAME_OF_WINDOW);
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/HomeScreen.fxml")))
+        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/HomeScreen.fxml")));
         primaryStage.setScene(scene);
         primaryStage.show();
     }
