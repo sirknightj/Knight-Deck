@@ -25,6 +25,8 @@ public class ApplicationModel {
     public final int BATTLEFIELD_SIZE = 3; // the maximum number of enemies on the battlefield
     public final double DROP_CHANCE = 0.4; // the chance that the enemy will drop a card for the player to find.
     public final int TEXT_DELAY = 100; // the text delay in milliseconds.
+    private int hospitalStatus; // the hospital dialogue.
+    private static ApplicationController controller; // this controller.
 //    public BattleManager battleManager;
 
     /**
@@ -32,9 +34,9 @@ public class ApplicationModel {
      *
      * @throws RuntimeException if the resources fail to load.
      */
-    public ApplicationModel(String name) {
+    public ApplicationModel(String name, ApplicationController controller) {
         try { // Loading the cards.
-            Reader cardFile = Files.newBufferedReader(Paths.get(Main.class.getResource("cards.json").toURI()));
+            Reader cardFile = Files.newBufferedReader(Paths.get(getClass().getResource("cards.json").toURI()));
             List<Card> cards = new Gson().fromJson(cardFile, new TypeToken<List<Card>>() {
             }.getType());
             for (Card card : cards) {
@@ -43,8 +45,8 @@ public class ApplicationModel {
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException("Failed to load cards");
         }
-        try {
-            Reader enemyFile = Files.newBufferedReader(Paths.get(Main.class.getResource("enemies.json").toURI()));
+        try { // Loading the enemies.
+            Reader enemyFile = Files.newBufferedReader(Paths.get(getClass().getResource("enemies.json").toURI()));
 
             List<EnemyTemplate> enemies = new Gson().fromJson(enemyFile, new TypeToken<List<EnemyTemplate>>() {
             }.getType());
@@ -57,7 +59,7 @@ public class ApplicationModel {
 
         SaveState save = getSaveState(name);
         if (save != null) { // Found a save
-            System.out.println("Found player " + name + ". Loaded from save file.");
+            System.out.println("Found player " + name + ". Loaded from save file."); // TODO: Remove this line after testing is done.
             difficulty = save.getDifficulty();
             player = save.constructPlayer();
         } else { // No save
@@ -65,13 +67,87 @@ public class ApplicationModel {
             difficulty = STARTING_DIFFICULTY;
             makeSaveState(player, difficulty);
         }
+        hospitalStatus = 0;
+        this.controller = controller;
     }
 
     /**
-     * @return the player.
+     * @return the player this game is considering.
      */
     public Player getPlayer() {
         return player;
+    }
+
+    /**
+     * Resets the hospital dialogue status.
+     */
+    public void resetHospitalStatus() {
+        hospitalStatus = 0;
+    }
+
+    /**
+     * @return true iff it's time to switch to the yes/no boxes.
+     */
+    public boolean isItYesNoTime() {
+        return hospitalStatus == 6;
+    }
+
+    public boolean isItLeavingTime() {
+        return hospitalStatus == 11;
+    }
+
+    public String getNextHospitalText() {
+        hospitalStatus++;
+        if (hospitalStatus == 1) {
+            return "Let me take a look at your wounds...";
+        }
+        if (hospitalStatus == 5) {
+            return "It doesn't look like you have enough gold for me to heal you. It costs " + getHealingCost() + " gold, and you have " + player.getGold() + " gold.";
+        }
+        if (hospitalStatus == 6) {
+            hospitalStatus = 10;
+            return "I really would like to heal you, but I'm poor and don't have any extra supplies.";
+        }
+        if (hospitalStatus == 11) {
+            return "Not saying you should get yourself injured, but come back when you need healing!";
+        }
+        if (player.getHealth() < player.getMaxHealth()) {
+            if (player.getGold() > 1) {
+                if (hospitalStatus == 2) {
+                    return "...";
+                } else if (hospitalStatus == 3) {
+                    return "It looks like you're injured pretty badly.";
+                } else if (hospitalStatus == 4) {
+                    if (player.getGold() >= getHealingCost()) {
+                        hospitalStatus = 6;
+                        return "I can heal you all the way to full, but it'll cost you " + getHealingCost() + " gold. Deal?";
+                    } else {
+                        return getNextHospitalText();
+                    }
+                }
+            } else { // player has no gold
+                if (hospitalStatus == 2) {
+                    hospitalStatus = 5;
+                    return "Supplies are low right now. I need gold to heal you, and you have none.";
+                }
+            }
+        } else if (hospitalStatus == 2) { // player is not injured
+            hospitalStatus = 10;
+            return "You don't appear to have any injuries.";
+        }
+        return null;
+    }
+
+    public int getHealingCost() {
+        return (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4));
+    }
+
+    /**
+     * Heals the player to full. Takes away the appropriate gold.
+     */
+    public void healPlayerToFull() {
+        player.takeGold(getHealingCost());
+        player.heal(player.getMaxHealth() - player.getHealth());
     }
 
     /**
@@ -157,6 +233,10 @@ public class ApplicationModel {
         playerDeck.add(CardFactory.getCard("Scythe"));
         Collections.sort(playerDeck);
         return playerDeck;
+    }
+
+    public void initializeBattle() {
+
     }
 
 
