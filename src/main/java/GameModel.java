@@ -26,6 +26,9 @@ public class GameModel {
     private static final String CARDS_DATA_FILE = "cards.json";
     private static final String ENEMIES_DATA_FILE = "enemies.json";
 
+    /**
+     * Constructor
+     */
     public GameModel() {
         loadCards();
         loadEnemies();
@@ -36,6 +39,12 @@ public class GameModel {
         Shop.setVisitable();
     }
 
+    /**
+     * Loads a player's save state into memory or creates a new one. Must be called after the constructor
+     * and before any other method.
+     *
+     * @param playerName Case-sensitive name of the player.
+     */
     public void loadPlayer(String playerName) {
         SaveState save = getSaveState(playerName);
         if (save != null) { // Found a save
@@ -48,11 +57,20 @@ public class GameModel {
         }
     }
 
+    /**
+     * Saves player save state to disk.
+     */
     public void saveData() {
         player.sortDeck();
         makeSaveState(player, difficulty);
     }
 
+    /**
+     * Starts a non-final battle with the given battle cost. Initializes and returns a BattleManager.
+     *
+     * @param battleFieldStamina Battle cost
+     * @return BattleManager representing the battle.
+     */
     public BattleManager startBattle(double battleFieldStamina) {
         // Adding the enemies to battle
         List<Enemy> enemies = new ArrayList<>();
@@ -73,6 +91,12 @@ public class GameModel {
 
         return new BattleManager(player, enemies);
     }
+
+    /**
+     * Initializes and returns the final battle.
+     *
+     * @return BattleManager representing final battle.
+     */
     public BattleManager startFinalBattle() {
         List<Enemy> enemies = new ArrayList<>();
         enemies.add(EnemyFactory.getEnemy("Beast"));
@@ -82,11 +106,16 @@ public class GameModel {
         return new BattleManager(player, enemies);
     }
 
-
+    /**
+     * @return Player
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * @return current difficulty of the game
+     */
     public double getDifficulty() {
         return difficulty;
     }

@@ -1,5 +1,21 @@
 import java.util.*;
 
+/**
+ * Represents a battle between the Player and one or more Enemies.
+ *
+ * Call methods in this order:
+ * - BattleManager
+ * - start
+ * - loop while !isBattleOver
+ * - [optional] getCurrentStats
+ * - prePlayerTurn
+ * - loop as needed:
+ * - playerAction
+ * - preEnemyTurn
+ * - enemiesTurn
+ * - postTurn
+ * - postGame
+ */
 public class BattleManager {
     private Player player; // the player to battle.
     private List<Enemy> enemies; // the enemies to battle.
@@ -9,6 +25,12 @@ public class BattleManager {
     // contains exactly one element: the Player. This is necessary/efficient due to the way ActionSummary is structured
     private final List<Being> listWithOnlyPlayer;
 
+    /**
+     * Constructor.
+     *
+     * @param player  Player
+     * @param enemies List of Enemies on the battlefield
+     */
     public BattleManager(Player player, List<Enemy> enemies) {
         this.player = player;
         this.enemies = enemies;
@@ -29,6 +51,9 @@ public class BattleManager {
         listWithOnlyPlayer.add(player);
     }
 
+    /**
+     * Sets up the player's and enemies' decks. Must be called after the constructor and before any other methods.
+     */
     public void start() {
         player.initializeDeck();
         for (Enemy enemy : enemies) {
@@ -46,19 +71,37 @@ public class BattleManager {
         return player.isDead() || enemies.isEmpty();
     }
 
+    /**
+     * @return TurnStat representing battle stat at the beginning of this turn.
+     */
     public TurnStat getCurrentStats() {
         return new TurnStat(turn, player, new ArrayList<>(enemies));
     }
 
+    /**
+     * @return List of alive enemies.
+     */
+    public List<Enemy> getEnemies() {
+        return new ArrayList<>(enemies);
+    }
+
+    /**
+     * Resets the player's stats and fills their action deck. Must be called before the player's turn.
+     */
     public void prePlayerTurn() {
         player.turnStartStatReset();
         player.drawCards();
     }
 
-    public List<Enemy> getEnemies() {
-        return new ArrayList<>(enemies);
-    }
-
+    /**
+     * Plays the given card against the given target (or all enemies if card.isAttackAll()).
+     * Returns an ActionSummary representing the consequences of this single action.
+     * IMPORTANT: the client of this method must NOT execute cardPlayed.playCard.
+     *
+     * @param cardPlayed Card in the player's action deck with sufficient action points
+     * @param target     Enemy to attack (may be null for defensive or attack all cards)
+     * @return ActionSummary representing result of this action
+     */
     public ActionSummary playerAction(Card cardPlayed, Enemy target) {
         assert cardPlayed != null;
         assert target != null;
@@ -84,9 +127,12 @@ public class BattleManager {
         enemies.removeIf(Being::isDead);
         player.addGold(goldGained);
 
-        return new ActionSummary(cardPlayed, player, opponents, goldGained, isBattleOver());
+        return new ActionSummary(cardPlayed, player, opponents, goldGained);
     }
 
+    /**
+     * Resets all enemies's stats and fills their action decks. Must be called before the enemies' turn.
+     */
     public void preEnemyTurn() {
         for (Enemy enemy : enemies) {
             enemy.turnStartStatReset();
@@ -94,6 +140,13 @@ public class BattleManager {
         }
     }
 
+    /**
+     * Calculates and return a list of ActionSummaries of their intended move.
+     * There may be more ActionSummaries than enemies since enemies may play multiple cards.
+     * IMPORTANT: the cards in the action summaries must be executed by the client of this method.
+     *
+     * @return List of ActionSummaries representing the card actions of the alive enemies.
+     */
     public List<ActionSummary> enemiesTurn() {
         List<ActionSummary> actionSummaries = new ArrayList<>();
 
@@ -101,37 +154,45 @@ public class BattleManager {
             // Play enemy's cards
             List<Card> move = enemy.getMove();
             for (Card card : move) {
-//                enemy.playCard(card, player);
-                actionSummaries.add(new ActionSummary(card, enemy, listWithOnlyPlayer, 0, false));
+                actionSummaries.add(new ActionSummary(card, enemy, listWithOnlyPlayer, 0));
             }
         }
 
         return actionSummaries;
     }
 
+    /**
+     * Increases turn count by 1. Must be called after every turn.
+     */
     public void postTurn() {
         turn++;
     }
 
+    /**
+     * Must be called after every game, regardless of whether the player wins or not.
+     *
+     * @return Set of Cards representing the dropped cards by the killed enemies. May be empty.
+     */
     public Set<Card> postGame() {
         // removes some cards from the possible drops.
         possibleCardDrops.removeIf(card -> Math.random() <= GameModel.DROP_CHANCE);
         return possibleCardDrops;
     }
 
+    /**
+     * Represents the consequences of a given play of a Card.
+     */
     public static class ActionSummary {
         private Card cardPlayed;
         private Being user;
         private List<Being> opponents;
         private int goldGained;
-        private boolean isGameOver;
 
-        public ActionSummary(Card cardPlayed, Being user, List<Being> opponents, int goldGained, boolean isGameOver) {
+        public ActionSummary(Card cardPlayed, Being user, List<Being> opponents, int goldGained) {
             this.cardPlayed = cardPlayed;
             this.user = user;
             this.opponents = opponents;
             this.goldGained = goldGained;
-            this.isGameOver = isGameOver;
         }
 
         public Card getCardPlayed() {
@@ -149,14 +210,13 @@ public class BattleManager {
         public int getGoldGained() {
             return goldGained;
         }
-
-        public boolean didEndGame() {
-            return isGameOver;
-        }
     }
 
+    /**
+     * Represents the battle state at any point in time.
+     */
     public static class TurnStat {
-        private int turn;
+        private int turn; // turn number
         private Player player;
         private List<Enemy> enemies;
 

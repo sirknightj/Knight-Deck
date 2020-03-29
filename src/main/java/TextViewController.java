@@ -33,6 +33,9 @@ public class TextViewController {
         viewController.start();
     }
 
+    /**
+     * Driver for the console view of the game.
+     */
     public void start() {
         char response = ' ';
         while (response != 'q') {
@@ -59,6 +62,11 @@ public class TextViewController {
         System.out.println();
     }
 
+    /**
+     * Executes the appropriate driver for the given response
+     *
+     * @param response one of the following: b (battle), e (easy battle), h (hospital), s (shop), q (quit)
+     */
     private void handleMenuChoice(char response) {
         switch (response) {
             case 'b':
@@ -97,6 +105,11 @@ public class TextViewController {
         }
     }
 
+    /**
+     * Drives a battle completely from start to end.
+     *
+     * @param battle BattleManager
+     */
     private void manageBattle(BattleManager battle) {
         battle.start();
         System.out.println("=== Battle has started! ===");
@@ -124,6 +137,7 @@ public class TextViewController {
 
             battle.preEnemyTurn();
 
+            // Execute cards
             List<BattleManager.ActionSummary> enemyActions = battle.enemiesTurn();
             for (BattleManager.ActionSummary action : enemyActions) {
                 Enemy enemy = (Enemy) action.getCardUser();
@@ -148,6 +162,11 @@ public class TextViewController {
         }
     }
 
+    /**
+     * Prompts the user for moves to make and executes them.
+     *
+     * @param battle BattleManager
+     */
     private void getPlayerAction(BattleManager battle) {
         boolean firstTime = true;
         while (player.getActionPoints() > 0 && !player.isActionDeckEmpty() && !battle.isBattleOver()) {
@@ -278,7 +297,7 @@ public class TextViewController {
         textWait();
 
         // Confirmation for player readiness. Exit if not ready
-        boolean isUserReady = yesNoPrompt("Narrator: Are you ready? (y/n)", ">",
+        boolean isUserReady = yesNoPrompt("Narrator: Are you ready?", ">",
                 "Narrator: Sorry, I don't understand.");
         if (!isUserReady) {
             System.out.println("Narrator: The final moments await. Ladies and gentlemen, please wait as " +
@@ -326,9 +345,10 @@ public class TextViewController {
                 textWait();
                 int goldToHeal = (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4));
                 if (player.getGold() >= goldToHeal) {
-                    if (yesNoPrompt("Cleric: I can heal you all the way to full, but it'll cost you " +
-                                    goldToHeal + " gold (y/n).\n\t(You have " + player.getGold() + " gold.)",
-                            "", "Cleric: Sorry, I don't understand.")) {
+                    boolean confirmHeal = yesNoPrompt("Cleric: I can heal you all the way to full, but it'll cost you " +
+                            goldToHeal + " gold (y/n).\n\t(You have " + player.getGold() + " gold.)", "",
+                            "Cleric: Sorry, I don't understand.");
+                    if (confirmHeal) {
                         System.out.println("Cleric: Get ready!");
                         textWait();
                         System.out.println("\t" + "Cleric used heal!");
@@ -357,6 +377,9 @@ public class TextViewController {
         textWait();
     }
 
+    /**
+     * Pauses execution for TEXT_DELAY milliseconds.
+     */
     public static void textWait() {
         try {
             Thread.sleep(TEXT_DELAY);
