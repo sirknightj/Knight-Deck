@@ -3,7 +3,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
+
+import java.io.IOException;
 
 /**
  * The starting point for the Knight Deck application.
@@ -25,13 +26,14 @@ public class ApplicationMain extends Application {
      * Loads the HomeScreen file.
      *
      * @param primaryStage the stage on which the resources are set.
-     * @throws Exception iff anything goes wrong.
+     * @throws IOException iff the .fxml file is not loaded properly.
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle(NAME_OF_WINDOW);
-        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/HomeScreen.fxml")))
+        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/HomeScreen.fxml")));
         primaryStage.setScene(scene);
+        scene.lookup("#EntireWindow").requestFocus();
         primaryStage.show();
     }
 }
