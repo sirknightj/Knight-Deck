@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.Region?>
-<AnchorPane prefHeight="720" prefWidth="1080" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ApplicationController" focusTraversable="true" fx:id="BattleScreen">
-    <padding>
-        <Insets bottom="25" left="25" right="25" top="25" />
-    </padding>
-    <SplitPane orientation="VERTICAL" maxWidth="5000">
-        <Region fx:id="PlaceHolderForEnemyDisplay" maxWidth="1080" maxHeight="500"/>
-        <FlowPane fx:id="CardHolder" focusTraversable="true" alignment="CENTER"/>
-    </SplitPane>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-</AnchorPane>
+<VBox fx:id="BattleScreen" focusTraversable="true" prefHeight="720" prefWidth="1080"
+      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ApplicationController" alignment="CENTER">
+    <padding>
+        <Insets bottom="25" left="25" right="25" top="25"/>
+    </padding>
+    <HBox maxHeight="5000" maxWidth="5000"></HBox>
+    <Region fx:id="PlaceHolderForEnemyDisplay" VBox.vgrow="ALWAYS"/>
+    <HBox fx:id="CardHolder" maxHeight="5000" maxWidth="5000" spacing="10" alignment="CENTER"/>
+
+</VBox>

@@ -27,8 +27,8 @@ public class GameModel {
     private static final String ENEMIES_DATA_FILE = "enemies.json";
 
     public GameModel() {
-        loadCards(CARDS_DATA_FILE);
-        loadEnemies(ENEMIES_DATA_FILE);
+        loadCards();
+        loadEnemies();
 
         assert !CardFactory.getAllCards().isEmpty();
         assert !EnemyFactory.getAllEnemies().isEmpty();
@@ -160,12 +160,11 @@ public class GameModel {
     /**
      * Loads all cards into CardFactory from data file
      *
-     * @param dataFile Name of the JSON resource file containing card data
      * @throws RuntimeException iff the cards failed to load.
      */
-    private static void loadCards(String dataFile) {
+    private void loadCards() {
         try {
-            Reader cardFile = Files.newBufferedReader(Paths.get(GameModel.class.getResource(dataFile).toURI()));
+            Reader cardFile = Files.newBufferedReader(Paths.get(getClass().getResource(GameModel.CARDS_DATA_FILE).toURI()));
             List<Card> cards = new Gson().fromJson(cardFile, new TypeToken<List<Card>>() {
             }.getType());
             for (Card card : cards) {
@@ -179,12 +178,11 @@ public class GameModel {
     /**
      * Loads all enemies into EnemyFactory from data file
      *
-     * @param dataFile Name of the JSON resource file containing enemy data
      * @throws RuntimeException iff the the enemies failed to load.
      */
-    private static void loadEnemies(String dataFile) {
+    private void loadEnemies() {
         try {
-            Reader enemyFile = Files.newBufferedReader(Paths.get(GameModel.class.getResource(dataFile).toURI()));
+            Reader enemyFile = Files.newBufferedReader(Paths.get(getClass().getResource(GameModel.ENEMIES_DATA_FILE).toURI()));
 
             List<EnemyTemplate> enemies = new Gson().fromJson(enemyFile, new TypeToken<List<EnemyTemplate>>() {
             }.getType());

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ApplicationController"
+      prefHeight="720" prefWidth="1080">
+    <padding>
+        <Insets bottom="25" left="25" right="25" top="25"/>
+    </padding>
+    <fx:define>
+        <Font fx:id="ButtonFont" size="20d"/>
+        <Font fx:id="SmallFont" size="30d"/>
+    </fx:define>
+    <Region VBox.vgrow="ALWAYS"/>
+    <HBox fx:id="YesNoButtonHolder" alignment="BASELINE_RIGHT" spacing="5d">
+        <padding>
+            <Insets bottom="5d" left="5d" right="5d" top="5d"/>
+        </padding>
+        <Text text=" Cleric:" font="$ButtonFont"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="HospitalYesButton" visible="true" disable="true" text="Yes" onAction="#HospitalFunction"
+                maxWidth="5000" maxHeight="5000" font="$ButtonFont"/>
+        <Button fx:id="HospitalNoButton" visible="true" disable="true" text="No" onAction="#HospitalFunction"
+                maxWidth="5000" maxHeight="5000" font="$ButtonFont"/>
+    </HBox>
+    <HBox fx:id="HospitalDialogueBox" maxWidth="5000" maxHeight="5000" alignment="CENTER">
+        <padding>
+            <Insets bottom="5d" left="5d" right="5d" top="5d"/>
+        </padding>
+        <Text fx:id="ClericDialogueBox" textAlignment="LEFT" text="Loading..." font="$SmallFont" wrappingWidth="880d"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="HospitalNextButton" text="Next" disable="true" font="$SmallFont" onAction="#onHospitalNextButtonClicked" alignment="CENTER"/>
+    </HBox>
+</VBox>
