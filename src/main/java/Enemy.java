@@ -2,14 +2,9 @@ import java.util.*;
 
 public class Enemy extends Being {
 
-    //    private List<Card> deck; // current deck of cards
     private double cost; // the cost to place this enemy on the battlefield
     private int gold; // the maximum gold this enemy drops on defeat
     private List<Card> cardDrops; // the cards this enemy drops on defeat
-
-    // TODO: Implement draw and discard
-    private List<Card> drawPile;
-    private List<Card> discardPile;
 
     /**
      * Constructor.
@@ -38,9 +33,6 @@ public class Enemy extends Being {
             assert card.isPlayableBy(this);
         }
         this.deck = deck;
-
-        this.drawPile = new ArrayList<>();
-        this.discardPile = new ArrayList<>();
     }
 
     /**
@@ -62,7 +54,7 @@ public class Enemy extends Being {
     /**
      * @return A random amount of gold equal to or less than the gold, but larger than half the gold.
      */
-    public int getGold() {
+    public int getDroppedGold() {
         Random r = new Random();
         return r.nextInt(gold / 2) + (gold / 2);
     }
@@ -96,8 +88,17 @@ public class Enemy extends Being {
      * @param card   Card to play
      * @param target Target to attack (should be a Player?)
      */
+    @Override
     public void playCard(Card card, Being target) {
+        assert actionDeck.contains(card);
         card.play(this, target);
+        actionPoints -= card.getCost();
+        assert actionPoints >= 0;
+
+        actionDeck.remove(card);
+        if (!card.isSingleUse()) {
+            discardPile.add(card);
+        }
     }
 
 }

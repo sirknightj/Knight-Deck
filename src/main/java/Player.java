@@ -5,10 +5,10 @@ import java.util.*;
  */
 public class Player extends Being {
 
-    private int drawSize; // the number of cards the player starts off their turn with in the actionDeck.
-    private List<Card> drawPile; // the cards the player is yet to draw.
-    private List<Card> actionDeck; // the cards in the player's hand.
-    private List<Card> discardPile; // the cards the player has already seen.
+//    private int drawSize; // the number of cards the player starts off their turn with in the actionDeck.
+//    private List<Card> drawPile; // the cards the player is yet to draw.
+//    private List<Card> actionDeck; // the cards in the player's hand.
+//    private List<Card> discardPile; // the cards the player has already seen.
     private int gold; // the gold the player will stockpile and use
 
     /**
@@ -30,9 +30,6 @@ public class Player extends Being {
 
         this.drawSize = drawSize;
         gold = 0;
-        drawPile = new LinkedList<>();
-        actionDeck = new ArrayList<>();
-        discardPile = new ArrayList<>();
     }
 
     /**
@@ -61,48 +58,12 @@ public class Player extends Being {
     }
 
     /**
-     * Should be called before starting a battle.
-     * Action deck is empty. Draw pile contains all player's cards shuffled. Discard pile is empty.
-     */
-    public void initializeDeck() {
-        discardPile.clear();
-        actionDeck.clear();
-        drawPile.addAll(deck);
-        Collections.shuffle(drawPile);
-    }
-
-    /**
      * Adds a card into the player's deck.
      *
      * @param card the card to be added into the player's deck.
      */
     public void deckAdd(Card card) {
         deck.add(card);
-    }
-
-    /**
-     * Draws cards from the draw pile equal to the player's draw capacity, and puts them in the player's hand.
-     * Or, if the player's action deck is not discarded, draw more cards up to the player's draw capacity.
-     */
-    public void drawCards() {
-        for (int i = actionDeck.size(); i < drawSize; i++) {
-            if (drawPile.isEmpty()) {
-                // Reset this player's draw pile
-                drawPile.addAll(discardPile);
-                discardPile.clear();
-                Collections.shuffle(drawPile);
-            }
-
-            Card card = drawPile.remove(0);
-            actionDeck.add(card);
-        }
-    }
-
-    /**
-     * @return The number of cards the player should have in their action deck at the start of their turn.
-     */
-    public int getDrawSize() {
-        return drawSize;
     }
 
     /**
@@ -122,13 +83,18 @@ public class Player extends Being {
     /**
      * Plays the given card against the given enemy. Card must be in the action deck.
      * If card is solely defensive, the target does not matter.
+     * Requires that the target is an Enemy.
      *
      * @param card   Card to play
      * @param target Enemy to attack
      */
-    public void playCard(Card card, Enemy target) {
+    @Override
+    public void playCard(Card card, Being target) {
+        if (target != null && !(target instanceof Enemy)) {
+            throw new IllegalArgumentException("target must be null or an Enemy");
+        }
         List<Enemy> enemies = new ArrayList<>();
-        enemies.add(target);
+        enemies.add((Enemy) target);
         playCard(card, enemies);
     }
 
@@ -140,7 +106,7 @@ public class Player extends Being {
      * @param targets Enemies to attack
      */
     public void playCard(Card card, List<Enemy> targets) {
-        assert (actionDeckContains(card));
+        assert actionDeckContains(card);
         for (Enemy target : targets) {
             card.play(this, target);
         }
@@ -151,37 +117,6 @@ public class Player extends Being {
         if (!card.isSingleUse()) {
             discardPile.add(card);
         }
-    }
-
-    /**
-     * @return Copy of the player's action deck
-     */
-    public List<Card> getActionDeck() {
-        return new ArrayList<>(actionDeck);
-    }
-
-    /**
-     * @return True iff the action deck is empty
-     */
-    public boolean isActionDeckEmpty() {
-        return actionDeck.isEmpty();
-    }
-
-    /**
-     * Checks whether the given card is in the current action deck.
-     *
-     * @param card Card to check for
-     * @return True iff player's action deck contains the current card. Returns false if card is null
-     */
-    public boolean actionDeckContains(Card card) {
-        return (card != null) && actionDeck.contains(card);
-    }
-
-    /**
-     * @return True iff the player is dead.
-     */
-    public boolean isDead() {
-        return health <= 0;
     }
 
     /**

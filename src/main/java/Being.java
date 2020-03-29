@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -14,6 +16,12 @@ public abstract class Being {
     protected List<Card> deck;
     protected int shield;
     protected int strength;
+
+    private static final int DEFAULT_DRAW_SIZE = 3;
+    protected int drawSize; // the number of cards the being starts off their turn with in the actionDeck.
+    protected List<Card> actionDeck; // the cards in the being's hand.
+    protected List<Card> drawPile; // the cards the being is yet to draw.
+    protected List<Card> discardPile; // the cards the being has already seen.
 
     /**
      * Constructor. Also sets action points and health to their respective maximum values.
@@ -33,6 +41,56 @@ public abstract class Being {
         this.defense = 0;
         this.shield = 0;
         this.strength = 0;
+
+        this.drawSize = DEFAULT_DRAW_SIZE;
+
+        drawPile = new LinkedList<>();
+        actionDeck = new ArrayList<>();
+        discardPile = new ArrayList<>();
+    }
+
+    /**
+     * Should be called before starting a battle.
+     * Action deck is empty. Draw pile contains all player's cards shuffled. Discard pile is empty.
+     */
+    public void initializeDeck() {
+        discardPile.clear();
+        actionDeck.clear();
+        drawPile.addAll(deck);
+        Collections.shuffle(drawPile);
+    }
+
+    /**
+     * Draws cards from the draw pile equal to the being's draw capacity, and puts them in the being's hand.
+     * Or, if the being's action deck is not discarded, draw more cards up to the being's draw capacity.
+     */
+    public void drawCards() {
+        for (int i = actionDeck.size(); i < drawSize; i++) {
+            // exit if being has already drawn their entire deck
+            if (actionDeck.size() == deck.size()) {
+                return;
+            }
+
+            // fill draw pile from discard pile as necessary
+            if (drawPile.isEmpty()) {
+                // Reset this player's draw pile
+                drawPile.addAll(discardPile);
+                discardPile.clear();
+                Collections.shuffle(drawPile);
+            }
+
+            Card card = drawPile.remove(0);
+            actionDeck.add(card);
+        }
+    }
+
+    public abstract void playCard(Card card, Being target);
+
+    /**
+     * @return The number of cards the being should have in their action deck at the start of their turn.
+     */
+    public int getDrawSize() {
+        return drawSize;
     }
 
     /**
@@ -209,6 +267,37 @@ public abstract class Being {
         output += (shield > 0) ? " and " + shield + " shield" : "";
         output += (strength > 0) ? " and " + strength + " strength" : "";
         return output.trim() + ".";
+    }
+    
+    /**
+     * @return Copy of the player's action deck
+     */
+    public List<Card> getActionDeck() {
+        return new ArrayList<>(actionDeck);
+    }
+
+    /**
+     * Checks whether the given card is in the current action deck.
+     *
+     * @param card Card to check for
+     * @return True iff being's action deck contains the current card. Returns false if card is null
+     */
+    public boolean actionDeckContains(Card card) {
+        return (card != null) && actionDeck.contains(card);
+    }
+
+    /**
+     * @return True iff the action deck is empty
+     */
+    public boolean isActionDeckEmpty() {
+        return actionDeck.isEmpty();
+    }
+
+    /**
+     * @return True iff the player is dead.
+     */
+    public boolean isDead() {
+        return health <= 0;
     }
 
     /**

@@ -34,7 +34,7 @@ public class ApplicationModel {
      */
     public ApplicationModel(String name) {
         try { // Loading the cards.
-            Reader cardFile = Files.newBufferedReader(Paths.get(Main.class.getResource("cards.json").toURI()));
+            Reader cardFile = Files.newBufferedReader(Paths.get(ApplicationModel.class.getResource("cards.json").toURI()));
             List<Card> cards = new Gson().fromJson(cardFile, new TypeToken<List<Card>>() {
             }.getType());
             for (Card card : cards) {
@@ -44,7 +44,7 @@ public class ApplicationModel {
             throw new RuntimeException("Failed to load cards");
         }
         try {
-            Reader enemyFile = Files.newBufferedReader(Paths.get(Main.class.getResource("enemies.json").toURI()));
+            Reader enemyFile = Files.newBufferedReader(Paths.get(ApplicationModel.class.getResource("enemies.json").toURI()));
 
             List<EnemyTemplate> enemies = new Gson().fromJson(enemyFile, new TypeToken<List<EnemyTemplate>>() {
             }.getType());

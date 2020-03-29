@@ -112,7 +112,7 @@ public class Main {
                         System.out.println("Shopkeepers: Could you come back in a bit? We'll have some more stock then.");
                         textWait();
                     } else {
-                        Shop.getInstance().enter();
+                        Shop.getInstance().enter(player);
                     }
                     break;
                 case "q":

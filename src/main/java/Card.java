@@ -158,7 +158,7 @@ public class Card implements Comparable<Card> {
     public String getDescription(Being user) {
         String ANSI_RESET = "\u001B[0m";
         String ANSI_GREEN = "\u001B[32m";
-        if (user.strength == 0) {
+        if (user.getStrength() == 0) {
             ANSI_GREEN = "";
             ANSI_RESET = "";
         }
