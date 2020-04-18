@@ -6,7 +6,7 @@
 
 <VBox fx:id="EntireWindow" alignment="CENTER" focusTraversable="true" prefHeight="720" prefWidth="1080" spacing="50"
       xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ApplicationController">
+      fx:controller="HomeScreenController">
     <fx:define>
         <Font fx:id="AllFont" size="60"/>
         <Font fx:id="ButtonFont" size="30"/>
@@ -15,7 +15,7 @@
 
     <Text fx:id="title" text="Knight Deck" font="$AllFont">Knight Deck</Text>
     <HBox alignment="CENTER" spacing="50">
-        <TextField fx:id="NameInputBox" prefWidth="150" promptText="Name" font="$ButtonFont"/>
+        <TextField fx:id="NameInputBox" prefWidth="150" promptText="Name" font="$ButtonFont" onAction="#play"/>
         <Button fx:id="PlayButton" onAction="#play" prefWidth="150" font="$ButtonFont">Play</Button>
     </HBox>
     <Text fx:id="NoNameErrorMessage" font="$SmallFont"/>

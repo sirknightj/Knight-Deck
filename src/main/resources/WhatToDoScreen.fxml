@@ -14,9 +14,8 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ApplicationController"
-      prefHeight="720" prefWidth="1080" alignment="CENTER" spacing="25" focusTraversable="true"
-      fx:id="WhatToDoWindow">
+      fx:controller="WhatToDoScreenController"
+      prefHeight="720" prefWidth="1080" alignment="CENTER" spacing="25" focusTraversable="true">
     <fx:define>
         <Font fx:id="AllFont" size="60"/>
         <Font fx:id="ButtonFont" size="30"/>
@@ -34,9 +33,9 @@
         </VBox>
         <Region HBox.hgrow="ALWAYS"/>
         <VBox fx:id="ActionButtonsHolder" alignment="CENTER" spacing="10">
-            <Text fx:id="PreBattlePlayerName" font="$ButtonFont"/>
-            <Text fx:id="PreBattlePlayerHealth" font="$ButtonFont"/>
-            <Text fx:id="PreBattleGoldDisplay" font="$ButtonFont"/>
+            <Text fx:id="PlayerNameDisplay" font="$ButtonFont"/>
+            <Text fx:id="PlayerHealthDisplay" font="$ButtonFont"/>
+            <Text fx:id="PlayerGoldDisplay" font="$ButtonFont"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Button fx:id="BattleButton" text="Battle" font="$ButtonFont" onAction="#onBattleButtonClick"
                     maxWidth="5000">

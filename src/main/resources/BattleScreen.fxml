@@ -1,17 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 <VBox fx:id="BattleScreen" focusTraversable="true" prefHeight="720" prefWidth="1080"
       xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ApplicationController" alignment="CENTER">
+      fx:controller="BattleScreenController" alignment="CENTER">
+    <fx:define>
+        <Font fx:id="DisplayFont" size="30"/>
+    </fx:define>
     <padding>
         <Insets bottom="25" left="25" right="25" top="25"/>
     </padding>
-    <HBox maxHeight="5000" maxWidth="5000"></HBox>
-    <Region fx:id="PlaceHolderForEnemyDisplay" VBox.vgrow="ALWAYS"/>
-    <HBox fx:id="CardHolder" maxHeight="5000" maxWidth="5000" spacing="10" alignment="CENTER"/>
+    <HBox maxHeight="5000" maxWidth="5000" spacing="10">
+        <Text fx:id="APDisplay" text="Loading..." font="$DisplayFont"/>
+        <Text fx:id="ActionSummary" text="" font="$DisplayFont"/>
+    </HBox>
+    <Region VBox.vgrow="ALWAYS"/>
+    <HBox fx:id="EnemyHolder" maxHeight="5000" maxWidth="5000" spacing="10" alignment="CENTER_RIGHT"/>
+    <Region VBox.vgrow="ALWAYS"/>
+    <HBox fx:id="CardHolder" maxHeight="5000" maxWidth="5000" spacing="10" alignment="BOTTOM_CENTER">
+        <Button fx:id="EndTurnButton" text="End Turn" disable="true" visible="true" onAction="#onEndTurnClicked"/>
+    </HBox>
 
 </VBox>

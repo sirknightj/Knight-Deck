@@ -78,65 +78,6 @@ public class ApplicationModel {
         return player;
     }
 
-    /**
-     * Resets the hospital dialogue status.
-     */
-    public void resetHospitalStatus() {
-        hospitalStatus = 0;
-    }
-
-    /**
-     * @return true iff it's time to switch to the yes/no boxes.
-     */
-    public boolean isItYesNoTime() {
-        return hospitalStatus == 6;
-    }
-
-    public boolean isItLeavingTime() {
-        return hospitalStatus == 11;
-    }
-
-    public String getNextHospitalText() {
-        hospitalStatus++;
-        if (hospitalStatus == 1) {
-            return "Let me take a look at your wounds...";
-        }
-        if (hospitalStatus == 5) {
-            return "It doesn't look like you have enough gold for me to heal you. It costs " + getHealingCost() + " gold, and you have " + player.getGold() + " gold.";
-        }
-        if (hospitalStatus == 6) {
-            hospitalStatus = 10;
-            return "I really would like to heal you, but I'm poor and don't have any extra supplies.";
-        }
-        if (hospitalStatus == 11) {
-            return "Not saying you should get yourself injured, but come back when you need healing!";
-        }
-        if (player.getHealth() < player.getMaxHealth()) {
-            if (player.getGold() > 1) {
-                if (hospitalStatus == 2) {
-                    return "...";
-                } else if (hospitalStatus == 3) {
-                    return "It looks like you're injured pretty badly.";
-                } else if (hospitalStatus == 4) {
-                    if (player.getGold() >= getHealingCost()) {
-                        hospitalStatus = 6;
-                        return "I can heal you all the way to full, but it'll cost you " + getHealingCost() + " gold. Deal?";
-                    } else {
-                        return getNextHospitalText();
-                    }
-                }
-            } else { // player has no gold
-                if (hospitalStatus == 2) {
-                    hospitalStatus = 5;
-                    return "Supplies are low right now. I need gold to heal you, and you have none.";
-                }
-            }
-        } else if (hospitalStatus == 2) { // player is not injured
-            hospitalStatus = 10;
-            return "You don't appear to have any injuries.";
-        }
-        return null;
-    }
 
     public int getHealingCost() {
         return (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4));
