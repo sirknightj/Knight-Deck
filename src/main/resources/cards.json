@@ -204,6 +204,14 @@
     "attackAll": true
   },
   {
+    "name": "Backstab",
+    "cost": 0,
+    "playable": true,
+    "damage": 5,
+    "hits": 2,
+    "attackAll": true
+  },
+  {
     "name": "Bow and Arrow",
     "cost": 1,
     "playable": false,
@@ -305,7 +313,7 @@
     "name": "Fortify",
     "cost": 1,
     "playable": false,
-    "defense": 5
+    "shield": 5
   },
   {
     "name": "Roar",

@@ -5,6 +5,7 @@ public class Enemy extends Being {
     private double cost; // the cost to place this enemy on the battlefield
     private int gold; // the maximum gold this enemy drops on defeat
     private List<Card> cardDrops; // the cards this enemy drops on defeat
+    private List<Card> intent; // the cards the enemy intends to play
 
     /**
      * Constructor.
@@ -67,19 +68,27 @@ public class Enemy extends Being {
     }
 
     /**
-     * @return the list of Cards for this Enemy to play. Returns an empty list if it cannot find any Card
+     * Must be called before getMove is called. Calculates the moves for an enemy.
+     *
+     * @return the list of Cards for this Enemy to play. Returns an empty list if it cannot find any Card.
      */
-    public List<Card> getMove() {
-        List<Card> res = new ArrayList<>();
+    public void calculateMove() {
+        intent = new ArrayList<>();
         int totalAP = 0;
-        for (int i = 0; i < deck.size() && totalAP <= maxActionPoints; i++) {
-            Card card = deck.get(i);
-            if (card.getCost() + totalAP <= maxActionPoints) {
+        for (int i = 0; i < deck.size() + 5 && totalAP <= maxActionPoints; i++) {
+            Card card = deck.get((int) (Math.random() * deck.size()));
+            if (card.getCost() + totalAP <= maxActionPoints && !intent.contains(card)) {
                 totalAP += card.getCost();
-                res.add(card);
+                intent.add(card);
             }
         }
-        return res;
+    }
+
+    /**
+     * @return the list of cards the enemy plans to use this turn.
+     */
+    public List<Card> getMove() {
+        return intent;
     }
 
     /**
@@ -100,5 +109,4 @@ public class Enemy extends Being {
             discardPile.add(card);
         }
     }
-
 }

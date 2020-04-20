@@ -2,18 +2,20 @@ import java.util.*;
 
 /**
  * Represents a battle between the Player and one or more Enemies.
- *
+ * <p>
  * Call methods in this order:
  * - BattleManager
  * - start
  * - loop while !isBattleOver
- * - [optional] getCurrentStats
- * - prePlayerTurn
- * - loop as needed:
- * - playerAction
- * - preEnemyTurn
- * - enemiesTurn
- * - postTurn
+ * - - [optional] getCurrentStats
+ * - - calculateEnemyMoves
+ * - - [optional] getEnemyIntents
+ * - - prePlayerTurn
+ * - - loop as needed:
+ * - - - playerAction
+ * - - preEnemyTurn
+ * - - enemiesTurn
+ * - - postTurn
  * - postGame
  */
 public class BattleManager {
@@ -131,13 +133,33 @@ public class BattleManager {
     }
 
     /**
-     * Resets all enemies's stats and fills their action decks. Must be called before the enemies' turn.
+     * Resets all enemies' stats and fills their action decks.
      */
     public void preEnemyTurn() {
         for (Enemy enemy : enemies) {
             enemy.turnStartStatReset();
-            enemy.drawCards();
         }
+    }
+
+    /**
+     * Calculates all the moves for the enemies. Must be called before the enemies' turn.
+     */
+    public void calculateEnemyMoves() {
+        for (Enemy enemy : enemies) {
+            enemy.calculateMove();
+        }
+    }
+
+    /**
+     * @return the moves the enemies plan to use this turn. Must be called after preEnemyTurn.
+     */
+    public Map<Enemy, List<Card>> getEnemyIntents() {
+        Map<Enemy, List<Card>> res = new LinkedHashMap<>();
+        for (Enemy enemy : enemies) {
+            assert enemy.getMove() != null;
+            res.put(enemy, enemy.getMove());
+        }
+        return res;
     }
 
     /**
@@ -170,10 +192,12 @@ public class BattleManager {
 
     /**
      * Must be called after every game, regardless of whether the player wins or not.
+     * Clears player status effects.
      *
      * @return Set of Cards representing the dropped cards by the killed enemies. May be empty.
      */
     public Set<Card> postGame() {
+        player.battleEndStatsReset();
         // removes some cards from the possible drops.
         possibleCardDrops.removeIf(card -> Math.random() <= GameModel.DROP_CHANCE);
         return possibleCardDrops;

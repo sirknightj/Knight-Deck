@@ -44,12 +44,17 @@ public class TextViewController {
             System.out.println("What would you like to do?");
             System.out.println("\tb to battle normally and get closer to saving the princess");
             System.out.println("\te to battle easier enemies and gain some more gold and cards");
+            System.out.println("\td to view your deck");
             System.out.println("\th to visit the field hospital");
             System.out.println("\ts to check out the shop");
             System.out.println("\tq to quit");
 
             System.out.print("Action> ");
-            response = input.nextLine().toLowerCase().charAt(0);
+            try {
+                response = input.nextLine().toLowerCase().charAt(0);
+            } catch (Exception e) {
+                response = 'a';
+            }
             System.out.println();
 
             handleMenuChoice(response);
@@ -76,12 +81,15 @@ public class TextViewController {
                 } else {
                     BattleManager battle = model.startBattle(difficulty);
                     manageBattle(battle);
+                    model.updateDifficulty();
+                    model.refreshShopContents();
                 }
                 break;
             case 'e':
                 double normalDifficulty = model.getDifficulty();
                 BattleManager battle = model.startBattle(normalDifficulty < 2 ? normalDifficulty : normalDifficulty / 2);
                 manageBattle(battle);
+                model.refreshShopContents();
                 break;
             case 'h':
                 visitHospital();
@@ -94,6 +102,12 @@ public class TextViewController {
                     textWait();
                 } else {
                     Shop.getInstance().enter(player);
+                }
+                break;
+            case 'd':
+                System.out.println("You have the following cards:");
+                for (Card card : player.getDeck()) {
+                    System.out.println("\t" + card.getDescription(player));
                 }
                 break;
             case 'q':
@@ -116,7 +130,13 @@ public class TextViewController {
         System.out.println();
 
         while (!battle.isBattleOver()) {
-            // Print turn stats information
+            // Calculates the enemy's moves.
+            battle.calculateEnemyMoves();
+
+            // Clears player's status effects, refills action points, and draws cards.
+            battle.prePlayerTurn();
+
+            // Print turn stats information.
             BattleManager.TurnStat stats = battle.getCurrentStats();
             System.out.println("--Turn " + stats.getTurn() + "--");
             System.out.println(stats.getPlayer().healthStatus());
@@ -125,7 +145,21 @@ public class TextViewController {
             }
             System.out.println();
 
-            battle.prePlayerTurn();
+            // Alerts the player of the enemy's intents.
+            for (Enemy enemy : battle.getEnemyIntents().keySet()) {
+                String output = "";
+                for (int i = 0; i < battle.getEnemyIntents().get(enemy).size(); i++) {
+                    if (i == 0) {
+                        output += enemy.getName() + " plans to use " + battle.getEnemyIntents().get(enemy).get(i).getName();
+                    } else if (i != battle.getEnemyIntents().get(enemy).size() - 1) {
+                        output += ", " + battle.getEnemyIntents().get(enemy).get(i).getName();
+                    } else {
+                        output += " and " + battle.getEnemyIntents().get(enemy).get(i).getName();
+                    }
+                }
+                System.out.println(output + ".");
+            }
+            System.out.println();
 
             // Print player's action deck
             System.out.println("You drew the following cards:");
@@ -143,6 +177,7 @@ public class TextViewController {
                 Enemy enemy = (Enemy) action.getCardUser();
                 Card card = action.getCardPlayed();
                 System.out.println(enemy.getName() + " plays " + card.getName() + "!");
+                System.out.println("\t" + card.getDescription(enemy));
                 textWait();
                 enemy.playCard(card, player);
                 textWait();
@@ -151,10 +186,10 @@ public class TextViewController {
             battle.postTurn();
         }
 
-        System.out.print("=== Battle has finished! ===\n");
-
         // Add card drops
         Set<Card> cardDrops = battle.postGame();
+        System.out.print("=== Battle has finished! ===\n");
+
         Card cardDropChosen = handleCardDropAdding(cardDrops);
         if (cardDropChosen != null) {
             player.deckAdd(cardDropChosen);
@@ -346,7 +381,7 @@ public class TextViewController {
                 int goldToHeal = (int) Math.ceil(Math.log(player.getMaxHealth() - player.getHealth()) / Math.log(1.4));
                 if (player.getGold() >= goldToHeal) {
                     boolean confirmHeal = yesNoPrompt("Cleric: I can heal you all the way to full, but it'll cost you " +
-                            goldToHeal + " gold (y/n).\n\t(You have " + player.getGold() + " gold.)", "",
+                                    goldToHeal + " gold (y/n).\n\t(You have " + player.getGold() + " gold.)", "",
                             "Cleric: Sorry, I don't understand.");
                     if (confirmHeal) {
                         System.out.println("Cleric: Get ready!");

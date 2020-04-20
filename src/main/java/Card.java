@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Immutable representation of a card.
  */
@@ -164,7 +162,7 @@ public class Card implements Comparable<Card> {
         }
         String description = name + " [" + cost + "]";
         if (damage > 0) {
-            description += " Deals " + ANSI_GREEN + damage + ANSI_RESET + (hits != 1 ? "x" + hits : "") + " damage";
+            description += " Deals " + ANSI_GREEN + (damage + user.getStrength()) + ANSI_RESET + (hits != 1 ? "x" + hits : "") + " damage";
             if (attackAll) {
                 description += " to all enemies.";
             } else {

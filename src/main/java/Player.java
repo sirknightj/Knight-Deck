@@ -5,7 +5,7 @@ import java.util.*;
  */
 public class Player extends Being {
 
-//    private int drawSize; // the number of cards the player starts off their turn with in the actionDeck.
+    //    private int drawSize; // the number of cards the player starts off their turn with in the actionDeck.
 //    private List<Card> drawPile; // the cards the player is yet to draw.
 //    private List<Card> actionDeck; // the cards in the player's hand.
 //    private List<Card> discardPile; // the cards the player has already seen.
@@ -13,6 +13,7 @@ public class Player extends Being {
 
     /**
      * Constructor. Also fills the Player's health and action points to full.
+     *
      * @param name            The name of the player.
      * @param maxHealth       The maximum health of the player.
      * @param maxActionPoints The maximum actionPoints of the player.
@@ -119,6 +120,21 @@ public class Player extends Being {
         }
     }
 
+    public void battleEndStatsReset() {
+        if (defense > 0) {
+            System.out.println(name + "'s defense wears off.");
+            defense = 0;
+        }
+        if (shield > 0) {
+            System.out.println(name + "'s shield wears off.");
+            shield = 0;
+        }
+        if (strength > 0) {
+            System.out.println(name + "'s strength wears off.");
+            strength = 0;
+        }
+    }
+
     /**
      * Heals the player, not allowing their health to go above max.
      *
@@ -126,6 +142,14 @@ public class Player extends Being {
      */
     public void heal(int health) {
         this.health = Math.min(this.health + health, maxHealth);
+    }
+
+    /**
+     * Increases the player's max health.
+     */
+    public void increaseMaxHealth() {
+        maxHealth += 5;
+        health += 5;
     }
 
     /**

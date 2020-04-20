@@ -268,7 +268,7 @@ public abstract class Being {
         output += (strength > 0) ? " and " + strength + " strength" : "";
         return output.trim() + ".";
     }
-    
+
     /**
      * @return Copy of the player's action deck
      */

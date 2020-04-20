@@ -66,6 +66,20 @@ public class GameModel {
     }
 
     /**
+     * Refreshes the shop's contents.
+     */
+    public void refreshShopContents() {
+        Shop.refreshContents();
+    }
+
+    /**
+     * Increases the difficulty.
+     */
+    public void updateDifficulty() {
+        difficulty *= 1.22;
+    }
+
+    /**
      * Starts a non-final battle with the given battle cost. Initializes and returns a BattleManager.
      *
      * @param battleFieldStamina Battle cost
